@@ -1,5 +1,5 @@
 import stack from './stack';
-import Main from './Main';
+import Main from './menu/Main';
 
 stack.push(new Main());
 

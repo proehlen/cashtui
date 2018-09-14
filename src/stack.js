@@ -2,8 +2,8 @@
 import clear from 'clear-console';
 import colors from 'colors';
 import { version } from '../package.json';
-import Menu from './Menu';
-import Main from './Main';
+import Menu from './menu/Menu';
+import Main from './menu/Main';
 
 class Stack {
   _renderTitle() {
@@ -41,7 +41,7 @@ class Stack {
     this._stack.pop();
     this._render();
   }
-  
+
   quit() {
     clear();
     console.log('Bye!');

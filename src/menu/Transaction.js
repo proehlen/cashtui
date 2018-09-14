@@ -1,8 +1,8 @@
 // @flow
 
 import Menu from './Menu';
-import Option from './Option';
-import stack from './stack';
+import Option from '../Option';
+import stack from '../stack';
 
 export default class Transaction extends Menu {
   constructor() {

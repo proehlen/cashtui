@@ -1,8 +1,8 @@
 // @flow
 import  colors from 'colors';
 import clear from 'clear-console';
-import Option from './Option';
-import stack from './stack';
+import Option from '../Option';
+import stack from '../stack';
 
 const KEY_ESCAPE = String.fromCharCode(0x1b);
 

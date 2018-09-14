@@ -1,0 +1,14 @@
+{
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "browser": "last 2 versions",
+          "node": "current"
+        }
+      }
+    ],
+    "flow"
+  ]
+}

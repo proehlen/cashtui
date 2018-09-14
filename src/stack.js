@@ -1,24 +1,18 @@
 // @flow
 import clear from 'clear-console';
 import colors from 'colors';
+import cliui from 'cliui';
+
 import { version } from '../package.json';
-import Menu from './menu/Menu';
-import Main from './menu/Main';
+import Component from './components/Component';
 
 class Stack {
-  _renderTitle() {
-    console.log(
-      colors.blue(
-        `My Cash CLI (v${version})`
-      )
-    );
-  }
-  _stack: Menu[]
+  _stack: Array<Component>
   constructor()  {
     this._stack = [];
   }
 
-  get active(): Menu {
+  get active(): Component {
     return this._stack[this._stack.length - 1];
   }
 
@@ -26,20 +20,37 @@ class Stack {
     return this._stack.length - 1;
   }
 
-  _render() {
+  render() {
     clear();
     this._renderTitle();
     this.active.render();
   }
 
-  push(menu: Menu) {
-    this._stack.push(menu);
-    this._render();
+  _renderTitle() {
+    const ui = cliui();
+    ui.div({
+      text: colors.blue(
+        'My Cash CLI'
+      ),
+      align: 'left'
+    }, {
+      text: this.active.title ,
+      align: 'center'
+    }, {
+      text: `v${version}`,
+      align: 'right'
+    });
+    console.log(ui.toString());
+  }
+
+  push(component: Component) {
+    this._stack.push(component);
+    this.render();
   }
 
   pop() {
     this._stack.pop();
-    this._render();
+    this.render();
   }
 
   quit() {
@@ -49,7 +60,6 @@ class Stack {
   }
 
 }
-
 
 const stack  = new Stack();
 export default stack;

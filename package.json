@@ -23,6 +23,7 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-flow": "^6.23.0",
+    "cliui": "^4.1.0",
     "flow-bin": "^0.80.0",
     "flow-copy-source": "^2.0.2",
     "rimraf": "^2.6.2"

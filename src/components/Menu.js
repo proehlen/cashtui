@@ -1,17 +1,18 @@
 // @flow
-import  colors from 'colors';
-import clear from 'clear-console';
+import colors from 'colors';
+import cliui from 'cliui';
+
+import Component from './Component';
 import Option from '../Option';
 import stack from '../stack';
 
 const KEY_ESCAPE = String.fromCharCode(0x1b);
 
-export default class Menu {
-  _title: string
+export default class Menu extends Component {
   _options: Option[]
 
   constructor(title: string, options: Option[]) {
-    this._title = title;
+    super(title);
 
     // Options specific to this menu
     this._options = options;
@@ -22,20 +23,23 @@ export default class Menu {
 
   render() {
     // Build options text
-    let text = colors.black(`${this._title}: `);
-    for (let i = 0; i < this._options.length; ++i) {
-      const option = this._options[i];
+    const ui = cliui();
+    let text = '';
+    let options = this._options.map((option) => {
+      debugger;
       const keyPosition = option.label.indexOf(option.key);
       const preKeyText = option.label.substring(0, keyPosition - 1);
       const postKeyText = option.label.substr(keyPosition + 1);
-      text = text + 
-        colors.black(preKeyText) +
-        colors.bold.black.inverse(option.key) +
-        colors.black(postKeyText) +
-        ' ';
-    }
+      return {
+        text: colors.cyan(preKeyText) +
+          colors.white.inverse(option.key) +
+          colors.cyan(postKeyText),
+        width: option.label.length + 2,
+      }
+    });
+    ui.div(...options);
 
-    console.log(colors.bgWhite(text));
+    console.log(ui.toString());
   }
 
   handle(key: string) {

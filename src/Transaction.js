@@ -15,8 +15,8 @@ export default class Transaction extends Menu {
   handle(key: string) {
     // TODO - handle C
     switch (key.toUpperCase()) {
-      case 'B':
-        stack.pop();
+      case 'C':
+        // do something here
         break;
       default:
         super.handle(key);

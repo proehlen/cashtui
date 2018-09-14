@@ -14,13 +14,16 @@ class Stack {
     );
   }
   _stack: Menu[]
-  constructor(initialMenu: Menu)  {
+  constructor()  {
     this._stack = [];
-    this.push(initialMenu);
   }
 
   get active(): Menu {
     return this._stack[this._stack.length - 1];
+  }
+
+  get depth() {
+    return this._stack.length - 1;
   }
 
   _render() {
@@ -38,9 +41,15 @@ class Stack {
     this._stack.pop();
     this._render();
   }
+  
+  quit() {
+    clear();
+    console.log('Bye!');
+    process.exit(0);
+  }
+
 }
 
 
-const initialMenu = new Main();
-const stack  = new Stack(initialMenu);
+const stack  = new Stack();
 export default stack;

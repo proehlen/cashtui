@@ -2,6 +2,9 @@
 import  colors from 'colors';
 import clear from 'clear-console';
 import Option from './Option';
+import stack from './stack';
+
+const KEY_ESCAPE = String.fromCharCode(0x1b);
 
 export default class Menu {
   _title: string
@@ -27,7 +30,7 @@ export default class Menu {
       const postKeyText = option.label.substr(keyPosition + 1);
       text = text + 
         colors.black(preKeyText) +
-        colors.blue(option.key) +
+        colors.bold.black.inverse(option.key) +
         colors.black(postKeyText) +
         ' ';
     }
@@ -36,12 +39,23 @@ export default class Menu {
   }
 
   handle(key: string) {
-    switch (key) {
-      case 'q':
+    switch (key.toUpperCase()) {
+      case KEY_ESCAPE:
+        if (stack.depth) {
+          stack.pop();
+        } else {
+          stack.quit();
+        }
+        break;
+      case 'B':
+        // Back
+        if (stack.depth) {
+          stack.pop();
+        }
+        break;
       case 'Q':
-        clear();
-        console.log('Bye!');
-        process.exit(0);
+        // Quit
+        stack.quit();
         break;
     }
   }

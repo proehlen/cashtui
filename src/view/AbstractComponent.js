@@ -2,7 +2,7 @@
 import colors from 'colors';
 import cliui from 'cliui';
 
-import stack from '../stack';
+import stack from './stack';
 
 export default class Menu {
   _title: string
@@ -16,10 +16,10 @@ export default class Menu {
   }
 
   render() {
-    throw new Error('Componet.render() is abstract.  Override in subclass.')
+    throw new Error('Method is abstract.  Override in subclass.')
   }
 
   handle(key: string) {
-    throw new Error('Componet.handle() is abstract.  Override in subclass.')
+    throw new Error('Method is abstract.  Override in subclass.')
   }
 }

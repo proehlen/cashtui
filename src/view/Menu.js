@@ -2,23 +2,23 @@
 import colors from 'colors';
 import cliui from 'cliui';
 
-import Component from './Component';
-import Option from '../Option';
-import stack from '../stack';
+import AbstractComponent from './AbstractComponent';
+import MenuOption from './MenuOption';
+import stack from './stack';
 
 const KEY_ESCAPE = String.fromCharCode(0x1b);
 
-export default class Menu extends Component {
-  _options: Option[]
+export default class Menu extends AbstractComponent {
+  _options: MenuOption[]
 
-  constructor(title: string, options: Option[]) {
+  constructor(title: string, options: MenuOption[]) {
     super(title);
 
     // Options specific to this menu
     this._options = options;
 
     // Every menu has to allow for quitting
-    this._options.push(new Option('Q', 'Quit', 'Exit the program'));
+    this._options.push(new MenuOption('Q', 'Quit', 'Exit the program'));
   }
 
   render() {

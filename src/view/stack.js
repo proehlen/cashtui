@@ -3,16 +3,16 @@ import clear from 'clear-console';
 import colors from 'colors';
 import cliui from 'cliui';
 
-import { version } from '../package.json';
-import Component from './components/Component';
+import { version } from '../../package.json';
+import AbstractComponent from './AbstractComponent';
 
 class Stack {
-  _stack: Array<Component>
+  _stack: Array<AbstractComponent>
   constructor()  {
     this._stack = [];
   }
 
-  get active(): Component {
+  get active(): AbstractComponent {
     return this._stack[this._stack.length - 1];
   }
 
@@ -43,7 +43,7 @@ class Stack {
     console.log(ui.toString());
   }
 
-  push(component: Component) {
+  push(component: AbstractComponent) {
     this._stack.push(component);
     this.render();
   }
@@ -52,6 +52,13 @@ class Stack {
     this._stack.pop();
     this.render();
   }
+
+  replace(component: AbstractComponent) {
+    this._stack.pop();
+    this._stack.push(component);
+    this.render();
+  }
+
 
   quit() {
     clear();

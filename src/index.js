@@ -1,7 +1,7 @@
-import stack from './stack';
-import Main from './components/Main';
+import stack from './view/stack';
+import MainMenu from './view/MainMenu';
 
-stack.push(new Main());
+stack.push(new MainMenu());
 
 const stdin = process.stdin;
 stdin.setRawMode(true);

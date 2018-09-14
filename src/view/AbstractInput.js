@@ -3,13 +3,13 @@ import colors from 'colors';
 import cliui from 'cliui';
 import readline from 'readline';
 
-import Component from './Component';
-import stack from '../stack';
+import AbstractComponent from './AbstractComponent';
+import stack from './stack';
 
 const KEY_ESCAPE = String.fromCharCode(0x1b);
 const KEY_ENTER = String.fromCharCode(0x0d);
 
-export default class Input extends Component {
+export default class AbstractInput extends AbstractComponent {
   _text: string
   constructor(title:string) {
     super(title);
@@ -37,8 +37,7 @@ export default class Input extends Component {
   handle(key: string) {
     switch (key) {
       case KEY_ENTER:
-        console.log('Done!');
-        process.exit(0);
+        this.onEnter();
         break;
       case KEY_ESCAPE:
         stack.pop();
@@ -47,5 +46,9 @@ export default class Input extends Component {
         this._text += key;
         stack.render();
     }
+  }
+  
+  onEnter() {
+    throw new Error('Method is abstract.  Override in subclass.')
   }
 }

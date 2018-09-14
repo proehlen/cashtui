@@ -2,7 +2,7 @@
 
 import Menu from './Menu';
 import MenuOption from './MenuOption';
-import AbstractInput from './AbstractInput';
+import RawTransactionInput from './RawTransactionInput';
 import stack from './stack';
 
 export default class TransactionsMenu extends Menu {
@@ -21,7 +21,7 @@ export default class TransactionsMenu extends Menu {
         break;
       case 'D':
         // TODO something here
-        const input =  new AbstractInput('Enter raw transaction');
+        const input =  new RawTransactionInput('Enter raw transaction');
         stack.push(input);
         break;
       default:

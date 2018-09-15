@@ -5,8 +5,8 @@ import cliui from 'cliui';
 import readline from 'readline';
 
 import { version } from '../../package.json';
-import AbstractComponent from './AbstractComponent';
-import Menu from './Menu';
+import ComponentBase from './ComponentBase';
+import MenuBase from './MenuBase';
 
 declare var process: any;
 
@@ -23,7 +23,7 @@ type Status = {
 }
 
 class Stack {
-  _stack: Array<AbstractComponent>
+  _stack: Array<ComponentBase>
   _status: Status
   constructor()  {
     this._stack = [];
@@ -33,7 +33,7 @@ class Stack {
     };
   }
 
-  get active(): AbstractComponent {
+  get active(): ComponentBase {
     return this._stack[this._stack.length - 1];
   }
 
@@ -122,7 +122,7 @@ class Stack {
     console.log(ui.toString());
   }
 
-  push(component: AbstractComponent) {
+  push(component: ComponentBase) {
     this._stack.push(component);
     this._setStatusForActiveComponent();
   }
@@ -132,7 +132,7 @@ class Stack {
     this._setStatusForActiveComponent();
   }
 
-  replace(component: AbstractComponent) {
+  replace(component: ComponentBase) {
     this._stack.pop();
     this._stack.push(component);
     this._setStatusForActiveComponent();
@@ -140,7 +140,7 @@ class Stack {
 
   _setStatusForActiveComponent()  {
     const activeComponent = this.active;
-    if (activeComponent instanceof Menu) {
+    if (activeComponent instanceof MenuBase) {
       const activeOption = activeComponent.activeOption;
       stack.setInfo(activeOption.help);
     } else {

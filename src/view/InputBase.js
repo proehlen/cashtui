@@ -3,13 +3,13 @@ import colors from 'colors';
 import cliui from 'cliui';
 import readline from 'readline';
 
-import AbstractComponent from './AbstractComponent';
+import ComponentBase from './ComponentBase';
 import stack from './stack';
 
 const KEY_ESCAPE = String.fromCharCode(0x1b);
 const KEY_ENTER = String.fromCharCode(0x0d);
 
-export default class AbstractInput extends AbstractComponent {
+export default class InputBase extends ComponentBase {
   _text: string
   constructor(title:string) {
     super(title);

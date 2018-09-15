@@ -1,11 +1,12 @@
 // @flow
 
-import Menu from './Menu';
+import MenuBase from './MenuBase';
 import MenuOption from './MenuOption';
 import TransactionsMenu from './TransactionsMenu';
+// import RpcCommandInput from './RpcCommandInput';
 import stack from './stack';
 
-export default class Main extends Menu {
+export default class MainMenu extends MenuBase {
   constructor() {
     const options: MenuOption[] = [];
     options.push(new MenuOption('T', 'Transactions', 'Work with transactions'));
@@ -15,6 +16,9 @@ export default class Main extends Menu {
 
   handle(key: string) {
     switch (key.toUpperCase()) {
+      // case 'R':
+      //   stack.push(new RpcCommandInput());
+      //   break;
       case 'T':
         stack.push(new TransactionsMenu());
         break;

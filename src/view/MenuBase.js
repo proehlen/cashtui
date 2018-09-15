@@ -3,7 +3,7 @@ import colors from 'colors';
 import cliui from 'cliui';
 import readline from 'readline';
 
-import AbstractComponent from './AbstractComponent';
+import ComponentBase from './ComponentBase';
 import MenuOption from './MenuOption';
 import stack from './stack';
 
@@ -13,7 +13,7 @@ const KEY_LEFT = String.fromCharCode(0x1b, 0x5b, 0x44);
 const KEY_RIGHT = String.fromCharCode(0x1b, 0x5b, 0x43);
 const OPTION_GAP = 2; // Render gap between options
 
-export default class Menu extends AbstractComponent {
+export default class MenuBase extends ComponentBase {
   _options: MenuOption[]
   _activeOption: number
 
@@ -42,7 +42,6 @@ export default class Menu extends AbstractComponent {
     const ui = cliui();
     let text = '';
     let options = this._options.map((option) => {
-      debugger;
       const keyPosition = option.label.indexOf(option.key);
       const preKeyText = option.label.substring(0, keyPosition - 1);
       const postKeyText = option.label.substr(keyPosition + 1);
@@ -120,7 +119,7 @@ export default class Menu extends AbstractComponent {
           const option = this._options.find(option => option.key === key.toUpperCase());
           if (option) {
             // Valid option
-            stack.setWarning(`Sorry, the '${option.label}' feature not implemented yet`);
+            stack.setWarning(`Sorry, the '${option.label}' feature is not implemented yet`);
           } else {
             stack.setWarning(`'${key.toUpperCase()}' is not a valid option`);
           }

@@ -1,11 +1,11 @@
 // @flow
 
-import Menu from './Menu';
+import MenuBase from './MenuBase';
 import MenuOption from './MenuOption';
 import RawTransactionInput from './RawTransactionInput';
 import stack from './stack';
 
-export default class TransactionsMenu extends Menu {
+export default class TransactionsMenu extends MenuBase {
   constructor() {
     const options: MenuOption[] = [];
     options.push(new MenuOption('C', 'Create', 'Create new transaction'));
@@ -16,12 +16,8 @@ export default class TransactionsMenu extends Menu {
 
   handle(key: string) {
     switch (key.toUpperCase()) {
-      case 'C':
-        // TODO something here
-        break;
       case 'D':
-        // TODO something here
-        const input =  new RawTransactionInput('Enter raw transaction');
+        const input =  new RawTransactionInput();
         stack.push(input);
         break;
       default:

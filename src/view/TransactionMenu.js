@@ -1,9 +1,9 @@
 // @flow
 
-import Menu from './Menu';
+import MenuBase from './MenuBase';
 import MenuOption from './MenuOption';
 
-export default class TransactionMenu extends Menu {
+export default class TransactionMenu extends MenuBase {
   constructor () {
     const options: MenuOption[] = [];
     options.push(new MenuOption('I', 'Inputs', 'Transaction inputs'));

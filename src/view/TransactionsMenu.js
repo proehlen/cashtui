@@ -11,7 +11,6 @@ export default class TransactionsMenu extends Menu {
     options.push(new MenuOption('C', 'Create', 'Create new transaction'));
     options.push(new MenuOption('D', 'Decode', 'Decode raw transaction'));
     options.push(new MenuOption('R', 'Recent', 'Recent transactions'));
-    options.push(new MenuOption('B', 'Back', 'Go back to previous menu'));
     super('Transactions', options);
   }
 

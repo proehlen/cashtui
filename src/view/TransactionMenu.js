@@ -9,7 +9,6 @@ export default class TransactionMenu extends Menu {
     options.push(new MenuOption('I', 'Inputs', 'Transaction inputs'));
     options.push(new MenuOption('O', 'Outputs', 'Transaction outputs'));
     options.push(new MenuOption('L', 'Label', 'Label this transaction'));
-    options.push(new MenuOption('B', 'Back', 'Go back to previous menu'));
     super('Transaction', options);
   }
 }

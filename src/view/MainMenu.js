@@ -9,7 +9,8 @@ export default class Main extends Menu {
   constructor() {
     const options: MenuOption[] = [];
     options.push(new MenuOption('T', 'Transactions', 'Work with transactions'));
-    super('Main Menu', options);
+    options.push(new MenuOption('R', 'RPC', 'Execute JSON RPC commands'));
+    super('Main Menu', options, false);
   }
 
   handle(key: string) {

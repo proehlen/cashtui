@@ -6,6 +6,9 @@ import readline from 'readline';
 
 import { version } from '../../package.json';
 import AbstractComponent from './AbstractComponent';
+import Menu from './Menu';
+
+declare var process: any;
 
 type WindowDimensions = {
   width: number,
@@ -42,8 +45,25 @@ class Stack {
     return this._status;
   }
 
-  set status(status: Status) {
-    this._status = status;
+  setError(message: string) {
+    this._status = {
+      type: 'error',
+      message,
+    }
+  }
+
+  setInfo(message: string) {
+    this._status = {
+      type: 'info',
+      message,
+    }
+  }
+
+  setWarning(message: string) {
+    this._status = {
+      type: 'warning',
+      message,
+    }
   }
 
   render() {
@@ -104,20 +124,30 @@ class Stack {
 
   push(component: AbstractComponent) {
     this._stack.push(component);
-    this.render();
+    this._setStatusForActiveComponent();
   }
 
   pop() {
     this._stack.pop();
-    this.render();
+    this._setStatusForActiveComponent();
   }
 
   replace(component: AbstractComponent) {
     this._stack.pop();
     this._stack.push(component);
-    this.render();
+    this._setStatusForActiveComponent();
   }
 
+  _setStatusForActiveComponent()  {
+    const activeComponent = this.active;
+    if (activeComponent instanceof Menu) {
+      const activeOption = activeComponent.activeOption;
+      stack.setInfo(activeOption.help);
+    } else {
+      // Input
+      stack.setInfo('Press Enter to finish; Esc to cancel');
+    }
+  }
 
   quit() {
     clear();

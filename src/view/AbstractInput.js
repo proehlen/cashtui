@@ -44,7 +44,6 @@ export default class AbstractInput extends AbstractComponent {
         break;
       default: 
         this._text += key;
-        stack.render();
     }
   }
   

@@ -1,6 +1,7 @@
 // @flow
 import colors from 'colors';
 import cliui from 'cliui';
+import readline from 'readline';
 
 import AbstractComponent from './AbstractComponent';
 import MenuOption from './MenuOption';
@@ -32,7 +33,7 @@ export default class Menu extends AbstractComponent {
       const postKeyText = option.label.substr(keyPosition + 1);
       return {
         text: colors.cyan(preKeyText) +
-          colors.white.inverse(option.key) +
+          colors.cyan.bold(option.key) +
           colors.cyan(postKeyText),
         width: option.label.length + 2,
       }
@@ -40,6 +41,7 @@ export default class Menu extends AbstractComponent {
     ui.div(...options);
 
     console.log(ui.toString());
+    readline.cursorTo(process.stdout, 0, 1);
   }
 
   handle(key: string) {

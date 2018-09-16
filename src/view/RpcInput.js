@@ -17,8 +17,12 @@ export default class RawInput extends InputBase {
       let output = [];
       if (typeof rpcResult === 'string') {
         output = rpcResult.split('\n');
+      } else if (typeof rpcResult === 'number') {
+        output.push(JSON.stringify(rpcResult));
       } else if (typeof rpcResult === 'object') {
         output = Object.entries(rpcResult).map((entry: [string, any]) => `${entry[0]}: ${JSON.stringify(entry[1])}`);
+      } else if (Array.isArray(rpcResult)) {
+        output.concat(rpcResult.map(entry => JSON.stringify(entry)));
       }
       if (output.length) {
         stack.push(new RpcOutput(output));

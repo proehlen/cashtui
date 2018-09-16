@@ -47,9 +47,7 @@ export default class MenuBase extends ComponentBase {
       const preKeyText = option.label.substring(0, keyPosition - 1);
       const postKeyText = option.label.substr(keyPosition + 1);
       return {
-        text: colors.cyan(preKeyText) +
-          colors.cyan.bold(option.key) +
-          colors.cyan(postKeyText),
+        text: preKeyText + colors.bold(option.key) + postKeyText,
         width: option.label.length + OPTION_GAP,
       }
     });

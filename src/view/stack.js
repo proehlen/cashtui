@@ -76,22 +76,25 @@ class Stack {
   }
 
   _renderStatus() {
-    let bgColor;
+    let bgColor, fgColor;
     switch (this._status.type) {
       case 'error':
         bgColor = 'bgRed';
+        fgColor = 'yellow';
         break;
       case 'warning':
         bgColor = 'bgYellow';
+        fgColor = 'black';
         break;
       case 'info':
         bgColor = 'bgBlue';
+        fgColor = 'white';
         break;
     }
     readline.cursorTo(process.stdout, 0, output.height - 2);
     const ui = cliui();
     ui.div({
-      text: colors[bgColor].black(this.status.message),
+      text: colors[bgColor][fgColor](this.status.message),
     });
     console.log(ui.toString());
   }

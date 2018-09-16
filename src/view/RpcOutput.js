@@ -3,6 +3,7 @@ import MenuBase from './MenuBase';
 import MenuOption from './MenuOption';
 import List from './List';
 import stack from './stack';
+import output from './output';
 
 export default class RpcOutput extends MenuBase {
   _list: List
@@ -18,7 +19,7 @@ export default class RpcOutput extends MenuBase {
 
 
   render() {
-    this._list.render(2, 10);
+    this._list.render(output.contentStartRow, output.contentHeight);
     super.render();
   }
 

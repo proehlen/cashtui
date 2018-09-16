@@ -122,7 +122,7 @@ export default class MenuBase extends ComponentBase {
             // Valid option
             stack.setWarning(`Sorry, the '${option.label}' feature is not implemented yet`);
           } else {
-            stack.setWarning(`'${key.toUpperCase()}' is not a valid option`);
+            stack.setWarning('Invaid option');
           }
           break;
       }

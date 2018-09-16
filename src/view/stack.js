@@ -1,9 +1,9 @@
 // @flow
-import clear from 'clear-console';
 import colors from 'colors';
 import cliui from 'cliui';
 import readline from 'readline';
 
+import output from './output';
 import { version } from '../../package.json';
 import ComponentBase from './ComponentBase';
 import MenuBase from './MenuBase';
@@ -67,23 +67,15 @@ class Stack {
   }
 
   render() {
-    clear();
+    debugger;
+    output.clear();
     this._renderTitle();
     this._renderStatus();
     readline.cursorTo(process.stdout, 0, 1);
     this.active.render();
   }
 
-  getWindowSize(): WindowDimensions {
-    const [width, height] = process.stdout.getWindowSize();
-    return {
-      width,
-      height
-    };
-  }
-
   _renderStatus() {
-    const {width, height} = this.getWindowSize();
     let bgColor;
     switch (this._status.type) {
       case 'error':
@@ -96,7 +88,7 @@ class Stack {
         bgColor = 'bgBlue';
         break;
     }
-    readline.cursorTo(process.stdout, 0, height - 2);
+    readline.cursorTo(process.stdout, 0, output.height - 2);
     const ui = cliui();
     ui.div({
       text: colors[bgColor].black(this.status.message),
@@ -150,7 +142,7 @@ class Stack {
   }
 
   quit() {
-    clear();
+    output.clear();
     console.log('Bye!');
     process.exit(0);
   }

@@ -3,7 +3,7 @@
 import MenuBase from './MenuBase';
 import MenuOption from './MenuOption';
 import TransactionsMenu from './TransactionsMenu';
-// import RpcCommandInput from './RpcCommandInput';
+import RpcInput from './RpcInput';
 import stack from './stack';
 
 export default class MainMenu extends MenuBase {
@@ -16,9 +16,9 @@ export default class MainMenu extends MenuBase {
 
   handle(key: string) {
     switch (key.toUpperCase()) {
-      // case 'R':
-      //   stack.push(new RpcCommandInput());
-      //   break;
+      case 'R':
+        stack.push(new RpcInput());
+        break;
       case 'T':
         stack.push(new TransactionsMenu());
         break;

@@ -4,6 +4,7 @@
   "description": "CLI for my-bitcoin-cash-lib",
   "main": "bin/index.js",
   "scripts": {
+    "axios": "^0.18.0",
     "build": "babel src -d bin",
     "clean": "rimraf bin",
     "flow": "flow",

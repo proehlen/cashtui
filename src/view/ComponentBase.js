@@ -19,7 +19,7 @@ export default class ComponentBase {
     throw new Error('Method is abstract.  Override in subclass.')
   }
 
-  handle(key: string) {
+  async handle(key: string): Promise<void> {
     throw new Error('Method is abstract.  Override in subclass.')
   }
 }

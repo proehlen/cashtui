@@ -20,6 +20,7 @@ export default class InputBase extends ComponentBase {
   render() {
     // Build options text
     const ui = cliui();
+    output.cursorTo(0, output.contentStartRow);
     ui.div({
       text: '> ',
       width: 2
@@ -30,7 +31,7 @@ export default class InputBase extends ComponentBase {
 
     const columnWidth = ui.width - 2;
     const cursorColumn = (this._text.length % columnWidth ) + 2;
-    const cursorRow = Math.trunc(this._text.length / columnWidth) + 1;
+    const cursorRow = Math.trunc(this._text.length / columnWidth) + output.contentStartRow;
   
     output.cursorTo(cursorColumn, cursorRow);
   }

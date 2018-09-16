@@ -1,16 +1,30 @@
 // @flow
+import cliui from 'cliui';
+import colors from 'colors';
+
 import InputBase from './InputBase';
 import RpcOutput from './RpcOutput';
 import stack from './stack';
 import state from '../model/state';
+import output from './output';
 
 export default class RawInput extends InputBase {
   constructor() {
     super('Enter RPC command');
   }
- async onEnter() {
-    // TODO set active transaction in model
-    // stack.replace(new TransactionMenu());
+  render() {
+    if (!this._text) {
+      output.cursorTo(0, 5);
+      const ui = cliui();
+      ui.div({
+        text: colors.gray('Enter an RPC command that will be sent to your bitcoin node. ' +
+          'Enter \'help\' without the quotes to get a list of commands.'),
+      });
+      console.log(ui.toString());
+    }
+    super.render();
+  }
+  async onEnter() {
     try {
       const [method, ...params] = this._text.split(' ');
       const rpcResult = await state.rpc.request(method, ...params);

@@ -8,6 +8,7 @@ import stack from './stack';
 
 const KEY_ESCAPE = String.fromCharCode(0x1b);
 const KEY_ENTER = String.fromCharCode(0x0d);
+const KEY_BACKSPACE = String.fromCharCode(0x7f);
 
 export default class InputBase extends ComponentBase {
   _text: string
@@ -34,10 +35,13 @@ export default class InputBase extends ComponentBase {
     readline.cursorTo(process.stdout, cursorColumn, cursorRow);
   }
 
-  handle(key: string) {
+  async handle(key: string): Promise<void> {
     switch (key) {
+      case KEY_BACKSPACE:
+        this._text = this._text.substr(0, this._text.length - 1);
+        break;
       case KEY_ENTER:
-        this.onEnter();
+        await this.onEnter();
         break;
       case KEY_ESCAPE:
         stack.pop();

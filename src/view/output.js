@@ -1,6 +1,7 @@
 // @flow
 
 import clear from 'clear-console';
+import readline from 'readline';
 
 const TITLE_HEIGHT = 1;
 const MENU_HEIGHT = 1;
@@ -10,9 +11,7 @@ const MENU_HEIGHT = 1;
 const STATUS_HEIGHT = 2;
 
 declare var process: {
-  stdout: {
-    getWindowSize(): Array<number>
-  }
+  stdout: any
 };
 
 class Output {
@@ -27,6 +26,10 @@ class Output {
 
   clear() {
     clear();
+  }
+
+  cursorTo(x: number, y: number) {
+    readline.cursorTo(process.stdout, x, y);
   }
 
   get height() {

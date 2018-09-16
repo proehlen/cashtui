@@ -67,7 +67,6 @@ class Stack {
   }
 
   render() {
-    debugger;
     output.clear();
     this._renderTitle();
     this._renderStatus();

@@ -44,7 +44,11 @@ export default class InputBase extends ComponentBase {
         await this.onEnter();
         break;
       case KEY_ESCAPE:
-        stack.pop();
+        if (this._text.length) {
+          this._text = '';
+        } else {
+          stack.pop();
+        }
         break;
       default: 
         this._text += key;

@@ -18,7 +18,8 @@ export default class RawInput extends InputBase {
       const ui = cliui();
       ui.div({
         text: colors.gray('Enter an RPC command that will be sent to your bitcoin node. ' +
-          'Enter \'help\' without the quotes to get a list of commands.'),
+          'E.g. enter \'help\' (without the quotes) to get a list of commands or \'help\' ' +
+          'followed by a command name to get help for that command.'),
       });
       console.log(ui.toString());
     }

@@ -14,7 +14,7 @@ export default class MainMenu extends MenuBase {
     super('Main Menu', options, false);
   }
 
-  handle(key: string) {
+  async handle(key: string): Promise<void> {
     switch (key.toUpperCase()) {
       case 'R':
         stack.push(new RpcInput());
@@ -23,7 +23,7 @@ export default class MainMenu extends MenuBase {
         stack.push(new TransactionsMenu());
         break;
       default:
-        super.handle(key);
+        return super.handle(key);
     }
   }
 }

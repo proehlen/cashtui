@@ -18,11 +18,11 @@ export default class RpcOutput extends MenuBase {
 
 
   render() {
+    this._list.render(2, 10);
     super.render();
-    this._list.render();
   }
 
-  handle(key: string) {
+  async handle(key: string): Promise<void> {
     switch (key.toUpperCase()) {
       // case 'R':
       //   stack.push(new RpcCommandInput());
@@ -31,7 +31,7 @@ export default class RpcOutput extends MenuBase {
       //   stack.push(new TransactionsMenu());
       //   break;
       default:
-        super.handle(key);
+        return super.handle(key);
     }
   }
 }

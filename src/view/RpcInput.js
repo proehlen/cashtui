@@ -6,7 +6,7 @@ import state from '../model/state';
 
 export default class RawInput extends InputBase {
   constructor() {
-    super('Enter JSON-RPC command');
+    super('Enter RPC command');
   }
  async onEnter() {
     // TODO set active transaction in model
@@ -18,7 +18,7 @@ export default class RawInput extends InputBase {
       if (typeof rpcResult === 'string') {
         output = rpcResult.split('\n');
       } else if (typeof rpcResult === 'object') {
-        output = Object.entries(rpcResult).map((entry) => `${entry[0]}: ${entry[1]}`);
+        output = Object.entries(rpcResult).map((entry: [string, any]) => `${entry[0]}: ${JSON.stringify(entry[1])}`);
       }
       if (output.length) {
         stack.push(new RpcOutput(output));

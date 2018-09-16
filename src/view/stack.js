@@ -145,7 +145,7 @@ class Stack {
       stack.setInfo(activeOption.help);
     } else {
       // Input
-      stack.setInfo('Press Enter to finish; Esc to cancel');
+      stack.setInfo('Press Enter to finish; Esc to clear/cancel');
     }
   }
 

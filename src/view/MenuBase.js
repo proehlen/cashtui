@@ -39,6 +39,7 @@ export default class MenuBase extends ComponentBase {
 
   render() {
     // Build options text
+    readline.cursorTo(process.stdout,0,1);
     const ui = cliui();
     let text = '';
     let options = this._options.map((option) => {
@@ -84,7 +85,7 @@ export default class MenuBase extends ComponentBase {
     stack.setInfo(option.help);
   }
 
-  handle(key: string) {
+  async handle(key: string): Promise<void> {
     if (key === KEY_ENTER) {
       // Call back this method (maybe in child class) with key
       // for active option

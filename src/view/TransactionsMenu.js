@@ -14,7 +14,7 @@ export default class TransactionsMenu extends MenuBase {
     super('Transactions', options);
   }
 
-  handle(key: string) {
+  async handle(key: string): Promise<void> {
     switch (key.toUpperCase()) {
       case 'D':
         const input =  new RawTransactionInput();

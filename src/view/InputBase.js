@@ -5,10 +5,7 @@ import cliui from 'cliui';
 import ComponentBase from './ComponentBase';
 import stack from './stack';
 import output from './output';
-
-const KEY_ESCAPE = String.fromCharCode(0x1b);
-const KEY_ENTER = String.fromCharCode(0x0d);
-const KEY_BACKSPACE = String.fromCharCode(0x7f);
+import { KEY_ESCAPE, KEY_ENTER, KEY_BACKSPACE } from './keys';
 
 export default class InputBase extends ComponentBase {
   _text: string

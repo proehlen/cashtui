@@ -6,15 +6,40 @@ import path from 'path';
 
 const RPC_HOST = '127.0.0.1';
 const RPC_PORT = 18332;
-const RPC_AUTH = '__cookie__:Vifr/4SB8EdFrKAoHuuOhebVnP7MajUdMRDRALvpywE=';
+const RPC_AUTH = '__cookie__:uiTJiEvqUqnFdwY8vvbzYZ5J3kSKoeI4EBKQu5TcmCE=';
 
 export default class Rpc { 
-  _auth: string
+  _history: Array<string>
 
-  request(method: string, ...params: Array<any>): Promise<string> {
-    let responseData = '';
+  constructor() {
+    this._history = [];
+  }
+
+  get history() {
+    return this._history;
+  }
+
+  _addHistory(command: string) {
+    // Remove earlier occurance of identical command
+    const earlierIndex = this._history.findIndex(item => item === command);
+    if (earlierIndex >= 0) {
+      this._history.splice(earlierIndex, 1);
+    }
+
+    // Add command to top of history
+    this._history.push(command);
+  }
+
+  request(command: string, remember: boolean = false): Promise<string> {
+    if (remember) {
+      this._addHistory(command);
+    }
+
+    const commandComponents = command.split(' ');
+    let [method:string, ...params] = commandComponents;
 
     // return new pending promise
+    let responseData = '';
     return new Promise((resolve, reject) => {
       type RpcRequest = {
         jsonrpc: string,

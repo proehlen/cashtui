@@ -6,11 +6,8 @@ import ComponentBase from './ComponentBase';
 import MenuOption from './MenuOption';
 import stack from './stack';
 import output from  './output';
+import { KEY_ENTER, KEY_ESCAPE, KEY_LEFT, KEY_RIGHT } from './keys';
 
-const KEY_ENTER = String.fromCharCode(0x0d);
-const KEY_ESCAPE = String.fromCharCode(0x1b);
-const KEY_LEFT = String.fromCharCode(0x1b, 0x5b, 0x44);
-const KEY_RIGHT = String.fromCharCode(0x1b, 0x5b, 0x43);
 const OPTION_GAP = 3; // Render gap between options
 
 export default class MenuBase extends ComponentBase {

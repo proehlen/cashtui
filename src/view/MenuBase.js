@@ -1,11 +1,11 @@
 // @flow
 import colors from 'colors';
 import cliui from 'cliui';
-import readline from 'readline';
 
 import ComponentBase from './ComponentBase';
 import MenuOption from './MenuOption';
 import stack from './stack';
+import output from  './output';
 
 const KEY_ENTER = String.fromCharCode(0x0d);
 const KEY_ESCAPE = String.fromCharCode(0x1b);
@@ -39,7 +39,7 @@ export default class MenuBase extends ComponentBase {
 
   render() {
     // Build options text
-    readline.cursorTo(process.stdout,0,1);
+    output.cursorTo(0, 1);
     const ui = cliui();
     let text = '';
     let options = this._options.map((option) => {
@@ -54,20 +54,20 @@ export default class MenuBase extends ComponentBase {
     ui.div(...options);
 
     console.log(ui.toString());
-    this._moveCursorToActiveOption();
+    this._cursorToActiveOption();
   }
 
   get activeOption() {
     return this._options[this._activeOption];
   }
   
-  _moveCursorToActiveOption() {
+  _cursorToActiveOption() {
     let x = 0;
     for (let i = 0; i < this._activeOption; i++) {
       const option = this._options[i];
       x += (option.label.length + OPTION_GAP);
     }
-    readline.cursorTo(process.stdout, x, 1);
+    output.cursorTo(x, 1);
   }
 
   _cycleActiveOption(direction: 1 | -1) {

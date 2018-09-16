@@ -1,7 +1,6 @@
 // @flow
 import colors from 'colors';
 import cliui from 'cliui';
-import readline from 'readline';
 
 import output from './output';
 import { version } from '../../package.json';
@@ -9,11 +8,6 @@ import ComponentBase from './ComponentBase';
 import MenuBase from './MenuBase';
 
 declare var process: any;
-
-type WindowDimensions = {
-  width: number,
-  height: number
-};
 
 type StatusType = 'error' | 'warning' | 'info';
 
@@ -70,7 +64,7 @@ class Stack {
     output.clear();
     this._renderTitle();
     this._renderStatus();
-    readline.cursorTo(process.stdout, 0, 1);
+    output.cursorTo(0, 1);
     this.active.render();
   }
 
@@ -90,7 +84,7 @@ class Stack {
         fgColor = 'white';
         break;
     }
-    readline.cursorTo(process.stdout, 0, output.height - 2);
+    output.cursorTo(0, output.height - 2);
     const ui = cliui();
     ui.div({
       text: colors[bgColor][fgColor](this.status.message),
@@ -99,7 +93,7 @@ class Stack {
   }
 
   _renderTitle() {
-    readline.cursorTo(process.stdout, 0, 0);
+    output.cursorTo(0, 0);
     const ui = cliui();
     ui.div({
       text: colors.blue(

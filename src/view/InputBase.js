@@ -1,10 +1,10 @@
 // @flow
 import colors from 'colors';
 import cliui from 'cliui';
-import readline from 'readline';
 
 import ComponentBase from './ComponentBase';
 import stack from './stack';
+import output from './output';
 
 const KEY_ESCAPE = String.fromCharCode(0x1b);
 const KEY_ENTER = String.fromCharCode(0x0d);
@@ -32,7 +32,7 @@ export default class InputBase extends ComponentBase {
     const cursorColumn = (this._text.length % columnWidth ) + 2;
     const cursorRow = Math.trunc(this._text.length / columnWidth) + 1;
   
-    readline.cursorTo(process.stdout, cursorColumn, cursorRow);
+    output.cursorTo(cursorColumn, cursorRow);
   }
 
   async handle(key: string): Promise<void> {

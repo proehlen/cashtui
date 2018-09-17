@@ -1,9 +1,4 @@
 // @flow
-import colors from 'colors';
-import cliui from 'cliui';
-
-import stack from './stack';
-
 export default class ComponentBase {
   _title: string
 

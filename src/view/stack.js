@@ -64,7 +64,7 @@ class Stack {
     output.clear();
     this._renderTitle();
     this._renderStatus();
-    output.cursorTo(0, 1);
+    output.cursorTo(0, output.contentStartRow);
     this.active.render();
   }
 

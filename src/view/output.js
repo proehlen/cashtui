@@ -2,9 +2,10 @@
 
 import clear from 'clear-console';
 import readline from 'readline';
+import cliui from 'cliui';
 
 const TITLE_HEIGHT = 1;
-const MENU_HEIGHT = 1;
+const MENU_HEIGHT = 2;
 
 // TODO fix:
 // Status currently rendered in 2nd last row to prevent need for scrolling

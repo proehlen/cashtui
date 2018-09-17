@@ -6,8 +6,6 @@ import MenuOption from './MenuOption';
 import stack from './stack';
 import output from './output';
 
-const GAP_UNDER_MENU_ROWS = 1;
-
 export default class RpcOutput extends MenuBase {
   _data: Array<string>
   _startIndex: number
@@ -24,12 +22,12 @@ export default class RpcOutput extends MenuBase {
 
   render() {
     const ui = cliui({ wrap: false });
-    let endIndex = this._startIndex + this.contentAreaHeight;
+    let endIndex = this._startIndex + output.contentHeight;
     if (endIndex > this._data.length) {
       endIndex = this._data.length
     }
 
-    output.cursorTo(0, output.contentStartRow + GAP_UNDER_MENU_ROWS);
+    output.cursorTo(0, output.contentStartRow);
     for (let i = this._startIndex; i < endIndex; i++) {
       ui.div({
         text: this._data[i].substr(0, output.width - 2),
@@ -39,14 +37,10 @@ export default class RpcOutput extends MenuBase {
     super.render();
   }
 
-  get contentAreaHeight() {
-    return output.contentHeight - GAP_UNDER_MENU_ROWS;
-  }
-
   async handle(key: string): Promise<void> {
     switch (key.toUpperCase()) {
       case 'P': {
-        const maybeStart = this._startIndex - this.contentAreaHeight;
+        const maybeStart = this._startIndex - output.contentHeight;
         if (this._startIndex === 0) {
           stack.setInfo('Already at start');
         } else if (maybeStart < 0) {

@@ -1,5 +1,5 @@
 // @flow
-import { Transaction } from 'my-bitcoin-cash-lib';
+import Transaction from 'my-bitcoin-cash-lib/lib/Transaction';
 import InputBase from './InputBase';
 import TransactionMenu from './TransactionMenu';
 import stack from './stack';
@@ -11,7 +11,11 @@ export default class RawTransactionInput extends InputBase {
   }
 
   onEnter() {
-    state.transactions.active = Transaction.fromHex(this._text);
-    stack.replace(new TransactionMenu());
+    try {
+      state.transactions.active = Transaction.fromHex(this._text);
+      stack.replace(new TransactionMenu());
+    } catch (error) {
+      stack.setError(error.message);
+    }
   }
 }

@@ -1,5 +1,5 @@
 // @flow
-import { Transaction } from 'my-bitcoin-cash-lib';
+import Transaction from 'my-bitcoin-cash-lib/lib/Transaction';
 
 export default class Transactions {
   _active: Transaction
@@ -8,7 +8,7 @@ export default class Transactions {
     this._active = transaction;
   }
 
-  get active() {
+  get active(): Transaction {
     return this._active;
   }
 }

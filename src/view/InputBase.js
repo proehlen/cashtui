@@ -49,7 +49,13 @@ export default class InputBase extends ComponentBase {
         }
         break;
       default: 
-        this._text += key;
+        // Add alphanumeric chars to input text - ignore all other
+        // special chars (e.g. unprintable arrow keys etc) 
+        // that haven't been handled by this point.
+        // TODO - add support for euro/other accents etc?
+        if (/^[ a-z0-9]+$/i.test(key)) {
+          this._text += key;
+        }
     }
   }
   

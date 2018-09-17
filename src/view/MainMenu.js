@@ -23,7 +23,7 @@ export default class MainMenu extends MenuBase {
         stack.push(new TransactionsMenu());
         break;
       default:
-        return super.handle(key);
+        await super.handle(key);
     }
   }
 }

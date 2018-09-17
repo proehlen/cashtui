@@ -1,7 +1,6 @@
 // @flow
 import { Transaction } from 'my-bitcoin-cash-lib';
 
-
 export default class Transactions {
   _active: Transaction
 

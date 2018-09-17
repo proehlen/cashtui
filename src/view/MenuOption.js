@@ -2,10 +2,12 @@
 
 export default class MenuOption {
   _key: string
+
   _label: string
+
   _help: string
 
-  constructor (key: string, label: string, help: string) {
+  constructor(key: string, label: string, help: string) {
     this._key = key;
     this._label = label;
     this._help = help;
@@ -14,7 +16,7 @@ export default class MenuOption {
   get key() {
     return this._key;
   }
-  
+
   get label() {
     return this._label;
   }

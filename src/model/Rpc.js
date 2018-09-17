@@ -1,14 +1,12 @@
 // @flow
 
 import http from 'http';
-import fs from 'fs';
-import path from 'path';
 
 const RPC_HOST = '127.0.0.1';
 const RPC_PORT = 18332;
 const RPC_AUTH = '__cookie__:y9b5BaM+wtiNxAFQg3aBl1h3WuL9EZoRPkD7ml/YuF4=';
 
-export default class Rpc { 
+export default class Rpc {
   _history: Array<string>
 
   constructor() {
@@ -36,7 +34,7 @@ export default class Rpc {
     }
 
     const commandComponents = command.split(' ');
-    let [method:string, ...params] = commandComponents;
+    const [method:string, ...params] = commandComponents;
 
     // return new pending promise
     let responseData = '';

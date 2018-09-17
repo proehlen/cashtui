@@ -1,4 +1,5 @@
 // @flow
+
 import colors from 'colors';
 import cliui from 'cliui';
 
@@ -18,12 +19,14 @@ type Status = {
 
 class Stack {
   _stack: Array<ComponentBase>
+
   _status: Status
-  constructor()  {
+
+  constructor() {
     this._stack = [];
     this._status = {
       type: 'info',
-      message: 'Welcome'
+      message: 'Welcome',
     };
   }
 
@@ -43,21 +46,21 @@ class Stack {
     this._status = {
       type: 'error',
       message,
-    }
+    };
   }
 
   setInfo(message: string) {
     this._status = {
       type: 'info',
       message,
-    }
+    };
   }
 
   setWarning(message: string) {
     this._status = {
       type: 'warning',
       message,
-    }
+    };
   }
 
   render() {
@@ -69,7 +72,8 @@ class Stack {
   }
 
   _renderStatus() {
-    let bgColor, fgColor;
+    let bgColor;
+    let fgColor;
     switch (this._status.type) {
       case 'error':
         bgColor = 'bgRed';
@@ -83,6 +87,9 @@ class Stack {
         bgColor = 'bgBlue';
         fgColor = 'white';
         break;
+      default:
+        bgColor = 'white';
+        fgColor = 'black';
     }
     output.cursorTo(0, output.height - 2);
     const ui = cliui();
@@ -98,15 +105,15 @@ class Stack {
     const ui = cliui();
     ui.div({
       text: colors.blue(
-        'My Cash CLI'
+        'My Cash CLI',
       ),
-      align: 'left'
+      align: 'left',
     }, {
-      text: this.active.title ,
-      align: 'center'
+      text: this.active.title,
+      align: 'center',
     }, {
       text: `v${version}`,
-      align: 'right'
+      align: 'right',
     });
     console.log(ui.toString());
   }
@@ -127,14 +134,14 @@ class Stack {
     this._setStatusForActiveComponent();
   }
 
-  _setStatusForActiveComponent()  {
+  _setStatusForActiveComponent() {
     const activeComponent = this.active;
     if (activeComponent instanceof MenuBase) {
-      const activeOption = activeComponent.activeOption;
-      stack.setInfo(activeOption.help);
+      const { activeOption } = activeComponent;
+      this.setInfo(activeOption.help);
     } else {
       // Input
-      stack.setInfo('Press Enter to finish; Esc to clear/cancel');
+      this.setInfo('Press Enter to finish; Esc to clear/cancel');
     }
   }
 
@@ -143,8 +150,7 @@ class Stack {
     console.log('Bye!');
     process.exit(0);
   }
-
 }
 
-const stack  = new Stack();
+const stack = new Stack();
 export default stack;

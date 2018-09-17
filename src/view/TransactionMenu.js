@@ -6,7 +6,7 @@ import MenuOption from './MenuOption';
 import state from '../model/state';
 
 export default class TransactionMenu extends MenuBase {
-  constructor () {
+  constructor() {
     const options: MenuOption[] = [];
     options.push(new MenuOption('I', 'Inputs', 'Transaction inputs'));
     options.push(new MenuOption('O', 'Outputs', 'Transaction outputs'));

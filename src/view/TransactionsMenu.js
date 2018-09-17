@@ -1,11 +1,11 @@
 // @flow
 
+import { Transaction } from 'my-bitcoin-cash-lib';
+
 import MenuBase from './MenuBase';
 import MenuOption from './MenuOption';
 import RawTransactionInput from './RawTransactionInput';
 import stack from './stack';
-
-import { Transaction } from 'my-bitcoin-cash-lib';
 import state from '../model/state';
 import TransactionMenu from './TransactionMenu';
 
@@ -22,12 +22,10 @@ export default class TransactionsMenu extends MenuBase {
     switch (key.toUpperCase()) {
       case 'C':
         state.transactions.active = new Transaction();
-        const menu = new TransactionMenu();
-        stack.push(menu);
+        stack.push(new TransactionMenu());
         break;
       case 'D':
-        const input =  new RawTransactionInput();
-        stack.push(input);
+        stack.push(new RawTransactionInput());
         break;
       default:
         super.handle(key);

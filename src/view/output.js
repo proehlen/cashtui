@@ -2,7 +2,6 @@
 
 import clear from 'clear-console';
 import readline from 'readline';
-import cliui from 'cliui';
 
 const TITLE_HEIGHT = 1;
 const MENU_HEIGHT = 2;
@@ -17,11 +16,12 @@ declare var process: {
 
 class Output {
   _width: number
+
   _height: number
 
   constructor() {
     const [width, height] = process.stdout.getWindowSize();
-    this._width = width
+    this._width = width;
     this._height = height;
   }
 

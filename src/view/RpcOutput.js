@@ -1,4 +1,5 @@
 // @flow
+
 import cliui from 'cliui';
 
 import MenuBase from './MenuBase';
@@ -8,6 +9,7 @@ import output from './output';
 
 export default class RpcOutput extends MenuBase {
   _data: Array<string>
+
   _startIndex: number
 
   constructor(rpcResult: Array<string>) {
@@ -24,7 +26,7 @@ export default class RpcOutput extends MenuBase {
     const ui = cliui({ wrap: false });
     let endIndex = this._startIndex + output.contentHeight;
     if (endIndex > this._data.length) {
-      endIndex = this._data.length
+      endIndex = this._data.length;
     }
 
     output.cursorTo(0, output.contentStartRow);
@@ -52,7 +54,7 @@ export default class RpcOutput extends MenuBase {
       }
       case 'N': {
         const maybeStart = this._startIndex + output.contentHeight;
-        if (maybeStart > (this._data.length -1)) {
+        if (maybeStart > (this._data.length - 1)) {
           stack.setInfo('No more pages');
         } else {
           this._startIndex = maybeStart;
@@ -60,7 +62,7 @@ export default class RpcOutput extends MenuBase {
         break;
       }
       default:
-        return super.handle(key);
+        await super.handle(key);
     }
   }
 }

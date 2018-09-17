@@ -1,3 +1,4 @@
+// @flow
 
 export const KEY_ESCAPE = String.fromCharCode(0x1b);
 export const KEY_ENTER = String.fromCharCode(0x0d);

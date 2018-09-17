@@ -1,5 +1,5 @@
 // @flow
-import colors from 'colors';
+
 import cliui from 'cliui';
 
 import ComponentBase from './ComponentBase';
@@ -9,7 +9,8 @@ import { KEY_ESCAPE, KEY_ENTER, KEY_BACKSPACE } from './keys';
 
 export default class InputBase extends ComponentBase {
   _text: string
-  constructor(title:string) {
+
+  constructor(title: string) {
     super(title);
     this._text = '';
   }
@@ -20,16 +21,16 @@ export default class InputBase extends ComponentBase {
     output.cursorTo(0, output.contentStartRow);
     ui.div({
       text: '> ',
-      width: 2
+      width: 2,
     }, {
-      text: this._text
+      text: this._text,
     });
     console.log(ui.toString());
 
     const columnWidth = ui.width - 2;
-    const cursorColumn = (this._text.length % columnWidth ) + 2;
+    const cursorColumn = (this._text.length % columnWidth) + 2;
     const cursorRow = Math.trunc(this._text.length / columnWidth) + output.contentStartRow;
-  
+
     output.cursorTo(cursorColumn, cursorRow);
   }
 
@@ -48,9 +49,9 @@ export default class InputBase extends ComponentBase {
           stack.pop();
         }
         break;
-      default: 
+      default:
         // Add alphanumeric chars to input text - ignore all other
-        // special chars (e.g. unprintable arrow keys etc) 
+        // special chars (e.g. unprintable arrow keys etc)
         // that haven't been handled by this point.
         // TODO - add support for euro/other accents etc?
         if (/^[ a-z0-9]+$/i.test(key)) {
@@ -58,8 +59,9 @@ export default class InputBase extends ComponentBase {
         }
     }
   }
-  
+
+  // eslint-disable-next-line class-methods-use-this
   onEnter() {
-    throw new Error('Method is abstract.  Override in subclass.')
+    throw new Error('Method is abstract.  Override in subclass.');
   }
 }

@@ -1,17 +1,21 @@
 // @flow
+
 import colors from 'colors';
 import cliui from 'cliui';
 
 import ComponentBase from './ComponentBase';
 import MenuOption from './MenuOption';
 import stack from './stack';
-import output from  './output';
-import { KEY_ENTER, KEY_ESCAPE, KEY_LEFT, KEY_RIGHT } from './keys';
+import output from './output';
+import {
+  KEY_ENTER, KEY_ESCAPE, KEY_LEFT, KEY_RIGHT,
+} from './keys';
 
 const OPTION_GAP = 3; // Render gap between options
 
 export default class MenuBase extends ComponentBase {
   _options: MenuOption[]
+
   _activeOption: number
 
   constructor(title: string, options: MenuOption[], allowBackOption: boolean = true) {
@@ -54,7 +58,7 @@ export default class MenuBase extends ComponentBase {
   get activeOption() {
     return this._options[this._activeOption];
   }
-  
+
   _cursorToActiveOption() {
     let x = 0;
     for (let i = 0; i < this._activeOption; i++) {
@@ -92,10 +96,10 @@ export default class MenuBase extends ComponentBase {
             stack.quit();
           }
           break;
-        case KEY_LEFT: 
+        case KEY_LEFT:
           this._cycleActiveOption(-1);
           break;
-        case KEY_RIGHT: 
+        case KEY_RIGHT:
           this._cycleActiveOption(1);
           break;
         case 'B':
@@ -108,8 +112,8 @@ export default class MenuBase extends ComponentBase {
           // Quit
           stack.quit();
           break;
-        default:
-          const option = this._options.find(option => option.key === key.toUpperCase());
+        default: {
+          const option = this._options.find(candidate => candidate.key === key.toUpperCase());
           if (option) {
             // Valid option
             stack.setWarning(`Sorry, the '${option.label}' feature is not implemented yet`);
@@ -117,6 +121,7 @@ export default class MenuBase extends ComponentBase {
             stack.setWarning('Invaid option');
           }
           break;
+        }
       }
     }
   }

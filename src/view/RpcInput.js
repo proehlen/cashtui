@@ -95,9 +95,9 @@ export default class RawInput extends InputBase {
     } catch (err) {
       let errorMessage;
       if (err.message.includes('ECONNREFUSED')) {
-        errorMessage = `Unable to connect to bitcoind (possibly not running): ECONNREFUSED`;
+        errorMessage = `Error: ECONNREFUSED (bitcoind possibly not running)`;
       } else if (err.message.includes('401')) {
-        errorMessage = 'Unable to connect to bitcoind (possibly incorrect RPC credentials): server returned 401.';
+        errorMessage = 'Error: 401 (Unauthorized)';
       } else {
         errorMessage = err.message;
       }

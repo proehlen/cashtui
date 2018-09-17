@@ -86,8 +86,9 @@ class Stack {
     }
     output.cursorTo(0, output.height - 2);
     const ui = cliui();
+    const shortened = this.status.message.substr(0, output.width);
     ui.div({
-      text: colors[bgColor][fgColor](this.status.message),
+      text: colors[bgColor][fgColor](shortened),
     });
     console.log(ui.toString());
   }

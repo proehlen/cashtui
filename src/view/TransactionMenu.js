@@ -4,7 +4,9 @@ import Transaction from 'my-bitcoin-cash-lib/lib/Transaction';
 
 import MenuBase from './MenuBase';
 import MenuOption from './MenuOption';
+import TransactionInputs from './TransactionInputs';
 import state from '../model/state';
+import stack from './stack';
 
 
 export default class TransactionMenu extends MenuBase {
@@ -34,5 +36,15 @@ export default class TransactionMenu extends MenuBase {
     });
     console.log(ui.toString());
     super.render();
+  }
+
+  async handle(key: string): Promise<void> {
+    switch (key.toUpperCase()) {
+      case 'I':
+        stack.push(new TransactionInputs());
+        break;
+      default:
+        super.handle(key);
+    }
   }
 }

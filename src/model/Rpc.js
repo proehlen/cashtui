@@ -13,7 +13,6 @@ let RPC_AUTH = '';
 if (options.rpccookiefile) {
   try {
     RPC_AUTH = fs.readFileSync(options.rpccookiefile, { encoding: 'utf8' });
-    debugger;
   } catch (err) {
     console.error(`Error reading file '${options.rpccookiefile}'`);
     process.exit(0);

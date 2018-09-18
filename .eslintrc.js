@@ -15,5 +15,6 @@ module.exports = {
     'no-underscore-dangle': 'off',
     'no-plusplus': 'off',
     'class-methods-use-this': 'off',
-  },
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+  }
 };

@@ -1,10 +1,26 @@
 // @flow
+/* eslint-disable no-console */
 
 import http from 'http';
+import fs from 'fs';
 
-const RPC_HOST = '127.0.0.1';
-const RPC_PORT = 18332;
-const RPC_AUTH = '__cookie__:y9b5BaM+wtiNxAFQg3aBl1h3WuL9EZoRPkD7ml/YuF4=';
+import options from '../options';
+
+// Build connection options
+const RPC_HOST = options.rpcbind;
+const RPC_PORT = options.rpcport;
+let RPC_AUTH = '';
+if (options.rpccookiefile) {
+  try {
+    RPC_AUTH = fs.readFileSync(options.rpccookiefile, { encoding: 'utf8' });
+    debugger;
+  } catch (err) {
+    console.error(`Error reading file '${options.rpccookiefile}'`);
+    process.exit(0);
+  }
+} else if (options.rpcuser && options.rpcpasword) {
+  RPC_AUTH = `${options.rpcuser}:${options.rpcpasword}`;
+}
 
 export default class Rpc {
   _history: Array<string>
@@ -56,7 +72,7 @@ export default class Rpc {
       }
       const postData = JSON.stringify(rpcRequest);
 
-      const options = {
+      const reqOptions = {
         hostname: RPC_HOST,
         port: RPC_PORT,
         auth: RPC_AUTH,
@@ -67,7 +83,7 @@ export default class Rpc {
         },
       };
 
-      const req = http.request(options, (res) => {
+      const req = http.request(reqOptions, (res) => {
         res.setEncoding('utf8');
         res.on('data', (chunk) => {
           responseData = responseData.concat(chunk);

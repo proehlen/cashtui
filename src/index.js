@@ -1,5 +1,6 @@
 import stack from './view/stack';
 import MainMenu from './view/MainMenu';
+import './options';
 
 stack.push(new MainMenu());
 stack.render();

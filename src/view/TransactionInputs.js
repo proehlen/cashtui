@@ -8,7 +8,7 @@ import state from '../model/state';
 export default class TransactionInputs extends ListBase {
   constructor() {
     const transaction: Transaction = state.transactions.active;
-    const inputToString = input => `${input.transactionId}:${input.outputIndex}`;
+    const inputToString = input => `${input.transactionId} ${input.outputIndex} ${input.signatureScript ? 'Signed' : ''}`;
     const inputs = transaction.inputs
       .map(inputToString);
     super(inputs, 'Transaction Inputs');

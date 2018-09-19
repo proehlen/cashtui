@@ -13,7 +13,7 @@ export default class TransactionsMenu extends MenuBase {
   constructor() {
     const options: MenuOption[] = [];
     options.push(new MenuOption('C', 'Create', 'Create new transaction'));
-    options.push(new MenuOption('D', 'Decode', 'Decode raw transaction'));
+    options.push(new MenuOption('D', 'Decode raw', 'Decode raw transaction'));
     options.push(new MenuOption('R', 'Recent', 'Recent transactions'));
     super('Transactions', options);
   }

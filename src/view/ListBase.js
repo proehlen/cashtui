@@ -14,8 +14,10 @@ export default class ListBase extends MenuBase {
 
   constructor(data: Array<string>, title: string) {
     const options: MenuOption[] = [];
-    options.push(new MenuOption('N', 'Next page', 'Go to next page'));
-    options.push(new MenuOption('P', 'Previous page', 'Return to previous page'));
+    if (data.length > output.contentHeight) {
+      options.push(new MenuOption('N', 'Next page', 'Go to next page'));
+      options.push(new MenuOption('P', 'Previous page', 'Return to previous page'));
+    }
     super(title, options, true);
     this._data = data;
     this._startIndex = 0;

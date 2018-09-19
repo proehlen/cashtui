@@ -44,9 +44,8 @@ export default class MenuBase extends ComponentBase {
     const ui = cliui();
     const text = this._options.reduce((acc, option, index) => {
       const separator = index > 0 ? ` ${String.fromCharCode(183)} ` : '';
-      const keyPosition = option.label.indexOf(option.key);
-      const preKeyText = (keyPosition) ? option.label.substring(0, keyPosition - 1) : '';
-      const postKeyText = option.label.substr(keyPosition + 1);
+      const preKeyText = (option.keyPosition) ? option.label.substring(0, option.keyPosition) : '';
+      const postKeyText = option.label.substr(option.keyPosition + 1);
       return `${acc}${separator}${preKeyText}${colors.bold(option.key)}${postKeyText}`;
     }, '');
     ui.div(text);
@@ -65,7 +64,8 @@ export default class MenuBase extends ComponentBase {
       const option = this._options[i];
       x += (option.label.length + OPTION_GAP);
     }
-    output.cursorTo(x, 1);
+    const activeOption = this._options[this._activeOption];
+    output.cursorTo(x + activeOption.keyPosition, 1);
   }
 
   _cycleActiveOption(direction: 1 | -1) {

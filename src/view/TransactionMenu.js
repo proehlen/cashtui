@@ -6,6 +6,7 @@ import MenuBase from './MenuBase';
 import MenuOption from './MenuOption';
 import TransactionInputs from './TransactionInputs';
 import TransactionOutputs from './TransactionOutputs';
+import TransactionRaw from './TransactionRaw';
 import state from '../model/state';
 import stack from './stack';
 
@@ -15,7 +16,7 @@ export default class TransactionMenu extends MenuBase {
     const options: MenuOption[] = [];
     options.push(new MenuOption('I', 'Inputs', 'Transaction inputs'));
     options.push(new MenuOption('O', 'Outputs', 'Transaction outputs'));
-    options.push(new MenuOption('L', 'Label', 'Label this transaction'));
+    options.push(new MenuOption('R', 'Raw', 'Show raw serialized transaction'));
     super('Transaction', options);
   }
 
@@ -41,6 +42,9 @@ export default class TransactionMenu extends MenuBase {
 
   async handle(key: string): Promise<void> {
     switch (key.toUpperCase()) {
+      case 'R':
+        stack.push(new TransactionRaw());
+        break;
       case 'O':
         stack.push(new TransactionOutputs());
         break;

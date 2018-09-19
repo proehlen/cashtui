@@ -18,7 +18,7 @@ export default class MenuBase extends ComponentBase {
 
   _activeOption: number
 
-  constructor(title: string, options: MenuOption[], allowBackOption: boolean = true) {
+  constructor(title: string, options?: MenuOption[] = [], allowBackOption: boolean = true) {
     super(title);
 
     // Options specific to this menu

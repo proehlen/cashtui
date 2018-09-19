@@ -9,7 +9,7 @@ import state from '../model/state';
 export default class TransactionInputs extends ListBase {
   constructor() {
     const transaction: Transaction = state.transactions.active;
-    const mapOutputToString = (output: Output, index) => `${index} ${output.value}`;
+    const mapOutputToString = (output: Output, index) => `${index} ${(output.value / 100000000).toFixed(8)}`;
     const inputs = transaction.outputs
       .map(mapOutputToString);
     super(inputs, 'Transaction Outputs');

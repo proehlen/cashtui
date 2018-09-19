@@ -12,9 +12,12 @@ module.exports = {
     node: true,
   },
   rules: {
-    'no-underscore-dangle': 'off',
-    'no-plusplus': 'off',
-    'class-methods-use-this': 'off',
+    // Lines between class members doesn't work well with flow declarations
+    'lines-between-class-members': 'off',
+    
+    'no-underscore-dangle': 'off', // We use "private" class members
+    'no-plusplus': 'off', // Life is too short; learn the problem this rule is designed to circumvent
+    'class-methods-use-this': 'off', // Allow "abstract" methods
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
   }
 };

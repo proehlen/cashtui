@@ -5,10 +5,12 @@ import Transaction from 'my-bitcoin-cash-lib/lib/Transaction';
 import MenuBase from './MenuBase';
 import MenuOption from './MenuOption';
 import state from '../model/state';
+import stack from './stack';
 import output from './output';
 
 export default class TransactionRaw extends MenuBase {
   _data: Array<string>
+  _numPages: number
   _currentPage: number
 
   constructor() {
@@ -30,7 +32,8 @@ export default class TransactionRaw extends MenuBase {
     }
     super('Raw Transaction', options, true);
     this._data = data;
-    this._currentPage = 0;
+    this._currentPage = 1;
+    this._numPages = numPages;
   }
 
   render() {
@@ -39,7 +42,30 @@ export default class TransactionRaw extends MenuBase {
     // even with wrapping we get linebreak chars in output
     // which get copied to the clipboard when user copies
     // text
-    console.log(this._data[this._currentPage]);
+    console.log(this._data[this._currentPage - 1]);
     super.render();
+  }
+
+  async handle(key: string): Promise<void> {
+    switch (key.toUpperCase()) {
+      case 'P': {
+        if (this._currentPage === 1) {
+          stack.setInfo('Already at start');
+        } else {
+          this._currentPage -= 1;
+        }
+        break;
+      }
+      case 'N': {
+        if (this._currentPage === this._numPages) {
+          stack.setInfo('No more pages');
+        } else {
+          this._currentPage += 1;
+        }
+        break;
+      }
+      default:
+        await super.handle(key);
+    }
   }
 }

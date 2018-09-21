@@ -4,7 +4,6 @@
   "description": "CLI for my-bitcoin-cash-lib",
   "main": "bin/index.js",
   "scripts": {
-    "axios": "^0.18.0",
     "build": "babel src -d bin",
     "clean": "rimraf bin",
     "eslint": "eslint src",
@@ -19,7 +18,6 @@
   "author": "Peter Roehlen",
   "license": "MIT",
   "dependencies": {
-    "args": "^5.0.0",
     "clear-console": "^1.1.0",
     "cliui": "^4.1.0",
     "colors": "^1.3.2",
@@ -37,7 +35,7 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.11.1",
-    "flow-bin": "^0.80.0",
+    "flow-bin": "^0.81.0",
     "flow-copy-source": "^2.0.2",
     "rimraf": "^2.6.2"
   }

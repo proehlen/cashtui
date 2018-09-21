@@ -2,24 +2,32 @@
 /* eslint-disable no-console */
 
 import http from 'http';
-import fs from 'fs';
+// import fs from 'fs';
 
-import options from '../options';
+import state from './state';
+
+declare type RequestOptions = {
+  hostname: string,
+  port: number,
+  method: string,
+  auth?: string,
+  headers: any,
+}
 
 // Build connection options
-const RPC_HOST = options.rpcbind;
-const RPC_PORT = options.rpcport;
-let RPC_AUTH = '';
-if (options.rpccookiefile) {
-  try {
-    RPC_AUTH = fs.readFileSync(options.rpccookiefile, { encoding: 'utf8' });
-  } catch (err) {
-    console.error(`Error reading file '${options.rpccookiefile}'`);
-    process.exit(0);
-  }
-} else if (options.rpcuser && options.rpcpasword) {
-  RPC_AUTH = `${options.rpcuser}:${options.rpcpasword}`;
-}
+// const RPC_HOST = options.rpcbind;
+// const RPC_PORT = options.rpcport;
+// let RPC_AUTH = '';
+// if (options.rpccookiefile) {
+//   try {
+//     RPC_AUTH = fs.readFileSync(options.rpccookiefile, { encoding: 'utf8' });
+//   } catch (err) {
+//     console.error(`Error reading file '${options.rpccookiefile}'`);
+//     process.exit(0);
+//   }
+// } else if (options.rpcuser && options.rpcpasword) {
+//   RPC_AUTH = `${options.rpcuser}:${options.rpcpasword}`;
+// }
 
 export default class Rpc {
   _history: Array<string>
@@ -43,7 +51,7 @@ export default class Rpc {
     this._history.push(command);
   }
 
-  request(command: string, remember: boolean = false): Promise<string> {
+  request(command: string, remember: boolean = false): Promise<string | any | number> {
     if (remember) {
       this._addHistory(command);
     }
@@ -71,16 +79,18 @@ export default class Rpc {
       }
       const postData = JSON.stringify(rpcRequest);
 
-      const reqOptions = {
-        hostname: RPC_HOST,
-        port: RPC_PORT,
-        auth: RPC_AUTH,
+      const reqOptions: RequestOptions = {
+        hostname: state.connection.host,
+        port: state.connection.port,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json-rpc',
           'Content-Length': Buffer.byteLength(postData),
         },
       };
+      if (state.connection.auth) {
+        reqOptions.auth = state.connection.auth;
+      }
 
       const req = http.request(reqOptions, (res) => {
         res.setEncoding('utf8');

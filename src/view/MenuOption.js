@@ -16,19 +16,9 @@ export default class MenuOption {
     }
   }
 
-  get key() {
-    return this._key;
-  }
-
-  get keyPosition() {
-    return this._keyPosition;
-  }
-
-  get label() {
-    return this._label;
-  }
-
-  get help() {
-    return this._help;
-  }
+  // Simple getters
+  get key() { return this._key; }
+  get keyPosition() { return this._keyPosition; }
+  get label() { return this._label; }
+  get help() { return this._help; }
 }

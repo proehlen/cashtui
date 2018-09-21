@@ -15,9 +15,13 @@ export default class TransactionIdInput extends InputBase {
   async onEnter() {
     try {
       const raw = await state.rpc.request(`getrawtransaction ${this._text}`);
-      const transaction = Transaction.fromHex(raw);
-      state.transactions.active = transaction;
-      stack.replace(new TransactionMenu());
+      if (typeof raw === 'string') {
+        const transaction = Transaction.fromHex(raw);
+        state.transactions.active = transaction;
+        stack.replace(new TransactionMenu());
+      } else {
+        throw new Error('Unexpected value returned from RPC call');
+      }
     } catch (err) {
       stack.setError(err.message);
     }

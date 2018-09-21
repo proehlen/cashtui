@@ -10,15 +10,15 @@ import { KEY_ESCAPE, KEY_ENTER, KEY_BACKSPACE } from './keys';
 export default class InputBase extends ComponentBase {
   _text: string
 
-  constructor(title: string) {
+  constructor(title: string, initialValue: string = '') {
     super(title);
-    this._text = '';
+    this._text = initialValue;
   }
 
-  render() {
+  render(atColumn: number = 0, atRow: number = output.contentStartRow) {
     // Build options text
     const ui = cliui();
-    output.cursorTo(0, output.contentStartRow);
+    output.cursorTo(atColumn, atRow);
     ui.div({
       text: '> ',
       width: 2,
@@ -28,8 +28,8 @@ export default class InputBase extends ComponentBase {
     console.log(ui.toString());
 
     const columnWidth = ui.width - 2;
-    const cursorColumn = (this._text.length % columnWidth) + 2;
-    const cursorRow = Math.trunc(this._text.length / columnWidth) + output.contentStartRow;
+    const cursorColumn = atColumn + (this._text.length % columnWidth) + 2;
+    const cursorRow = Math.trunc(this._text.length / columnWidth) + atRow;
 
     output.cursorTo(cursorColumn, cursorRow);
   }

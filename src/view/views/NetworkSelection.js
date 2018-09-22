@@ -4,25 +4,28 @@ import cliui from 'cliui';
 import colors from 'colors';
 import Network from 'my-bitcoin-cash-lib/lib/Network';
 
-import Connection from '../model/Connection';
-import MenuBase from './MenuBase';
-import MenuOption from './MenuOption';
+import ViewBase from './ViewBase';
+import Connection from '../../model/Connection';
+import Menu from '../components/Menu';
+import MenuOption from '../components/MenuOption';
 import ConnectionSettings from './ConnectionSettings';
-import output from './output';
-import state from '../model/state';
-import stack from './stack';
-import { KEY_UP, KEY_DOWN } from './keys';
+import output from '../output';
+import state from '../../model/state';
+import stack from '../stack';
+import { KEY_UP, KEY_DOWN } from '../keys';
 
-export default class NetworkSelection extends MenuBase {
+export default class NetworkSelection extends ViewBase {
   _networks: Array<string>
   _selectedNetwork: number
+  _menu: Menu
 
   constructor() {
+    super('Connect to node');
     const menuOptions = [
-      new MenuOption('C', 'Continue', 'Connect to Network'),
+      new MenuOption('C', 'Continue', 'Connect to Network', this.toConnectionSettings.bind(this)),
       new MenuOption('R', 'Recent', 'Recent connections'),
     ];
-    super('Connect to node', menuOptions, false);
+    this._menu = new Menu(menuOptions, false);
     this._networks = [
       'mainnet',
       'testnet',
@@ -33,14 +36,14 @@ export default class NetworkSelection extends MenuBase {
   }
 
   render() {
+    // Render network list
     const ui = cliui();
-
     output.cursorTo(0, output.contentStartRow);
     for (let i = 0; i < this._networks.length; ++i) {
       const option = this._networks[i];
       const selected = i === this._selectedNetwork;
       const selector = ` ${selected ? '>' : ' '} `;
-      const optionText = selected && this.selectedOption.key === 'C'
+      const optionText = selected && this._menu.selectedOption.key === 'C'
         ? colors.bold(option)
         : option;
       ui.div({
@@ -56,22 +59,24 @@ export default class NetworkSelection extends MenuBase {
     });
     console.log(ui.toString());
 
-    super.render();
+    // Render menu last (for correct cursor positioning)
+    this._menu.render();
+  }
+
+  async toConnectionSettings() {
+    try {
+      const networkLabel = this._networks[this._selectedNetwork];
+      const network = Network.fromString(networkLabel);
+      const connection = new Connection(network);
+      state.connection = connection;
+      stack.push(new ConnectionSettings());
+    } catch (err) {
+      stack.setError(err.message);
+    }
   }
 
   async handle(key: string) {
     switch (key.toUpperCase()) {
-      case 'C':
-        try {
-          const networkLabel = this._networks[this._selectedNetwork];
-          const network = Network.fromString(networkLabel);
-          const connection = new Connection(network);
-          state.connection = connection;
-          stack.push(new ConnectionSettings());
-        } catch (err) {
-          stack.setError(err.message);
-        }
-        break;
       case KEY_DOWN:
         this._selectedNetwork++;
         if (this._selectedNetwork >= this._networks.length) {
@@ -85,7 +90,7 @@ export default class NetworkSelection extends MenuBase {
         }
         break;
       default:
-        await super.handle(key);
+        await this._menu.handle(key);
     }
   }
 }

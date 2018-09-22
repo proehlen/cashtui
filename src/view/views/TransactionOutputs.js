@@ -4,10 +4,10 @@ import Transaction from 'my-bitcoin-cash-lib/lib/Transaction';
 import Output from 'my-bitcoin-cash-lib/lib/Output';
 // import Address from 'my-bitcoin-cash-lib/lib/Address';
 
-import ListBase from './ListBase';
-import state from '../model/state';
+import List from './List';
+import state from '../../model/state';
 
-export default class TransactionOutputs extends ListBase {
+export default class TransactionOutputs extends List {
   constructor() {
     const transaction: Transaction = state.transactions.active;
     const inputs = transaction.outputs

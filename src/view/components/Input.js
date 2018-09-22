@@ -3,19 +3,22 @@
 import cliui from 'cliui';
 
 import ComponentBase from './ComponentBase';
-import stack from './stack';
-import output from './output';
-import { KEY_ESCAPE, KEY_ENTER, KEY_BACKSPACE } from './keys';
+import stack from '../stack';
+import output from '../output';
+import { KEY_ESCAPE, KEY_ENTER, KEY_BACKSPACE } from '../keys';
 
-export default class InputBase extends ComponentBase {
+export default class Input extends ComponentBase {
   _value: string
+  _onEnter: () => Promise<void>
 
-  constructor(title: string, initialValue: string = '') {
-    super(title);
+  constructor(onEnter: () => Promise<void>, initialValue: string = '') {
+    super();
+    this._onEnter = onEnter;
     this._value = initialValue;
   }
 
   get value() { return this._value; }
+  set value(value: string) { this._value = value; }
 
   render(atColumn: number = 0, atRow: number = output.contentStartRow, active: boolean = true) {
     // Build options text
@@ -43,7 +46,7 @@ export default class InputBase extends ComponentBase {
         this._value = this._value.substr(0, this._value.length - 1);
         break;
       case KEY_ENTER:
-        await this.onEnter();
+        await this._onEnter();
         break;
       case KEY_ESCAPE:
         if (this._value.length) {
@@ -56,15 +59,13 @@ export default class InputBase extends ComponentBase {
         // Add printable chars to input text - ignore all other
         // special chars (e.g. unprintable arrow keys etc)
         // that haven't been handled by this point.
-        // TODO handle range beyond extended ASCII - ie UTF?
         if (key.length === 1 && key.charCodeAt(0) > 0x1F) {
+          this._value += key;
+        } else if (key.length > 1) {
+          // Need to allow multiple chars for pasting - some of
+          // these might not be printable however
           this._value += key;
         }
     }
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  onEnter() {
-    throw new Error('Method is abstract.  Override in subclass.');
   }
 }

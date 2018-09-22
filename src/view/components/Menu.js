@@ -5,21 +5,21 @@ import cliui from 'cliui';
 
 import ComponentBase from './ComponentBase';
 import MenuOption from './MenuOption';
-import stack from './stack';
-import output from './output';
+import stack from '../stack';
+import output from '../output';
 import {
   KEY_ENTER, KEY_ESCAPE, KEY_LEFT, KEY_RIGHT,
-} from './keys';
+} from '../keys';
 
 const OPTION_GAP = 3; // Render gap between options
 
-export default class MenuBase extends ComponentBase {
+export default class Menu extends ComponentBase {
   _options: MenuOption[]
   _active: boolean
   _selectedIndex: number
 
-  constructor(title: string, options?: MenuOption[] = [], allowBackOption: boolean = true) {
-    super(title);
+  constructor(options?: MenuOption[] = [], allowBackOption: boolean = true) {
+    super();
 
     // Options specific to this menu
     this._options = options;

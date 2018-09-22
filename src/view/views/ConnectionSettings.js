@@ -1,17 +1,17 @@
 // @flow
 
-import ComponentBase from './ComponentBase';
+import ViewBase from './ViewBase';
 import MainMenu from './MainMenu';
-import MenuBase from './MenuBase';
-import MenuOption from './MenuOption';
-import InputBase from './InputBase';
-import output from './output';
-import state from '../model/state';
-import stack from './stack';
+import Menu from '../components/Menu';
+import MenuOption from '../components/MenuOption';
+import Input from '../components/Input';
+import output from '../output';
+import state from '../../model/state';
+import stack from '../stack';
 
 import {
   KEY_TAB, KEY_SHIFT_TAB, KEY_LEFT, KEY_RIGHT, KEY_ESCAPE, KEY_UP, KEY_DOWN, KEY_ENTER,
-} from './keys';
+} from '../keys';
 
 const indexes = {
   HOST: 0,
@@ -21,9 +21,14 @@ const indexes = {
   PASSWORD: 4,
 };
 
-export default class ConnectionSettings extends ComponentBase {
-  _menu: MenuBase
-  _fields: Array<InputBase>
+declare type Field = {
+  label: string,
+  input: Input,
+}
+
+export default class ConnectionSettings extends ViewBase {
+  _menu: Menu
+  _fields: Array<Field>
   _selectedFieldIndex: number | void
 
   constructor() {
@@ -32,22 +37,22 @@ export default class ConnectionSettings extends ComponentBase {
       new MenuOption('C', 'Connect', 'Connect to the node', this.connect.bind(this)),
     ];
     this._fields = [];
-    this._fields[indexes.HOST] = new InputBase('Host', state.connection.host);
-    this._fields[indexes.PORT] = new InputBase('Port', state.connection.port.toString());
-    this._fields[indexes.COOKIE] = new InputBase('Cookie file', state.connection.cookieFile);
-    this._fields[indexes.USER] = new InputBase('User', state.connection.user);
-    this._fields[indexes.PASSWORD] = new InputBase('Password', state.connection.password);
-    this._menu = new MenuBase('Connection Settings', menuOptions);
+    this._fields[indexes.HOST] = { label: 'Host', input: new Input(this._onEnter.bind(this), state.connection.host) };
+    this._fields[indexes.PORT] = { label: 'Port', input: new Input(this._onEnter.bind(this), state.connection.port.toString()) };
+    this._fields[indexes.COOKIE] = { label: 'Cookie file', input: new Input(this._onEnter.bind(this), state.connection.cookieFile) };
+    this._fields[indexes.USER] = { label: 'User', input: new Input(this._onEnter.bind(this), state.connection.user) };
+    this._fields[indexes.PASSWORD] = { label: 'Password', input: new Input(this._onEnter.bind(this), state.connection.password) };
+    this._menu = new Menu(menuOptions);
   }
 
   async connect() {
     try {
       // Update connection settings from form and connect
-      state.connection.host = this._fields[indexes.HOST].value;
-      state.connection.port = parseInt(this._fields[indexes.PORT].value, 10);
-      state.connection.cookieFile = this._fields[indexes.COOKIE].value;
-      state.connection.user = this._fields[indexes.USER].value;
-      state.connection.password = this._fields[indexes.PASSWORD].value;
+      state.connection.host = this._fields[indexes.HOST].input.value;
+      state.connection.port = parseInt(this._fields[indexes.PORT].input.value, 10);
+      state.connection.cookieFile = this._fields[indexes.COOKIE].input.value;
+      state.connection.user = this._fields[indexes.USER].input.value;
+      state.connection.password = this._fields[indexes.PASSWORD].input.value;
       await state.connection.connect();
       stack.push(new MainMenu());
     } catch (err) {
@@ -55,6 +60,9 @@ export default class ConnectionSettings extends ComponentBase {
     }
   }
 
+  async _onEnter() {
+    this.cycleSelectedField(1);
+  }
 
   cycleSelectedField(direction: 1 | -1) {
     if (this._selectedFieldIndex === undefined) {
@@ -135,7 +143,7 @@ export default class ConnectionSettings extends ComponentBase {
             // Enter on selected field should go to next field
             this.cycleSelectedField(1);
           } else {
-            await selectedField.handle(key);
+            await selectedField.input.handle(key);
           }
         // } else if (key.toUpperCase() === 'C') {
         //   // Connect
@@ -151,8 +159,8 @@ export default class ConnectionSettings extends ComponentBase {
     const row = output.contentStartRow + index;
     output.cursorTo(0, row);
     const field = this._fields[index];
-    console.log(field.title);
-    field.render(20, row, active);
+    console.log(field.label);
+    field.input.render(20, row, active);
   }
 
   render() {

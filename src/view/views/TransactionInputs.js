@@ -2,10 +2,10 @@
 
 import Transaction from 'my-bitcoin-cash-lib/lib/Transaction';
 
-import ListBase from './ListBase';
-import state from '../model/state';
+import List from './List';
+import state from '../../model/state';
 
-export default class TransactionInputs extends ListBase {
+export default class TransactionInputs extends List {
   constructor() {
     const transaction: Transaction = state.transactions.active;
     const inputToString = input => `${input.transactionId} ${input.outputIndex} ${input.signatureScript ? 'Signed' : ''}`;

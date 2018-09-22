@@ -20,7 +20,7 @@ export default class RawInput extends InputBase {
   }
 
   render() {
-    if (!this._text) {
+    if (!this._value) {
       output.cursorTo(0, 5);
       const ui = cliui();
       ui.div({
@@ -47,7 +47,7 @@ export default class RawInput extends InputBase {
       this._loadFromHistory();
     } else {
       // History exhausted - clear input
-      this._text = '';
+      this._value = '';
     }
   }
 
@@ -57,7 +57,7 @@ export default class RawInput extends InputBase {
       return;
     }
     const index = state.rpc.history.length - this._historyLevel;
-    this._text = state.rpc.history[index];
+    this._value = state.rpc.history[index];
   }
 
   async handle(key: string): Promise<void> {
@@ -75,7 +75,7 @@ export default class RawInput extends InputBase {
 
   async onEnter() {
     try {
-      const rpcResult = await state.rpc.request(this._text, true);
+      const rpcResult = await state.rpc.request(this._value, true);
       let outputLines = [];
       if (typeof rpcResult === 'string') {
         outputLines = rpcResult.split('\n');
@@ -87,7 +87,7 @@ export default class RawInput extends InputBase {
         outputLines.concat(rpcResult.map(entry => JSON.stringify(entry)));
       }
       if (outputLines.length) {
-        this._text = '';
+        this._value = '';
         this._historyLevel = 0;
         stack.push(new RpcOutput(outputLines));
       } else {

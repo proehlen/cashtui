@@ -15,14 +15,18 @@ const OPTION_GAP = 3; // Render gap between options
 
 export default class MenuBase extends ComponentBase {
   _options: MenuOption[]
-
-  _activeOption: number
+  _active: boolean
+  _selectedIndex: number
 
   constructor(title: string, options?: MenuOption[] = [], allowBackOption: boolean = true) {
     super(title);
 
     // Options specific to this menu
     this._options = options;
+
+    // If menu is active, arrows cycle between options and keys
+    // execute menu options.
+    this._active = true;
 
     // Most menus have (B)ack option
     if (allowBackOption) {
@@ -33,8 +37,8 @@ export default class MenuBase extends ComponentBase {
     this._options.push(new MenuOption('Q', 'Quit', 'Exit the program'));
 
     // Set active/default  action
-    this._activeOption = 0;
-    const option = this._options[this._activeOption];
+    this._selectedIndex = 0;
+    const option = this._options[this._selectedIndex];
     stack.setInfo(option.help);
   }
 
@@ -46,81 +50,98 @@ export default class MenuBase extends ComponentBase {
       const separator = index > 0 ? ` ${String.fromCharCode(183)} ` : '';
       const preKeyText = (option.keyPosition) ? option.label.substring(0, option.keyPosition) : '';
       const postKeyText = option.label.substr(option.keyPosition + 1);
-      return `${acc}${separator}${preKeyText}${colors.bold(option.key)}${postKeyText}`;
+      const keyText = this._active
+        ? colors.bold(option.key)
+        : option.key;
+      return `${acc}${separator}${preKeyText}${keyText}${postKeyText}`;
     }, '');
     ui.div(text);
 
     console.log(ui.toString());
-    this._cursorToActiveOption();
-  }
-
-  get activeOption() {
-    return this._options[this._activeOption];
-  }
-
-  _cursorToActiveOption() {
-    let x = 0;
-    for (let i = 0; i < this._activeOption; i++) {
-      const option = this._options[i];
-      x += (option.label.length + OPTION_GAP);
+    if (this._active) {
+      this._cursorToselectedOption();
+      stack.setInfo(this.selectedOption.help);
     }
-    const activeOption = this._options[this._activeOption];
-    output.cursorTo(x + activeOption.keyPosition, 1);
   }
 
-  _cycleActiveOption(direction: 1 | -1) {
-    this._activeOption += direction;
+  get selectedIndex() { return this._selectedIndex; }
+  set selectedIndex(index: number) { this._selectedIndex = index; }
+  get selectedOption() { return this._options[this._selectedIndex]; }
+  get options() { return this._options; }
 
-    if (this._activeOption < 0) {
-      this._activeOption = this._options.length - 1;
-    } else if (this._activeOption >= this._options.length) {
-      this._activeOption = 0;
+  get active() { return this._active; }
+  set active(active: boolean) { this._active = active; }
+
+  cycleSelectedOption(direction: 1 | -1) {
+    this._selectedIndex += direction;
+
+    if (this._selectedIndex < 0) {
+      this._selectedIndex = this._options.length - 1;
+    } else if (this._selectedIndex >= this._options.length) {
+      this._selectedIndex = 0;
     }
 
-    const option = this._options[this._activeOption];
+    const option = this._options[this._selectedIndex];
     stack.setInfo(option.help);
   }
 
+  _cursorToselectedOption() {
+    let x = 0;
+    for (let i = 0; i < this._selectedIndex; i++) {
+      const option = this._options[i];
+      x += (option.label.length + OPTION_GAP);
+    }
+    const selectedOption = this._options[this._selectedIndex];
+    output.cursorTo(x + selectedOption.keyPosition, 1);
+  }
+
+
   async handle(key: string): Promise<void> {
-    if (key === KEY_ENTER) {
-      // Call back this method (maybe in child class) with key
-      // for active option
-      const option = this._options[this._activeOption];
-      this.handle(option.key);
-    } else {
-      switch (key.toUpperCase()) {
-        case KEY_ESCAPE:
-          if (stack.depth) {
-            stack.pop();
-          } else {
+    if (this._active) {
+      if (key === KEY_ENTER) {
+        // Call back this method (maybe in child class) with key
+        // for active option
+        const option = this._options[this._selectedIndex];
+        await this.handle(option.key);
+      } else {
+        switch (key.toUpperCase()) {
+          case KEY_ESCAPE:
+            if (stack.depth) {
+              stack.pop();
+            } else {
+              stack.quit();
+            }
+            break;
+          case KEY_LEFT:
+            this.cycleSelectedOption(-1);
+            break;
+          case KEY_RIGHT:
+            this.cycleSelectedOption(1);
+            break;
+          case 'B':
+            // Back
+            if (stack.depth) {
+              stack.pop();
+            }
+            break;
+          case 'Q':
+            // Quit
             stack.quit();
+            break;
+          default: {
+            const option = this._options.find(candidate => candidate.key === key.toUpperCase());
+            if (option) {
+              if (option.execute) {
+                await option.execute();
+              } else {
+                // Valid option
+                stack.setWarning(`Sorry, the '${option.label}' feature is not implemented yet`);
+              }
+            } else {
+              stack.setWarning('Invaid option');
+            }
+            break;
           }
-          break;
-        case KEY_LEFT:
-          this._cycleActiveOption(-1);
-          break;
-        case KEY_RIGHT:
-          this._cycleActiveOption(1);
-          break;
-        case 'B':
-          // Back
-          if (stack.depth) {
-            stack.pop();
-          }
-          break;
-        case 'Q':
-          // Quit
-          stack.quit();
-          break;
-        default: {
-          const option = this._options.find(candidate => candidate.key === key.toUpperCase());
-          if (option) {
-            // Valid option
-            stack.setWarning(`Sorry, the '${option.label}' feature is not implemented yet`);
-          } else {
-            stack.setWarning('Invaid option');
-          }
-          break;
         }
       }
     }

@@ -1,8 +1,7 @@
 import stack from './view/stack';
-import MainMenu from './view/MainMenu';
-import './options';
+import NetworkSelection from './view/NetworkSelection';
 
-stack.push(new MainMenu());
+stack.push(new NetworkSelection());
 stack.render();
 
 const { stdin } = process;

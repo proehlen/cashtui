@@ -5,8 +5,9 @@ import cliui from 'cliui';
 
 import output from './output';
 import { version } from '../../package.json';
+// import state from '../model/state';
 import ComponentBase from './ComponentBase';
-import MenuBase from './MenuBase';
+import InputBase from './InputBase';
 
 declare var process: any;
 
@@ -92,10 +93,19 @@ class Stack {
         fgColor = 'black';
     }
     output.cursorTo(0, output.height - 2);
-    const ui = cliui();
-    const shortened = this.status.message.substr(0, output.width);
+    const ui = cliui({ wrap: false });
+
+    // const network = state.rpc.network || '';
+    // const networkWidth = network.length;
+    // const messageWidth = output.width - networkWidth;
+    const messageWidth = output.width;
+    const message = this.status.message.substr(0, messageWidth);
     ui.div({
-      text: colors[bgColor][fgColor](shortened),
+      text: colors[bgColor][fgColor](message),
+      // width: messageWidth,
+    // }, {
+    //   text: network,
+    //   width: networkWidth,
     });
     console.log(ui.toString());
   }
@@ -136,12 +146,8 @@ class Stack {
 
   _setStatusForActiveComponent() {
     const activeComponent = this.active;
-    if (activeComponent instanceof MenuBase) {
-      const { activeOption } = activeComponent;
-      this.setInfo(activeOption.help);
-    } else {
+    if (activeComponent instanceof InputBase) {
       // Input
-      this.setInfo('Press Enter to finish; Esc to clear/cancel');
     }
   }
 

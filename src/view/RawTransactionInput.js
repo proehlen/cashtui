@@ -12,7 +12,7 @@ export default class RawTransactionInput extends InputBase {
 
   onEnter() {
     try {
-      state.transactions.active = Transaction.fromHex(this._text);
+      state.transactions.active = Transaction.fromHex(this._value);
       stack.replace(new TransactionMenu());
     } catch (error) {
       stack.setError(error.message);

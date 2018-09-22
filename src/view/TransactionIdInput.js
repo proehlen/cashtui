@@ -14,7 +14,7 @@ export default class TransactionIdInput extends InputBase {
 
   async onEnter() {
     try {
-      const raw = await state.rpc.request(`getrawtransaction ${this._text}`);
+      const raw = await state.rpc.request(`getrawtransaction ${this._value}`);
       if (typeof raw === 'string') {
         const transaction = Transaction.fromHex(raw);
         state.transactions.active = transaction;

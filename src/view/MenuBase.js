@@ -16,7 +16,7 @@ const OPTION_GAP = 3; // Render gap between options
 export default class MenuBase extends ComponentBase {
   _options: MenuOption[]
   _active: boolean
-  _selectedOption: number
+  _selectedIndex: number
 
   constructor(title: string, options?: MenuOption[] = [], allowBackOption: boolean = true) {
     super(title);
@@ -37,8 +37,8 @@ export default class MenuBase extends ComponentBase {
     this._options.push(new MenuOption('Q', 'Quit', 'Exit the program'));
 
     // Set active/default  action
-    this._selectedOption = 0;
-    const option = this._options[this._selectedOption];
+    this._selectedIndex = 0;
+    const option = this._options[this._selectedIndex];
     stack.setInfo(option.help);
   }
 
@@ -63,42 +63,44 @@ export default class MenuBase extends ComponentBase {
     }
   }
 
-  get selectedOption() {
-    return this._options[this._selectedOption];
-  }
+  get selectedIndex() { return this._selectedIndex; }
+  set selectedIndex(index: number) { this._selectedIndex = index; }
+  get selectedOption() { return this._options[this._selectedIndex]; }
+  get options() { return this._options; }
 
   get active() { return this._active; }
   set active(active: boolean) { this._active = active; }
 
+  cycleSelectedOption(direction: 1 | -1) {
+    this._selectedIndex += direction;
+
+    if (this._selectedIndex < 0) {
+      this._selectedIndex = this._options.length - 1;
+    } else if (this._selectedIndex >= this._options.length) {
+      this._selectedIndex = 0;
+    }
+
+    const option = this._options[this._selectedIndex];
+    stack.setInfo(option.help);
+  }
+
   _cursorToselectedOption() {
     let x = 0;
-    for (let i = 0; i < this._selectedOption; i++) {
+    for (let i = 0; i < this._selectedIndex; i++) {
       const option = this._options[i];
       x += (option.label.length + OPTION_GAP);
     }
-    const selectedOption = this._options[this._selectedOption];
+    const selectedOption = this._options[this._selectedIndex];
     output.cursorTo(x + selectedOption.keyPosition, 1);
   }
 
-  _cycleselectedOption(direction: 1 | -1) {
-    this._selectedOption += direction;
-
-    if (this._selectedOption < 0) {
-      this._selectedOption = this._options.length - 1;
-    } else if (this._selectedOption >= this._options.length) {
-      this._selectedOption = 0;
-    }
-
-    const option = this._options[this._selectedOption];
-    stack.setInfo(option.help);
-  }
 
   async handle(key: string): Promise<void> {
     if (this._active) {
       if (key === KEY_ENTER) {
         // Call back this method (maybe in child class) with key
         // for active option
-        const option = this._options[this._selectedOption];
+        const option = this._options[this._selectedIndex];
         this.handle(option.key);
       } else {
         switch (key.toUpperCase()) {
@@ -110,10 +112,10 @@ export default class MenuBase extends ComponentBase {
             }
             break;
           case KEY_LEFT:
-            this._cycleselectedOption(-1);
+            this.cycleSelectedOption(-1);
             break;
           case KEY_RIGHT:
-            this._cycleselectedOption(1);
+            this.cycleSelectedOption(1);
             break;
           case 'B':
             // Back

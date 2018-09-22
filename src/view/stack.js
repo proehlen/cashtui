@@ -6,8 +6,8 @@ import cliui from 'cliui';
 import output from './output';
 import { version } from '../../package.json';
 // import state from '../model/state';
-import ComponentBase from './ComponentBase';
-import InputBase from './InputBase';
+import ViewBase from './views/ViewBase';
+import Input from './components/Input';
 
 declare var process: any;
 
@@ -19,7 +19,7 @@ type Status = {
 }
 
 class Stack {
-  _stack: Array<ComponentBase>
+  _stack: Array<ViewBase>
 
   _status: Status
 
@@ -31,7 +31,7 @@ class Stack {
     };
   }
 
-  get active(): ComponentBase {
+  get active(): ViewBase {
     return this._stack[this._stack.length - 1];
   }
 
@@ -128,7 +128,7 @@ class Stack {
     console.log(ui.toString());
   }
 
-  push(component: ComponentBase) {
+  push(component: ViewBase) {
     this._stack.push(component);
     this._setStatusForActiveComponent();
   }
@@ -138,7 +138,7 @@ class Stack {
     this._setStatusForActiveComponent();
   }
 
-  replace(component: ComponentBase) {
+  replace(component: ViewBase) {
     this._stack.pop();
     this._stack.push(component);
     this._setStatusForActiveComponent();
@@ -146,7 +146,7 @@ class Stack {
 
   _setStatusForActiveComponent() {
     const activeComponent = this.active;
-    if (activeComponent instanceof InputBase) {
+    if (activeComponent instanceof Input) {
       // Input
     }
   }

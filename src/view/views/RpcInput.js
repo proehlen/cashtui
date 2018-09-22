@@ -3,24 +3,28 @@
 import cliui from 'cliui';
 import colors from 'colors';
 
-import InputBase from './InputBase';
+import ViewBase from './ViewBase';
+import Input from '../components/Input';
 import RpcOutput from './RpcOutput';
-import stack from './stack';
-import state from '../model/state';
-import output from './output';
+import stack from '../stack';
+import state from '../../model/state';
+import output from '../output';
 
-import { KEY_UP, KEY_DOWN } from './keys';
+import { KEY_UP, KEY_DOWN } from '../keys';
 
-export default class RawInput extends InputBase {
+export default class RawInput extends ViewBase {
   _historyLevel: number
+  _input: Input
 
   constructor() {
     super('Enter RPC command');
     this._historyLevel = 0;
+    this._input = new Input(this.onEnter.bind(this));
   }
 
   render() {
-    if (!this._value) {
+    // Render instruction text
+    if (!this._input.value) {
       output.cursorTo(0, 5);
       const ui = cliui();
       ui.div({
@@ -31,7 +35,9 @@ export default class RawInput extends InputBase {
       });
       console.log(ui.toString());
     }
-    super.render();
+
+    // Render input last for correct cursor positioning
+    this._input.render();
   }
 
   _loadEarlier() {
@@ -47,7 +53,7 @@ export default class RawInput extends InputBase {
       this._loadFromHistory();
     } else {
       // History exhausted - clear input
-      this._value = '';
+      this._input.value = '';
     }
   }
 
@@ -57,7 +63,7 @@ export default class RawInput extends InputBase {
       return;
     }
     const index = state.rpc.history.length - this._historyLevel;
-    this._value = state.rpc.history[index];
+    this._input.value = state.rpc.history[index];
   }
 
   async handle(key: string): Promise<void> {
@@ -69,13 +75,13 @@ export default class RawInput extends InputBase {
         this._loadEarlier();
         break;
       default:
-        await super.handle(key);
+        await this._input.handle(key);
     }
   }
 
   async onEnter() {
     try {
-      const rpcResult = await state.rpc.request(this._value, true);
+      const rpcResult = await state.rpc.request(this._input.value, true);
       let outputLines = [];
       if (typeof rpcResult === 'string') {
         outputLines = rpcResult.split('\n');
@@ -87,7 +93,7 @@ export default class RawInput extends InputBase {
         outputLines.concat(rpcResult.map(entry => JSON.stringify(entry)));
       }
       if (outputLines.length) {
-        this._value = '';
+        this._input.value = '';
         this._historyLevel = 0;
         stack.push(new RpcOutput(outputLines));
       } else {

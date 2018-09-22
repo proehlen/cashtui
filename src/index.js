@@ -1,5 +1,5 @@
 import stack from './view/stack';
-import NetworkSelection from './view/NetworkSelection';
+import NetworkSelection from './view/views/NetworkSelection';
 
 stack.push(new NetworkSelection());
 stack.render();

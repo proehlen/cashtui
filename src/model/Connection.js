@@ -1,8 +1,10 @@
 // @flow
 
+import fs from 'fs';
 import path from 'path';
-
 import Network from 'my-bitcoin-cash-lib/lib/Network';
+
+import state from './state';
 
 export default class Connection {
   _network: Network
@@ -12,11 +14,13 @@ export default class Connection {
   _user: string
   _password: string
   _isConnected: boolean
+  _auth: string
 
   constructor(network: Network) {
     this._isConnected = false;
     this._network = network;
     this._host = '127.0.0.1';
+    this._auth = '';
     const datadir = Connection.getDefaultDataDir();
     switch (network.label) {
       case 'mainnet':
@@ -46,24 +50,59 @@ export default class Connection {
 
   // Settable members
   get host() { return this._host; }
-  set host(host: string) { this._host = host; }
   get port() { return this._port; }
-  set port(port: number) { this._port = port; }
   get cookieFile() { return this._cookieFile; }
-  set cookieFile(cookieFile: string) { this._cookieFile = cookieFile; }
   get user() { return this._user; }
-  set user(user: string) { this._user = user; }
   get password() { return this._password; }
-  set password(password: string) { this._password = password; }
 
-
-  get auth(): string {
-    return 'test';
+  _clearConnection() {
+    this._auth = '';
+    this._isConnected = false;
   }
 
-  connect() {
+  set host(host: string) {
+    this._clearConnection();
+    this._host = host;
+  }
 
+  set port(port: number) {
+    this._clearConnection();
+    this._port = port;
+  }
 
+  set cookieFile(cookieFile: string) {
+    this._clearConnection();
+    this._cookieFile = cookieFile;
+  }
+
+  set password(password: string) {
+    this._clearConnection();
+    this._password = password;
+  }
+
+  set user(user: string) {
+    this._clearConnection();
+    this._user = user;
+  }
+
+  get auth(): string {
+    if (!this._auth) {
+      if (this._cookieFile) {
+        try {
+          this._auth = fs.readFileSync(this._cookieFile, { encoding: 'utf8' });
+        } catch (err) {
+          throw new Error(`Error reading file '${this._cookieFile}'`);
+        }
+      } else {
+        this._auth = `${this._user}:${this._password}`;
+      }
+    }
+    return this._auth;
+  }
+
+  async connect() {
+    await state.rpc.request('getinfo');
+    this._isConnected = true;
   }
 
   static getDefaultDataDir() {

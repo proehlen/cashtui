@@ -11,7 +11,7 @@ export default class MainMenu extends MenuBase {
     const options: MenuOption[] = [];
     options.push(new MenuOption('T', 'Transactions', 'Work with transactions'));
     options.push(new MenuOption('R', 'RPC', 'Execute JSON RPC commands'));
-    super('Main Menu', options, false);
+    super('Main Menu', options);
   }
 
   async handle(key: string): Promise<void> {

@@ -15,6 +15,8 @@ export default class InputBase extends ComponentBase {
     this._value = initialValue;
   }
 
+  get value() { return this._value; }
+
   render(atColumn: number = 0, atRow: number = output.contentStartRow, active: boolean = true) {
     // Build options text
     const ui = cliui();
@@ -55,7 +57,7 @@ export default class InputBase extends ComponentBase {
         // special chars (e.g. unprintable arrow keys etc)
         // that haven't been handled by this point.
         // TODO handle range beyond extended ASCII - ie UTF?
-        if (key.length === 1 && key.charCodeAt(0) > 0x31) {
+        if (key.length === 1 && key.charCodeAt(0) > 0x1F) {
           this._value += key;
         }
     }

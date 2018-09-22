@@ -1,15 +1,25 @@
 // @flow
 
 import ComponentBase from './ComponentBase';
+import MainMenu from './MainMenu';
 import MenuBase from './MenuBase';
 import MenuOption from './MenuOption';
 import InputBase from './InputBase';
 import output from './output';
 import state from '../model/state';
+import stack from './stack';
 
 import {
-  KEY_TAB, KEY_LEFT, KEY_RIGHT, KEY_ESCAPE, KEY_UP, KEY_DOWN, KEY_ENTER,
+  KEY_TAB, KEY_SHIFT_TAB, KEY_LEFT, KEY_RIGHT, KEY_ESCAPE, KEY_UP, KEY_DOWN, KEY_ENTER,
 } from './keys';
+
+const indexes = {
+  HOST: 0,
+  PORT: 1,
+  COOKIE: 2,
+  USER: 3,
+  PASSWORD: 4,
+};
 
 export default class ConnectionSettings extends ComponentBase {
   _menu: MenuBase
@@ -19,16 +29,30 @@ export default class ConnectionSettings extends ComponentBase {
   constructor() {
     super('Connection Settings');
     const menuOptions = [
-      new MenuOption('C', 'Connect', 'Connect to the node'),
+      new MenuOption('C', 'Connect', 'Connect to the node', this.connect.bind(this)),
     ];
-    this._fields = [
-      new InputBase('Host', state.connection.host),
-      new InputBase('Port', state.connection.port.toString()),
-      new InputBase('Cookie file', state.connection.cookieFile),
-      new InputBase('User', state.connection.user),
-      new InputBase('Password', state.connection.password),
-    ];
+    this._fields = [];
+    this._fields[indexes.HOST] = new InputBase('Host', state.connection.host);
+    this._fields[indexes.PORT] = new InputBase('Port', state.connection.port.toString());
+    this._fields[indexes.COOKIE] = new InputBase('Cookie file', state.connection.cookieFile);
+    this._fields[indexes.USER] = new InputBase('User', state.connection.user);
+    this._fields[indexes.PASSWORD] = new InputBase('Password', state.connection.password);
     this._menu = new MenuBase('Connection Settings', menuOptions);
+  }
+
+  async connect() {
+    try {
+      // Update connection settings from form and connect
+      state.connection.host = this._fields[indexes.HOST].value;
+      state.connection.port = parseInt(this._fields[indexes.PORT].value, 10);
+      state.connection.cookieFile = this._fields[indexes.COOKIE].value;
+      state.connection.user = this._fields[indexes.USER].value;
+      state.connection.password = this._fields[indexes.PASSWORD].value;
+      await state.connection.connect();
+      stack.push(new MainMenu());
+    } catch (err) {
+      stack.setError(err.message);
+    }
   }
 
 
@@ -68,6 +92,7 @@ export default class ConnectionSettings extends ComponentBase {
         this.cycleSelectedField(1);
         break;
       case KEY_LEFT:
+      case KEY_SHIFT_TAB:
         if (this._menu.active) {
           if (this._menu.selectedIndex > 0) {
             // Cycle to previous menu option
@@ -112,6 +137,9 @@ export default class ConnectionSettings extends ComponentBase {
           } else {
             await selectedField.handle(key);
           }
+        // } else if (key.toUpperCase() === 'C') {
+        //   // Connect
+        //   await this.connect();
         } else {
           await this._menu.handle(key);
         }
@@ -135,8 +163,6 @@ export default class ConnectionSettings extends ComponentBase {
         this._renderField(i, active);
       }
     }
-    // output.cursorTo(0, output.contentStartRow + this._fields.length);
-    // console.log('\nTab to switch between fields/menu');
 
     // Render menu
     this._menu.render();

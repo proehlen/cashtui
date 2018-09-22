@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 
 import http from 'http';
-// import fs from 'fs';
 
 import state from './state';
 
@@ -13,21 +12,6 @@ declare type RequestOptions = {
   auth?: string,
   headers: any,
 }
-
-// Build connection options
-// const RPC_HOST = options.rpcbind;
-// const RPC_PORT = options.rpcport;
-// let RPC_AUTH = '';
-// if (options.rpccookiefile) {
-//   try {
-//     RPC_AUTH = fs.readFileSync(options.rpccookiefile, { encoding: 'utf8' });
-//   } catch (err) {
-//     console.error(`Error reading file '${options.rpccookiefile}'`);
-//     process.exit(0);
-//   }
-// } else if (options.rpcuser && options.rpcpasword) {
-//   RPC_AUTH = `${options.rpcuser}:${options.rpcpasword}`;
-// }
 
 export default class Rpc {
   _history: Array<string>
@@ -109,18 +93,18 @@ export default class Rpc {
               }
             } catch (err) {
               // Not a JSON response - probably just an error message in plaintext
-              reject(new Error(`bitcoind returned: ${responseData}`));
+              reject(new Error(`Error: ${responseData}`));
             }
           } else if (res.statusCode !== 200) {
-            reject(new Error(`Bitcoin node responded with HTTP code ${res.statusCode}: ${res.statusMessage}`));
+            reject(new Error(`Error: ${res.statusCode}: ${res.statusMessage}`));
           } else {
             resolve('');
           }
         });
       });
 
-      req.on('error', (e) => {
-        reject(new Error(`problem with request: ${e.message}`));
+      req.on('error', (err) => {
+        reject(err);
       });
 
       // write data to request body

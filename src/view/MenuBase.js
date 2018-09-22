@@ -60,6 +60,7 @@ export default class MenuBase extends ComponentBase {
     console.log(ui.toString());
     if (this._active) {
       this._cursorToselectedOption();
+      stack.setInfo(this.selectedOption.help);
     }
   }
 
@@ -101,7 +102,7 @@ export default class MenuBase extends ComponentBase {
         // Call back this method (maybe in child class) with key
         // for active option
         const option = this._options[this._selectedIndex];
-        this.handle(option.key);
+        await this.handle(option.key);
       } else {
         switch (key.toUpperCase()) {
           case KEY_ESCAPE:
@@ -130,8 +131,12 @@ export default class MenuBase extends ComponentBase {
           default: {
             const option = this._options.find(candidate => candidate.key === key.toUpperCase());
             if (option) {
-              // Valid option
-              stack.setWarning(`Sorry, the '${option.label}' feature is not implemented yet`);
+              if (option.execute) {
+                await option.execute();
+              } else {
+                // Valid option
+                stack.setWarning(`Sorry, the '${option.label}' feature is not implemented yet`);
+              }
             } else {
               stack.setWarning('Invaid option');
             }

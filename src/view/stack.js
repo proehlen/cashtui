@@ -7,7 +7,7 @@ import output from './output';
 import { version } from '../../package.json';
 // import state from '../model/state';
 import ComponentBase from './ComponentBase';
-import MenuBase from './MenuBase';
+import InputBase from './InputBase';
 
 declare var process: any;
 
@@ -146,12 +146,8 @@ class Stack {
 
   _setStatusForActiveComponent() {
     const activeComponent = this.active;
-    if (activeComponent instanceof MenuBase) {
-      const { selectedOption } = activeComponent;
-      this.setInfo(selectedOption.help);
-    } else {
+    if (activeComponent instanceof InputBase) {
       // Input
-      this.setInfo('Press Enter to finish; Esc to clear/cancel');
     }
   }
 

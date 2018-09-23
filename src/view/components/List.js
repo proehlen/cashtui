@@ -6,6 +6,7 @@ import ComponentBase from './ComponentBase';
 import Menu from './Menu';
 import MenuOption from './MenuOption';
 import output from '../output';
+import stack from '../stack';
 
 import { KEY_PAGE_DOWN, KEY_PAGE_UP } from '../keys';
 
@@ -34,7 +35,7 @@ export default class List extends ComponentBase {
     const colToDiv = (col, index) => {
       const column = this._columns[index];
       const merged: any = {
-        text: col,
+        text: col.substr(0, output.width),
       };
       if (column.width) merged.width = column.width;
       if (column.align) merged.align = column.align;
@@ -49,6 +50,10 @@ export default class List extends ComponentBase {
   }
 
   async pageUp() {
+    if (this._startIndex === 0) {
+      stack.setInfo('Already at start');
+      return;
+    }
     this._startIndex -= output.contentHeight;
     if (this._startIndex < 0) {
       this._startIndex = 0;
@@ -56,6 +61,10 @@ export default class List extends ComponentBase {
   }
 
   async pageDown() {
+    if ((this._startIndex + output.contentHeight) > this._data.length) {
+      stack.setInfo('No more pages');
+      return;
+    }
     this._startIndex += output.contentHeight;
     if (this._startIndex >= (this._data.length)) {
       this._startIndex = this._data.length - 1;

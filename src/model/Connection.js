@@ -6,6 +6,17 @@ import Network from 'my-bitcoin-cash-lib/lib/Network';
 
 import state from './state';
 
+const MAX_HISTORY = 25;
+
+declare type History = {
+  network: string,
+  host: string,
+  port: number,
+  cookieFile: string,
+  user: string,
+  password: string,
+}
+
 export default class Connection {
   _network: Network
   _host: string
@@ -103,6 +114,7 @@ export default class Connection {
   async connect() {
     await state.rpc.request('getinfo');
     this._isConnected = true;
+    Connection.addHistory(this);
   }
 
   static getDefaultDataDir() {
@@ -128,5 +140,38 @@ export default class Connection {
         throw new Error(`Unrecognized platform '${process.platform}'`);
     }
     return datadir;
+  }
+
+  static getHistory(): Array<History> {
+    let history = [];
+    const stored = state.localStorage.getItem('connectionHistory');
+    if (stored) {
+      history = JSON.parse(stored);
+    }
+    return history;
+  }
+
+  static addHistory(connection: Connection) {
+    const newRec: History = {
+      network: connection.network.label,
+      host: connection.host,
+      port: connection.port,
+      cookieFile: connection.cookieFile,
+      user: connection.user,
+      password: connection.password,
+    };
+
+    const history = this.getHistory();
+    if (history.length) {
+      history.unshift(newRec);
+    } else {
+      history.push(newRec);
+    }
+
+    if (history.length > MAX_HISTORY) {
+      history.splice(MAX_HISTORY);
+    }
+
+    state.localStorage.setItem('connectionHistory', JSON.stringify(history));
   }
 }

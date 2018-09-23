@@ -17,6 +17,7 @@ export default class Menu extends ComponentBase {
   _options: MenuOption[]
   _active: boolean
   _selectedIndex: number
+  _hasBack: boolean
 
   constructor(options?: MenuOption[] = [], allowBackOption: boolean = true) {
     super();
@@ -31,6 +32,9 @@ export default class Menu extends ComponentBase {
     // Most menus have (B)ack option
     if (allowBackOption) {
       this._options.push(new MenuOption('B', 'Back', 'Go back to previous menu'));
+      this._hasBack = true;
+    } else {
+      this._hasBack = false;
     }
 
     // Every menu has to allow for quitting
@@ -60,7 +64,18 @@ export default class Menu extends ComponentBase {
     console.log(ui.toString());
     if (this._active) {
       this._cursorToselectedOption();
-      stack.setInfo(this.selectedOption.help);
+    }
+  }
+
+  addOption(option: MenuOption, position: 'start' | 'end' = 'end') {
+    debugger;
+    if (position === 'start') {
+      this._options.unshift(option);
+    } else {
+      const insertAt = this._hasBack
+        ? this._options.length - 2 // before Back
+        : this._options.length - 1; // before Quit
+      this._options.splice(insertAt, 0, option);
     }
   }
 
@@ -70,7 +85,11 @@ export default class Menu extends ComponentBase {
   get options() { return this._options; }
 
   get active() { return this._active; }
-  set active(active: boolean) { this._active = active; }
+  set active(active: boolean) {
+    const option = this._options[this._selectedIndex];
+    stack.setInfo(option.help);
+    this._active = active;
+  }
 
   cycleSelectedOption(direction: 1 | -1) {
     this._selectedIndex += direction;
@@ -137,8 +156,6 @@ export default class Menu extends ComponentBase {
                 // Valid option
                 stack.setWarning(`Sorry, the '${option.label}' feature is not implemented yet`);
               }
-            } else {
-              stack.setWarning('Invaid option');
             }
             break;
           }

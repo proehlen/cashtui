@@ -11,7 +11,7 @@ import Input from './components/Input';
 
 declare var process: any;
 
-type StatusType = 'error' | 'warning' | 'info';
+type StatusType = 'error' | 'warning' | 'info' | 'none';
 
 type Status = {
   type: StatusType,
@@ -70,6 +70,18 @@ class Stack {
     this._renderStatus();
     output.cursorTo(0, output.contentStartRow);
     this.active.render();
+  }
+
+  _clearStatus() {
+    this._status = {
+      type: 'none',
+      message: '',
+    };
+  }
+
+  async handle(key: string) {
+    this._clearStatus();
+    await this.active.handle(key);
   }
 
   _renderStatus() {

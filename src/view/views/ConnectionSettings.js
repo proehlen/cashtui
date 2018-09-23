@@ -94,9 +94,11 @@ export default class ConnectionSettings extends ViewBase {
   async handle(key: string) {
     switch (key) {
       case KEY_UP:
+        if (this._menu.active) this._menu.active = false;
         this.cycleSelectedField(-1);
         break;
       case KEY_DOWN:
+        if (this._menu.active) this._menu.active = false;
         this.cycleSelectedField(1);
         break;
       case KEY_LEFT:
@@ -145,9 +147,6 @@ export default class ConnectionSettings extends ViewBase {
           } else {
             await selectedField.input.handle(key);
           }
-        // } else if (key.toUpperCase() === 'C') {
-        //   // Connect
-        //   await this.connect();
         } else {
           await this._menu.handle(key);
         }

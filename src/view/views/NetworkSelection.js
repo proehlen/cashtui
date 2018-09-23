@@ -9,6 +9,7 @@ import Connection from '../../model/Connection';
 import Menu from '../components/Menu';
 import MenuOption from '../components/MenuOption';
 import ConnectionSettings from './ConnectionSettings';
+import ConnectionHistory from './ConnectionHistory';
 import output from '../output';
 import state from '../../model/state';
 import stack from '../stack';
@@ -23,7 +24,7 @@ export default class NetworkSelection extends ViewBase {
     super('Connect to node');
     const menuOptions = [
       new MenuOption('C', 'Continue', 'Connect to Network', this.toConnectionSettings.bind(this)),
-      new MenuOption('R', 'Recent', 'Recent connections'),
+      new MenuOption('R', 'Recent', 'Recent connections', this.toConnectionHistory.bind(this)),
     ];
     this._menu = new Menu(menuOptions, false);
     this._networks = [
@@ -70,6 +71,14 @@ export default class NetworkSelection extends ViewBase {
       const connection = new Connection(network);
       state.connection = connection;
       stack.push(new ConnectionSettings());
+    } catch (err) {
+      stack.setError(err.message);
+    }
+  }
+
+  async toConnectionHistory() {
+    try {
+      stack.push(new ConnectionHistory());
     } catch (err) {
       stack.setError(err.message);
     }

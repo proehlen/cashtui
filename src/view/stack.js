@@ -5,7 +5,7 @@ import cliui from 'cliui';
 
 import output from './output';
 import { version } from '../../package.json';
-// import state from '../model/state';
+import state from '../model/state';
 import ViewBase from './views/ViewBase';
 import Input from './components/Input';
 
@@ -95,17 +95,21 @@ class Stack {
     output.cursorTo(0, output.height - 2);
     const ui = cliui({ wrap: false });
 
-    // const network = state.rpc.network || '';
-    // const networkWidth = network.length;
-    // const messageWidth = output.width - networkWidth;
-    const messageWidth = output.width;
+    let networkName = '';
+    const { connection } = state;
+    if (connection && connection.isConnected) {
+      networkName = connection.network.label;
+    }
+
+    const networkWidth = networkName.length;
+    const messageWidth = output.width - networkWidth;
     const message = this.status.message.substr(0, messageWidth);
     ui.div({
       text: colors[bgColor][fgColor](message),
-      // width: messageWidth,
-    // }, {
-    //   text: network,
-    //   width: networkWidth,
+      width: messageWidth,
+    }, {
+      text: networkName,
+      width: networkWidth,
     });
     console.log(ui.toString());
   }
@@ -113,6 +117,7 @@ class Stack {
   _renderTitle() {
     output.cursorTo(0, 0);
     const ui = cliui();
+    const versionText = `v${version}`;
     ui.div({
       text: colors.blue(
         'My Cash CLI',
@@ -122,7 +127,7 @@ class Stack {
       text: this.active.title,
       align: 'center',
     }, {
-      text: `v${version}`,
+      text: versionText,
       align: 'right',
     });
     console.log(ui.toString());

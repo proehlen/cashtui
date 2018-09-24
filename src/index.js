@@ -1,6 +1,7 @@
 // @flow
 
 import stack from './view/stack';
+import output from './view/output';
 import NetworkSelection from './view/views/NetworkSelection';
 
 stack.push(new NetworkSelection());
@@ -13,5 +14,11 @@ stdin.setRawMode(true);
 stdin.setEncoding('utf8');
 stdin.on('data', async (key) => {
   await stack.handle(key);
+  stack.render();
+});
+
+// Re-render on window resize
+process.stdout.on('resize', () => {
+  output.resize();
   stack.render();
 });

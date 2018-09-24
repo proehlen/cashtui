@@ -20,9 +20,7 @@ class Output {
   _height: number
 
   constructor() {
-    const [width, height] = process.stdout.getWindowSize();
-    this._width = width;
-    this._height = height;
+    this.resize();
   }
 
   clear() {
@@ -31,6 +29,12 @@ class Output {
 
   cursorTo(x: number, y: number) {
     readline.cursorTo(process.stdout, x, y);
+  }
+
+  resize() {
+    const [width, height] = process.stdout.getWindowSize();
+    this._width = width;
+    this._height = height;
   }
 
   get height() {

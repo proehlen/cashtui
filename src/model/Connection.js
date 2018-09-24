@@ -8,7 +8,7 @@ import state from './state';
 
 const MAX_HISTORY = 25;
 
-declare type History = {
+export type History = {
   network: string,
   host: string,
   port: number,

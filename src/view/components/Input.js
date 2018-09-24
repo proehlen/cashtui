@@ -8,11 +8,13 @@ import { KEY_ESCAPE, KEY_ENTER, KEY_BACKSPACE } from '../keys';
 export default class Input extends ComponentBase {
   _value: string
   _onEnter: () => Promise<void>
+  _isPassword: boolean
 
-  constructor(onEnter: () => Promise<void>, initialValue: string = '') {
+  constructor(onEnter: () => Promise<void>, initialValue: string = '', isPassword: boolean = false) {
     super();
     this._onEnter = onEnter;
     this._value = initialValue;
+    this._isPassword = isPassword;
   }
 
   get value() { return this._value; }
@@ -26,7 +28,10 @@ export default class Input extends ComponentBase {
     output.cursorTo(atColumn, atRow);
     for (let row = 0; row < rows; row++) {
       const prompt = active && row === 0 ? '> ' : '  ';
-      const value = this.value.substr(row * valueColumnWidth, valueColumnWidth);
+      let value = this.value.substr(row * valueColumnWidth, valueColumnWidth);
+      if (this._isPassword) {
+        value = '*'.repeat(value.length);
+      }
       console.log(`${prompt}${value}`);
     }
 

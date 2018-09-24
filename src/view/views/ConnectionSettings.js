@@ -41,7 +41,7 @@ export default class ConnectionSettings extends ViewBase {
     this._fields[indexes.PORT] = { label: 'Port', input: new Input(this._onEnter.bind(this), state.connection.port.toString()) };
     this._fields[indexes.COOKIE] = { label: 'Cookie file', input: new Input(this._onEnter.bind(this), state.connection.cookieFile) };
     this._fields[indexes.USER] = { label: 'User', input: new Input(this._onEnter.bind(this), state.connection.user) };
-    this._fields[indexes.PASSWORD] = { label: 'Password', input: new Input(this._onEnter.bind(this), state.connection.password) };
+    this._fields[indexes.PASSWORD] = { label: 'Password', input: new Input(this._onEnter.bind(this), state.connection.password, true) };
     this._menu = new Menu(menuOptions);
   }
 

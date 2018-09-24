@@ -23,7 +23,11 @@ export default class ConnectionHistory extends ViewBase {
     this._history = Connection.getHistory();
 
     const listData: Array<Array<string>> = this._history
-      .map(rec => [rec.network, `${rec.host}:${rec.port.toString()}`, rec.cookieFile || `${rec.user}:<password>`]);
+      .map(rec => [
+        rec.network,
+        `${rec.host}:${rec.port.toString()}`,
+        rec.cookieFile || `${rec.user}:${'*'.repeat(rec.password.length)}`,
+      ]);
 
     const columns: Array<ListColumn> = [{
       heading: 'Network',

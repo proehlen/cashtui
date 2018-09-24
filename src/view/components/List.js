@@ -10,27 +10,31 @@ import MenuOption from './MenuOption';
 import output from '../output';
 import stack from '../stack';
 
-import { KEY_PAGE_DOWN, KEY_PAGE_UP } from '../keys';
+import {
+  KEY_PAGE_DOWN, KEY_PAGE_UP, KEY_DOWN, KEY_UP, KEY_ENTER,
+} from '../keys';
 
 export default class List extends ComponentBase {
   _startIndex: number
   _data: Array<Array<string>>
   _columns: Array<ListColumn>
   _showHeadings: boolean
-  _onEnter: () => Promise<void>
+  _onEnter: (number) => Promise<void>
+  _selectedPageRow: number
 
   constructor(
     columns: Array<ListColumn>,
     data: Array<Array<string>>,
     showHeadings: boolean = true,
     menu?: Menu,
-    onEnter?: () => Promise<void>,
+    onEnter?: (number) => Promise<void>,
   ) {
     super();
     this._columns = columns;
     this._data = data;
     this._showHeadings = showHeadings;
     this._startIndex = 0;
+    this._selectedPageRow = 0;
     if (onEnter) {
       this._onEnter = onEnter;
     }
@@ -42,6 +46,7 @@ export default class List extends ComponentBase {
   }
 
   render() {
+    // Column headings
     if (this._showHeadings) {
       output.cursorTo(0, output.contentStartRow - 1);
       const reduceHeadingsToString = (accumulator, column): string => {
@@ -52,6 +57,7 @@ export default class List extends ComponentBase {
       console.log(colors.bgBlue.white(heading));
     }
 
+    // Data for current page
     output.cursorTo(0, output.contentStartRow);
     const reduceColsToString = (accumulator, colData, index): string => {
       const column = this._columns[index];
@@ -61,7 +67,16 @@ export default class List extends ComponentBase {
     this._data
       .slice(this._startIndex, this._startIndex + output.contentHeight)
       .map(cols => cols.reduce(reduceColsToString, ''))
-      .forEach(cols => console.log(cols.substr(0, output.width)));
+      .forEach((text, index) => {
+        const outputText = text.substr(0, output.width);
+        if (this._onEnter && index === this._selectedPageRow) {
+          // onEnter callback signifies rows are selectable so
+          // highlight selected row
+          console.log(colors.inverse(outputText));
+        } else {
+          console.log(outputText);
+        }
+      });
   }
 
   async pageUp() {
@@ -70,9 +85,26 @@ export default class List extends ComponentBase {
       return;
     }
     this._startIndex -= output.contentHeight;
+    this._selectedPageRow = output.contentHeight - 1;
     if (this._startIndex < 0) {
       this._startIndex = 0;
     }
+  }
+
+  get selectedRowIndex() {
+    return this._startIndex + this._selectedPageRow;
+  }
+
+  _currentPage(): number {
+    return Math.ceil((this._startIndex + 1) / output.contentHeight);
+  }
+
+  _numberPages(): number {
+    return Math.floor(this._data.length / output.contentHeight) + 1;
+  }
+
+  _isLastPage(): boolean {
+    return this._currentPage() >= this._numberPages();
   }
 
   async pageDown() {
@@ -81,18 +113,52 @@ export default class List extends ComponentBase {
       return;
     }
     this._startIndex += output.contentHeight;
+    this._selectedPageRow = 0;
     if (this._startIndex >= (this._data.length)) {
       this._startIndex = this._data.length - 1;
     }
   }
 
+  async selectPrevious() {
+    if (this._selectedPageRow === 0) {
+      await this.pageUp();
+    } else {
+      this._selectedPageRow--;
+    }
+  }
+
+  async selectNext() {
+    const isLastPage = this._isLastPage();
+    const lastPageRowIndex = (this._data.length % output.contentHeight) - 1;
+    if (!isLastPage && this._selectedPageRow >= output.contentHeight - 1) {
+      await this.pageDown();
+    } else if (isLastPage && this._selectedPageRow < lastPageRowIndex) {
+      this._selectedPageRow++;
+    } else if (!isLastPage) {
+      this._selectedPageRow++;
+    } else {
+      stack.setInfo('No more records');
+    }
+  }
+
   async handle(key: string) {
     switch (key) {
+      case KEY_ENTER:
+        if (this._onEnter) {
+          await this._onEnter(this.selectedRowIndex);
+        }
+        break;
+      case KEY_DOWN:
+        await this.selectNext();
+        break;
+      case KEY_UP:
+        await this.selectPrevious();
+        break;
       case KEY_PAGE_DOWN:
-        this.pageDown();
+        await this.pageDown();
         break;
       case KEY_PAGE_UP:
-        this.pageUp();
+        await this.pageUp();
         break;
       default:
         // Don't handle here

@@ -1,7 +1,5 @@
 // @flow
 
-import cliui from 'cliui';
-
 import ComponentBase from './ComponentBase';
 import stack from '../stack';
 import output from '../output';
@@ -22,22 +20,21 @@ export default class Input extends ComponentBase {
 
   render(atColumn: number = 0, atRow: number = output.contentStartRow, active: boolean = true) {
     // Build options text
-    const ui = cliui();
+    const promptColumnWidth = 2;
+    const valueColumnWidth = output.width - atColumn - promptColumnWidth;
+    const rows = Math.trunc(this._value.length / valueColumnWidth) + 1;
     output.cursorTo(atColumn, atRow);
-    ui.div({
-      text: active ? '> ' : ' ',
-      width: 2,
-    }, {
-      text: this._value,
-    });
-    console.log(ui.toString());
-
-    if (active) {
-      const columnWidth = ui.width - 2;
-      const cursorColumn = atColumn + (this._value.length % columnWidth) + 2;
-      const cursorRow = Math.trunc(this._value.length / columnWidth) + atRow;
-      output.cursorTo(cursorColumn, cursorRow);
+    for (let row = 0; row < rows; row++) {
+      const prompt = active && row === 0 ? '> ' : '  ';
+      const value = this.value.substr(row * valueColumnWidth, valueColumnWidth);
+      console.log(`${prompt}${value}`);
     }
+
+    // Put cursor back to next char after last character output - ie where
+    // the user will be typing next
+    const cursorColumn = atColumn + (this._value.length % valueColumnWidth) + promptColumnWidth;
+    const cursorRow = Math.trunc(this._value.length / valueColumnWidth) + atRow;
+    output.cursorTo(cursorColumn, cursorRow);
   }
 
   async handle(key: string): Promise<void> {
@@ -61,10 +58,15 @@ export default class Input extends ComponentBase {
         // that haven't been handled by this point.
         if (key.length === 1 && key.charCodeAt(0) > 0x1F) {
           this._value += key;
-        } else if (key.length > 1) {
+        } else if (key.length > 4) {
           // Need to allow multiple chars for pasting - some of
           // these might not be printable however
           this._value += key;
+        } else {
+          // keys of length 2 to 4 are possibly arrow navigation and other
+          // undesirable inputs that will screw up our input control so
+          // ignore them.  It presently means that you can't paste
+          // less than 5 chars into the input field.
         }
     }
   }

@@ -24,6 +24,7 @@ export default class List extends ComponentBase {
   _data: Array<Array<string>>
   _columns: Array<ListColumn>
   _showHeadings: boolean
+  _rowSelection: boolean
   _onEnter: (number) => Promise<void>
   _selectedPageRow: number
 
@@ -32,6 +33,7 @@ export default class List extends ComponentBase {
     data: Array<Array<string>>,
     showHeadings: boolean = true,
     menu?: Menu,
+    rowSelection: boolean = false,
     onEnter?: (number) => Promise<void>,
   ) {
     super();
@@ -40,6 +42,7 @@ export default class List extends ComponentBase {
     this._showHeadings = showHeadings;
     this._startIndex = 0;
     this._selectedPageRow = 0;
+    this._rowSelection = rowSelection;
     if (onEnter) {
       this._onEnter = onEnter;
     }
@@ -74,9 +77,7 @@ export default class List extends ComponentBase {
       .map(cols => cols.reduce(reduceColsToString, ''))
       .forEach((text, index) => {
         const outputText = text.substr(0, output.width);
-        if (this._onEnter && index === this._selectedPageRow) {
-          // onEnter callback signifies rows are selectable so
-          // highlight selected row
+        if (this._rowSelection && index === this._selectedPageRow) {
           console.log(colors.inverse(outputText));
         } else {
           console.log(outputText);
@@ -154,12 +155,12 @@ export default class List extends ComponentBase {
         }
         break;
       case KEY_DOWN:
-        if (this._onEnter) {
+        if (this._rowSelection) {
           await this.selectNext();
         }
         break;
       case KEY_UP:
-        if (this._onEnter) {
+        if (this._rowSelection) {
           await this.selectPrevious();
         }
         break;

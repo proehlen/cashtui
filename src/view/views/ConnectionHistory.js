@@ -6,6 +6,7 @@ import ViewBase from './ViewBase';
 import List from '../components/List';
 import type { ListColumn } from '../components/List';
 import Menu from '../components/Menu';
+import MenuOption from '../components/MenuOption';
 import Connection, { type History as ModelHistory } from '../../model/Connection';
 import stack from '../stack';
 import state from '../../model/state';
@@ -18,7 +19,9 @@ export default class ConnectionHistory extends ViewBase {
   constructor() {
     super('Recent Connections');
 
-    this._menu = new Menu();
+    this._menu = new Menu([
+      new MenuOption('C', 'Connect', 'Connect to selected network', this.connectToSelected.bind(this)),
+    ]);
 
     this._history = Connection.getHistory();
 
@@ -40,13 +43,13 @@ export default class ConnectionHistory extends ViewBase {
       width: 40,
     }];
 
-    this._list = new List(columns, listData, true, this._menu, this.onSelection.bind(this));
+    this._list = new List(columns, listData, true, this._menu, true);
   }
 
-  async onSelection(historyIndex: number) {
+  async connectToSelected() {
     try {
-      debugger;
-      const history = this._history[historyIndex];
+      const selectedIndex = this._list.selectedRowIndex;
+      const history = this._history[selectedIndex];
       const network = Network.fromString(history.network);
       const connection = new Connection(network);
       connection.host = history.host;

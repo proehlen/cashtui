@@ -1,5 +1,4 @@
 // @flow
-
 import ViewBase from './ViewBase';
 import List from '../components/List';
 import type { ListColumn } from '../components/ListColumn';
@@ -13,22 +12,24 @@ export default class ConnectionHistory extends ViewBase {
   constructor() {
     super('Recent Connections');
 
+    this._menu = new Menu();
+
     const history: Array<Array<string>> = Connection
       .getHistory()
-      .map(rec => [rec.network, rec.host, rec.port.toString(), rec.cookieFile || rec.user]);
+      .map(rec => [rec.network, `${rec.host}:${rec.port.toString()}`, rec.cookieFile || `${rec.user}:<password>`]);
 
     const columns: Array<ListColumn> = [{
+      heading: 'Network',
       width: 10,
     }, {
-      width: 15,
+      heading: 'Host',
+      width: 30,
     }, {
-      width: 6,
-    }, {
+      heading: 'Auth',
       width: 40,
     }];
 
-    this._list = new List(columns, history);
-    this._menu = new Menu();
+    this._list = new List(columns, history, true, this._menu);
   }
 
   render() {

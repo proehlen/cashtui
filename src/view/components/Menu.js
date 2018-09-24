@@ -68,7 +68,6 @@ export default class Menu extends ComponentBase {
   }
 
   addOption(option: MenuOption, position: 'start' | 'end' = 'end') {
-    debugger;
     if (position === 'start') {
       this._options.unshift(option);
     } else {

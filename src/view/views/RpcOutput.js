@@ -17,9 +17,8 @@ export default class RpcOutput extends ViewBase {
     // RPC results are a single column list
     const listData: Array<Array<string>> = rpcResult
       .map(rec => [rec]);
-    const columns: Array<ListColumn> = [{
-    }];
-    this._list = new List(columns, listData, this._menu);
+    const columns: Array<ListColumn> = [{ heading: 'Result', width: 999 }];
+    this._list = new List(columns, listData, false, this._menu);
   }
 
   render() {

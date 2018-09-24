@@ -2,10 +2,10 @@
 
 import ViewBase from './ViewBase';
 import List from '../components/List';
-import type { ListColumn } from '../components/ListColumn';
+import type { ListColumn } from '../components/List';
 import Menu from '../components/Menu';
 
-export default class RpcOutput extends ViewBase {
+export default class RpcOutputList extends ViewBase {
   _list: List
   _menu: Menu
 

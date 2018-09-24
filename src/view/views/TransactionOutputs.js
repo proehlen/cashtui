@@ -7,7 +7,7 @@ import Output from 'my-bitcoin-cash-lib/lib/Output';
 import ViewBase from './ViewBase';
 import List from '../components/List';
 import Menu from '../components/Menu';
-import type { ListColumn } from '../components/ListColumn';
+import type { ListColumn } from '../components/List';
 import state from '../../model/state';
 
 export default class TransactionOutputs extends ViewBase {

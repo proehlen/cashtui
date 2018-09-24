@@ -4,7 +4,6 @@ import colors from 'colors';
 // $flow-disable-line stringFixedWidth is definitely available
 import { stringFixedWidth } from 'my-bitcoin-cash-lib/lib/string';
 
-import type { ListColumn } from './ListColumn';
 import ComponentBase from './ComponentBase';
 import Menu from './Menu';
 import MenuOption from './MenuOption';
@@ -14,6 +13,11 @@ import stack from '../stack';
 import {
   KEY_PAGE_DOWN, KEY_PAGE_UP, KEY_DOWN, KEY_UP, KEY_ENTER,
 } from '../keys';
+
+export type ListColumn = {
+  heading: string,
+  width: number,
+}
 
 export default class List extends ComponentBase {
   _startIndex: number
@@ -150,10 +154,14 @@ export default class List extends ComponentBase {
         }
         break;
       case KEY_DOWN:
-        await this.selectNext();
+        if (this._onEnter) {
+          await this.selectNext();
+        }
         break;
       case KEY_UP:
-        await this.selectPrevious();
+        if (this._onEnter) {
+          await this.selectPrevious();
+        }
         break;
       case KEY_PAGE_DOWN:
         await this.pageDown();

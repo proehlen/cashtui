@@ -4,7 +4,7 @@ import Network from 'my-bitcoin-cash-lib/lib/Network';
 import MainMenu from './MainMenu';
 import ViewBase from './ViewBase';
 import List from '../components/List';
-import type { ListColumn } from '../components/ListColumn';
+import type { ListColumn } from '../components/List';
 import Menu from '../components/Menu';
 import Connection, { type History as ModelHistory } from '../../model/Connection';
 import stack from '../stack';

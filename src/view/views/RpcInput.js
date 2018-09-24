@@ -5,7 +5,7 @@ import colors from 'colors';
 
 import ViewBase from './ViewBase';
 import Input from '../components/Input';
-import RpcOutput from './RpcOutput';
+import RpcOutputList from './RpcOutputList';
 import stack from '../stack';
 import state from '../../model/state';
 import output from '../output';
@@ -82,23 +82,29 @@ export default class RawInput extends ViewBase {
   async onEnter() {
     try {
       const rpcResult = await state.rpc.request(this._input.value, true);
-      let outputLines = [];
       if (typeof rpcResult === 'string') {
-        outputLines = rpcResult.split('\n');
+        const outputLines = rpcResult.split('\n');
+        if (outputLines.length > 1 || rpcResult.length < output.width) {
+          stack.push(new RpcOutputList(outputLines));
+        } else {
+          stack.setWarning('Display of non-breaking string results not implemented yet.');
+        }
       } else if (typeof rpcResult === 'number') {
-        outputLines.push(JSON.stringify(rpcResult));
+        // const outputLines.push(JSON.stringify(rpcResult));
+        stack.setWarning('Display of number results not implemented yet.');
       } else if (typeof rpcResult === 'object') {
-        outputLines = Object.entries(rpcResult).map((entry: [string, any]) => `${entry[0]}: ${JSON.stringify(entry[1])}`);
+        const stringified = JSON.stringify(rpcResult, null, 2);
+        const outputLines = stringified.split('\n');
+        stack.push(new RpcOutputList(outputLines));
       } else if (Array.isArray(rpcResult)) {
-        outputLines.concat(rpcResult.map(entry => JSON.stringify(entry)));
-      }
-      if (outputLines.length) {
-        this._input.value = '';
-        this._historyLevel = 0;
-        stack.push(new RpcOutput(outputLines));
+        const outputLines = rpcResult.map(entry => JSON.stringify(entry));
+        stack.push(new RpcOutputList(outputLines));
       } else {
         stack.setError('Unexpected output received; don\'t know how to display');
+        return;
       }
+      this._input.value = '';
+      this._historyLevel = 0;
     } catch (err) {
       let errorMessage;
       if (err.message.includes('ECONNREFUSED')) {

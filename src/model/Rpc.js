@@ -87,7 +87,11 @@ export default class Rpc {
               // Probably JSON response
               const jsonResponse = JSON.parse(responseData);
               if (jsonResponse.error) {
-                reject(new Error(`bitcoind error: ${JSON.stringify(jsonResponse.error)}`));
+                if (jsonResponse.error.message) {
+                  reject(new Error(jsonResponse.error.message));
+                } else {
+                  reject(new Error(`bitcoind error: ${JSON.stringify(jsonResponse.error)}`));
+                }
               } else {
                 resolve(jsonResponse.result);
               }

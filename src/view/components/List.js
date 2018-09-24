@@ -1,6 +1,7 @@
 // @flow
 import colors from 'colors';
 
+// $flow-disable-line stringFixedWidth is definitely available
 import { stringFixedWidth } from 'my-bitcoin-cash-lib/lib/string';
 
 import type { ListColumn } from './ListColumn';

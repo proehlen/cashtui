@@ -26,6 +26,7 @@ export default class List extends ComponentBase {
   _showHeadings: boolean
   _rowSelection: boolean
   _onEnter: (number) => Promise<void>
+  _onSelect: () => Promise<void>
   _selectedPageRow: number
 
   constructor(
@@ -34,6 +35,7 @@ export default class List extends ComponentBase {
     showHeadings: boolean = true,
     menu?: Menu,
     rowSelection: boolean = false,
+    onSelect?: () => Promise<void>,
     onEnter?: (number) => Promise<void>,
   ) {
     super();
@@ -43,6 +45,9 @@ export default class List extends ComponentBase {
     this._rowSelection = rowSelection;
     if (onEnter) {
       this._onEnter = onEnter;
+    }
+    if (onSelect) {
+      this._onSelect = onSelect;
     }
     if (menu) {
       // Add paging to menu
@@ -99,6 +104,10 @@ export default class List extends ComponentBase {
     if (this._startIndex < 0) {
       this._startIndex = 0;
     }
+
+    if (this._onSelect) {
+      await this._onSelect();
+    }
   }
 
   get selectedRowIndex() {
@@ -127,6 +136,9 @@ export default class List extends ComponentBase {
     if (this._startIndex >= (this._data.length)) {
       this._startIndex = this._data.length - 1;
     }
+    if (this._onSelect) {
+      await this._onSelect();
+    }
   }
 
   async selectPrevious() {
@@ -134,6 +146,9 @@ export default class List extends ComponentBase {
       await this.pageUp();
     } else {
       this._selectedPageRow--;
+    }
+    if (this._onSelect) {
+      await this._onSelect();
     }
   }
 
@@ -148,6 +163,9 @@ export default class List extends ComponentBase {
       this._selectedPageRow++;
     } else {
       stack.setInfo('No more records');
+    }
+    if (this._onSelect) {
+      await this._onSelect();
     }
   }
 

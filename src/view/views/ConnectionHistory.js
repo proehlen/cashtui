@@ -16,12 +16,14 @@ export default class ConnectionHistory extends ViewBase {
   _list: List
   _menu: Menu
   _history: Array<ModelHistory>
+  _connectOption: MenuOption
 
   constructor() {
     super('Recent Connections');
 
+    this._connectOption = new MenuOption('C', 'Connect', 'Connect to selected network', this.connectToSelected.bind(this));
     this._menu = new Menu([
-      new MenuOption('C', 'Connect', 'Connect to selected network', this.connectToSelected.bind(this)),
+      this._connectOption,
       new MenuOption('N', 'New', 'Create new connection', this.toNetworkSelection.bind(this)),
     ], false);
 
@@ -41,7 +43,11 @@ export default class ConnectionHistory extends ViewBase {
       width: 40,
     }];
 
-    this._list = new List(columns, listData, true, this._menu, true);
+    this._list = new List(columns, listData, true, this._menu, true, this.onListSelect.bind(this));
+  }
+
+  async onListSelect() {
+    this._menu.setSelectedOption(this._connectOption.key);
   }
 
   async toNetworkSelection() {

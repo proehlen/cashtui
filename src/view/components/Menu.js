@@ -81,6 +81,15 @@ export default class Menu extends ComponentBase {
     }
   }
 
+  setSelectedOption(key: string) {
+    const index = this._options.findIndex(option => option.key === key);
+    if (index < 0) {
+      throw new Error(`Cannot set selected menu option; missing key '${key}'`);
+    }
+
+    this._selectedIndex = index;
+  }
+
   get selectedIndex() { return this._selectedIndex; }
   set selectedIndex(index: number) { this._selectedIndex = index; }
   get selectedOption() { return this._options[this._selectedIndex]; }

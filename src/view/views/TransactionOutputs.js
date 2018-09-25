@@ -28,7 +28,10 @@ export default class TransactionOutputs extends ViewBase {
       width: 15,
     }, {
       heading: 'Address',
-      width: 65,
+      width: 40,
+    }, {
+      heading: 'Type',
+      width: 10,
     }];
     this._menu = new Menu();
     this._list = new List(columns, inputs, true, this._menu);
@@ -48,7 +51,7 @@ export default class TransactionOutputs extends ViewBase {
     if (!addressEncoded) {
       addressEncoded = 'Sorry, not available yet';
     }
-    return [index.toString(), value, addressEncoded];
+    return [index.toString(), value, addressEncoded, output.scriptType];
   }
 
   render() {

@@ -13,6 +13,9 @@
   "bin": {
     "cashtui": "./bin/cashtui.js"
   },
+  "files": [
+    "dist/"
+  ],
   "keywords": [
     "bitcoin",
     "cash",
@@ -27,15 +30,13 @@
     "nodejs"
   ],
   "scripts": {
-    "build": "babel src -d dist",
+    "build": "npm run eslint && npm run clean && npm run flowbuild && babel src -d dist",
     "clean": "rimraf dist",
     "eslint": "eslint src",
     "flow": "flow",
     "flowbuild": "flow-copy-source src dist",
-    "postinstall": "npm run build",
-    "prebuild": "npm run eslint && npm run clean && npm run flowbuild",
+    "prepare": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npm run build && node dist/index",
     "start": "node dist/index.js"
   },
   "dependencies": {

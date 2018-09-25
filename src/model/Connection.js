@@ -161,7 +161,17 @@ export default class Connection {
       password: connection.password,
     };
 
-    const history = this.getHistory();
+    let history = this.getHistory();
+
+    // Remove any earlier connections with identical settings
+    history = history
+      .filter(old => old.network !== connection.network.label
+          || old.host !== connection.host
+          || old.port !== connection.port
+          || old.cookieFile !== connection.cookieFile
+          || old.user !== connection.user);
+
+    // Add connection to top of history
     if (history.length) {
       history.unshift(newRec);
     } else {

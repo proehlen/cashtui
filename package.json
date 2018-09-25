@@ -1,6 +1,6 @@
 {
   "name": "cashtui",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Text UI for Bitcoin Cash nodes",
   "homepage": "https://github.com/proehlen/cashtui#README.md",
   "main": "dist/index.js",

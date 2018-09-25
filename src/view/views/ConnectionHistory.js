@@ -39,7 +39,7 @@ export default class ConnectionHistory extends ViewBase {
       heading: 'Host',
       width: 30,
     }, {
-      heading: 'Auth',
+      heading: 'Authentication',
       width: 40,
     }];
 

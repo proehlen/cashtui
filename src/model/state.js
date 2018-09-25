@@ -1,4 +1,5 @@
 // @flow
+import path from 'path';
 import { LocalStorage } from 'node-localstorage';
 
 import Rpc from './Rpc';
@@ -13,7 +14,8 @@ class State {
   _localStorage: LocalStorage
 
   constructor() {
-    this._localStorage = new LocalStorage('./cashtui');
+    const localStorageDir = path.join(State.appDataRoot, 'cashtui');
+    this._localStorage = new LocalStorage(localStorageDir);
     this._rpc = new Rpc();
     this._transactions = new Transactions();
   }
@@ -25,6 +27,14 @@ class State {
 
   set connection(connection: Connection) {
     this._connection = connection;
+  }
+
+  static get appDataRoot(): string {
+    const home = process.env.HOME || '';
+    return process.env.APPDATA // Windows
+      || (process.platform === 'darwin'
+        ? path.join(home, 'Library', 'Preferences') // Mac
+        : path.join(home, '.local', 'share')); // Linux
   }
 }
 

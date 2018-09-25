@@ -1,8 +1,8 @@
 // @flow
 
-import Transaction from 'my-bitcoin-cash-lib/lib/Transaction';
-import Output from 'my-bitcoin-cash-lib/lib/Output';
-// import Address from 'my-bitcoin-cash-lib/lib/Address';
+import Transaction from 'cashlib/lib/Transaction';
+import Output from 'cashlib/lib/Output';
+// import Address from 'cashlib/lib/Address';
 
 import ViewBase from './ViewBase';
 import List from '../components/List';

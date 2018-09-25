@@ -6,6 +6,7 @@ import colors from 'colors';
 import ViewBase from './ViewBase';
 import Input from '../components/Input';
 import OutputList from './OutputList';
+import OutputText from './OutputText';
 import stack from '../stack';
 import state from '../../model/state';
 import output from '../output';
@@ -31,7 +32,8 @@ export default class RawInput extends ViewBase {
         text: colors.gray('Enter an RPC command that will be sent to the bitcoin node. '
           + 'E.g. enter \'help\' (without the quotes) to get a list of commands or \'help\' '
           + 'followed by a command name to get help for that command.\n\n'
-          + 'Use up and down arrows to navigate history.'),
+          + 'Use up and down arrows to navigate history.  Press Escape to clear the input\n'
+          + 'and/or go back to the previous screen.'),
       });
       console.log(ui.toString());
     }
@@ -87,11 +89,10 @@ export default class RawInput extends ViewBase {
         if (outputLines.length > 1 || rpcResult.length < output.width) {
           stack.push(new OutputList('RPC result', outputLines));
         } else {
-          stack.setWarning('Display of non-breaking string results not implemented yet.');
+          stack.push(new OutputText('RPC result', rpcResult));
         }
       } else if (typeof rpcResult === 'number') {
-        // const outputLines.push(JSON.stringify(rpcResult));
-        stack.setWarning('Display of number results not implemented yet.');
+        stack.push(new OutputText('RPC result', rpcResult.toString()));
       } else if (typeof rpcResult === 'object') {
         const stringified = JSON.stringify(rpcResult, null, 2);
         const outputLines = stringified.split('\n');
@@ -112,7 +113,7 @@ export default class RawInput extends ViewBase {
       } else if (err.message.includes('401')) {
         errorMessage = 'Error: 401 (Unauthorized)';
       } else {
-        errorMessage = err.message;
+        [errorMessage] = err.message.split('\n');
       }
       stack.setError(errorMessage);
     }

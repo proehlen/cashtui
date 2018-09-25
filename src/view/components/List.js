@@ -2,7 +2,7 @@
 import colors from 'colors';
 
 // $flow-disable-line stringFixedWidth is definitely available
-import { stringFixedWidth } from 'my-bitcoin-cash-lib/lib/string';
+import { stringFixedWidth } from 'cashlib/lib/string';
 
 import ComponentBase from './ComponentBase';
 import Menu from './Menu';
@@ -182,11 +182,15 @@ export default class List extends ComponentBase {
       case KEY_DOWN:
         if (this._rowSelection) {
           await this.selectNext();
+        } else {
+          await this.pageDown();
         }
         break;
       case KEY_UP:
         if (this._rowSelection) {
           await this.selectPrevious();
+        } else {
+          await this.pageUp();
         }
         break;
       case KEY_PAGE_DOWN:

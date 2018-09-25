@@ -1,5 +1,5 @@
 // @flow
-import Transaction from 'my-bitcoin-cash-lib/lib/Transaction';
+import Transaction from 'cashlib/lib/Transaction';
 
 import ViewBase from './ViewBase';
 import Input from '../components/Input';

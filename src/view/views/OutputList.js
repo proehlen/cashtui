@@ -1,3 +1,4 @@
+/* Generic single column list view with standard menu */
 // @flow
 
 import ViewBase from './ViewBase';

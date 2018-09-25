@@ -1,5 +1,5 @@
 // @flow
-import Network from 'my-bitcoin-cash-lib/lib/Network';
+import Network from 'cashlib/lib/Network';
 
 import Connection, { type History as ModelHistory } from '../../model/Connection';
 import List from '../components/List';

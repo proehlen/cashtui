@@ -132,7 +132,7 @@ class Stack {
     const versionText = `v${version}`;
     ui.div({
       text: colors.blue(
-        'My Cash CLI',
+        'CashTUI',
       ),
       align: 'left',
     }, {

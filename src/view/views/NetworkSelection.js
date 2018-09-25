@@ -1,6 +1,6 @@
 // @flow
 
-import Network from 'my-bitcoin-cash-lib/lib/Network';
+import Network from 'cashlib/lib/Network';
 
 import ViewBase from './ViewBase';
 import Connection from '../../model/Connection';

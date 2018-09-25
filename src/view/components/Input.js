@@ -21,7 +21,7 @@ export default class Input extends ComponentBase {
   set value(value: string) { this._value = value; }
 
   render(atColumn: number = 0, atRow: number = output.contentStartRow, active: boolean = true) {
-    // Build options text
+    // Output value
     const promptColumnWidth = 2;
     const valueColumnWidth = output.width - atColumn - promptColumnWidth;
     const rows = Math.trunc(this._value.length / valueColumnWidth) + 1;

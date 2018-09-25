@@ -2,7 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import Network from 'my-bitcoin-cash-lib/lib/Network';
+import Network from 'cashlib/lib/Network';
 
 import state from './state';
 

@@ -1,8 +1,28 @@
 {
-  "name": "my-bitcoin-cash-cli",
+  "name": "cashtui",
   "version": "0.0.1",
-  "description": "CLI for my-bitcoin-cash-lib",
+  "description": "Text UI for Bitcoin Cash nodes",
+  "homepage": "https://github.com/proehlen/cashtui#README.md",
   "main": "bin/index.js",
+  "author": "Peter Roehlen",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/proehlen/cashtui.git"
+  },
+  "keywords": [
+    "bitcoin",
+    "cash",
+    "bch",
+    "ui",
+    "developer",
+    "tool",
+    "user interface",
+    "command line",
+    "shell",
+    "console",
+    "nodejs"
+  ],
   "scripts": {
     "build": "babel src -d bin",
     "clean": "rimraf bin",
@@ -15,13 +35,11 @@
     "dev": "npm run build && node bin/index",
     "start": "node bin/index.js"
   },
-  "author": "Peter Roehlen",
-  "license": "MIT",
   "dependencies": {
+    "cashlib": "0.0.1",
     "clear-console": "^1.1.0",
     "cliui": "^4.1.0",
     "colors": "^1.3.2",
-    "my-bitcoin-cash-lib": "file:../my-bitcoin-cash-lib",
     "node-localstorage": "^1.3.1"
   },
   "devDependencies": {

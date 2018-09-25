@@ -1,5 +1,5 @@
 // @flow
-import Transaction from 'my-bitcoin-cash-lib/lib/Transaction';
+import Transaction from 'cashlib/lib/Transaction';
 
 export default class Transactions {
   _active: Transaction

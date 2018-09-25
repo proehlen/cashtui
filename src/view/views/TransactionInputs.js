@@ -1,6 +1,6 @@
 // @flow
 
-import Transaction from 'my-bitcoin-cash-lib/lib/Transaction';
+import Transaction from 'cashlib/lib/Transaction';
 
 import List from './List';
 import state from '../../model/state';

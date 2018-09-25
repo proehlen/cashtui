@@ -22,23 +22,22 @@ export default class Menu extends ComponentBase {
   constructor(options?: MenuOption[] = [], allowBackOption: boolean = true) {
     super();
 
-    // Options specific to this menu
-    this._options = options;
-
-    // If menu is active, arrows cycle between options and keys
-    // execute menu options.
     this._active = true;
+    this._options = [];
+
+    // Every menu has to allow for quitting
+    this.addOption(new MenuOption('Q', 'Quit', 'Exit the program'));
 
     // Most menus have (B)ack option
     if (allowBackOption) {
-      this._options.push(new MenuOption('B', 'Back', 'Go back to previous menu'));
+      this.addOption(new MenuOption('B', 'Back', 'Go back to previous menu'), 'start');
       this._hasBack = true;
     } else {
       this._hasBack = false;
     }
 
-    // Every menu has to allow for quitting
-    this._options.push(new MenuOption('Q', 'Quit', 'Exit the program'));
+    // Add options specific to this menu
+    options.reverse().forEach(option => this.addOption(option, 'start'));
 
     // Set active/default  action
     this._selectedIndex = 0;
@@ -68,6 +67,10 @@ export default class Menu extends ComponentBase {
   }
 
   addOption(option: MenuOption, position: 'start' | 'end' = 'end') {
+    if (this._options.findIndex(existing => existing.key === option.key) > -1) {
+      throw new Error(`Cannot create menu with duplicate key '${option.key}'`);
+    }
+
     if (position === 'start') {
       this._options.unshift(option);
     } else {

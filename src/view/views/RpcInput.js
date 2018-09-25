@@ -5,7 +5,7 @@ import colors from 'colors';
 
 import ViewBase from './ViewBase';
 import Input from '../components/Input';
-import RpcOutputList from './RpcOutputList';
+import OutputList from './OutputList';
 import stack from '../stack';
 import state from '../../model/state';
 import output from '../output';
@@ -85,7 +85,7 @@ export default class RawInput extends ViewBase {
       if (typeof rpcResult === 'string') {
         const outputLines = rpcResult.split('\n');
         if (outputLines.length > 1 || rpcResult.length < output.width) {
-          stack.push(new RpcOutputList(outputLines));
+          stack.push(new OutputList('RPC result', outputLines));
         } else {
           stack.setWarning('Display of non-breaking string results not implemented yet.');
         }
@@ -95,10 +95,10 @@ export default class RawInput extends ViewBase {
       } else if (typeof rpcResult === 'object') {
         const stringified = JSON.stringify(rpcResult, null, 2);
         const outputLines = stringified.split('\n');
-        stack.push(new RpcOutputList(outputLines));
+        stack.push(new OutputList('RPC result', outputLines));
       } else if (Array.isArray(rpcResult)) {
         const outputLines = rpcResult.map(entry => JSON.stringify(entry));
-        stack.push(new RpcOutputList(outputLines));
+        stack.push(new OutputList('RPC result', outputLines));
       } else {
         stack.setError('Unexpected output received; don\'t know how to display');
         return;

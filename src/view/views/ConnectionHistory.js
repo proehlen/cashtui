@@ -26,6 +26,10 @@ export default class ConnectionHistory extends ViewBase {
     ], false);
 
     const listData = this._getListData();
+    if (!listData.length) {
+      throw new Error('No recent connections found.');
+    }
+
     const columns: Array<ListColumn> = [{
       heading: 'Network',
       width: 10,

@@ -1,72 +1,74 @@
 // @flow
 
-import cliui from 'cliui';
-import colors from 'colors';
 import Network from 'my-bitcoin-cash-lib/lib/Network';
 
 import ViewBase from './ViewBase';
 import Connection from '../../model/Connection';
+import List from '../components/List';
 import Menu from '../components/Menu';
 import MenuOption from '../components/MenuOption';
 import ConnectionSettings from './ConnectionSettings';
 import ConnectionHistory from './ConnectionHistory';
-import output from '../output';
 import state from '../../model/state';
 import stack from '../stack';
-import { KEY_UP, KEY_DOWN } from '../keys';
 
 export default class NetworkSelection extends ViewBase {
-  _networks: Array<string>
-  _selectedNetwork: number
+  _networks: Array<Array<string>>
   _menu: Menu
+  _list: List
+  _continueOption: MenuOption
 
   constructor() {
     super('Connect to node');
+
+    // Build menu
+    this._continueOption = new MenuOption('C', 'Continue', 'Connect to Network', this.toConnectionSettings.bind(this));
     const menuOptions = [
-      new MenuOption('C', 'Continue', 'Connect to Network', this.toConnectionSettings.bind(this)),
+      this._continueOption,
       new MenuOption('R', 'Recent', 'Recent connections', this.toConnectionHistory.bind(this)),
     ];
     this._menu = new Menu(menuOptions, false);
+
+    // Build networks list
     this._networks = [
-      'mainnet',
-      'testnet',
-      'regtest',
-      'nol',
+      ['mainnet'],
+      ['testnet'],
+      ['regtest'],
+      ['nol'],
     ];
-    this._selectedNetwork = 0;
+    this._list = new List(
+      [{
+        heading: 'Network',
+        width: 25,
+      }],
+      this._networks,
+      false,
+      undefined,
+      true,
+      this.onListSelect.bind(this),
+    );
+  }
+
+  async onListSelect() {
+    this._menu.setSelectedOption(this._continueOption.key);
   }
 
   render() {
     // Render network list
-    const ui = cliui();
-    output.cursorTo(0, output.contentStartRow);
-    for (let i = 0; i < this._networks.length; ++i) {
-      const option = this._networks[i];
-      const selected = i === this._selectedNetwork;
-      const selector = ` ${selected ? '>' : ' '} `;
-      const optionText = selected && this._menu.selectedOption.key === 'C'
-        ? colors.bold(option)
-        : option;
-      ui.div({
-        text: selector,
-        width: 2,
-      }, {
-        text: optionText,
-      });
-    }
-    ui.div({ text: '' });
-    ui.div({
-      text: 'Use up/down arrows to select network type',
-    });
-    console.log(ui.toString());
+    this._list.render();
 
     // Render menu last (for correct cursor positioning)
     this._menu.render();
   }
 
+  get _selectedNetwork(): string {
+    const selectedIndex = this._list.selectedRowIndex;
+    return this._networks[selectedIndex][0];
+  }
+
   async toConnectionSettings() {
     try {
-      const networkLabel = this._networks[this._selectedNetwork];
+      const networkLabel = this._selectedNetwork;
       const network = Network.fromString(networkLabel);
       const connection = new Connection(network);
       state.connection = connection;
@@ -85,21 +87,7 @@ export default class NetworkSelection extends ViewBase {
   }
 
   async handle(key: string) {
-    switch (key.toUpperCase()) {
-      case KEY_DOWN:
-        this._selectedNetwork++;
-        if (this._selectedNetwork >= this._networks.length) {
-          this._selectedNetwork = 0;
-        }
-        break;
-      case KEY_UP:
-        this._selectedNetwork--;
-        if (this._selectedNetwork < 0) {
-          this._selectedNetwork = this._networks.length - 1;
-        }
-        break;
-      default:
-        await this._menu.handle(key);
-    }
+    await this._menu.handle(key);
+    await this._list.handle(key);
   }
 }

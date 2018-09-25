@@ -47,6 +47,9 @@ export default class List extends ComponentBase {
       this._onEnter = onEnter;
     }
     if (onSelect) {
+      if (!rowSelection) {
+        throw new Error('onSelect callback is incompatible with rowSelection === false');
+      }
       this._onSelect = onSelect;
     }
     if (menu) {

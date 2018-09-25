@@ -23,15 +23,7 @@ export default class ConnectionHistory extends ViewBase {
       new MenuOption('C', 'Connect', 'Connect to selected network', this.connectToSelected.bind(this)),
     ]);
 
-    this._history = Connection.getHistory();
-
-    const listData: Array<Array<string>> = this._history
-      .map(rec => [
-        rec.network,
-        `${rec.host}:${rec.port.toString()}`,
-        rec.cookieFile || `${rec.user}:${'*'.repeat(rec.password.length)}`,
-      ]);
-
+    const listData = this._getListData();
     const columns: Array<ListColumn> = [{
       heading: 'Network',
       width: 10,
@@ -44,6 +36,16 @@ export default class ConnectionHistory extends ViewBase {
     }];
 
     this._list = new List(columns, listData, true, this._menu, true);
+  }
+
+  _getListData(): Array<Array<string>> {
+    this._history = Connection.getHistory();
+    return this._history
+      .map(rec => [
+        rec.network,
+        `${rec.host}:${rec.port.toString()}`,
+        rec.cookieFile || `${rec.user}:${'*'.repeat(rec.password.length)}`,
+      ]);
   }
 
   async connectToSelected() {
@@ -59,6 +61,7 @@ export default class ConnectionHistory extends ViewBase {
       connection.password = history.password;
       state.connection = connection;
       await connection.connect();
+      this._list.setData(this._getListData());
       stack.push(new MainMenu());
     } catch (err) {
       stack.setError(err.message);

@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "description": "Text UI for Bitcoin Cash nodes",
   "homepage": "https://github.com/proehlen/cashtui#README.md",
-  "main": "bin/index.js",
+  "main": "dist/index.js",
   "author": "Peter Roehlen",
   "license": "MIT",
   "repository": {
@@ -24,16 +24,16 @@
     "nodejs"
   ],
   "scripts": {
-    "build": "babel src -d bin",
-    "clean": "rimraf bin",
+    "build": "babel src -d dist",
+    "clean": "rimraf dist",
     "eslint": "eslint src",
     "flow": "flow",
-    "flowbuild": "flow-copy-source src bin",
+    "flowbuild": "flow-copy-source src dist",
     "postinstall": "npm run build",
     "prebuild": "npm run eslint && npm run clean && npm run flowbuild",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npm run build && node bin/index",
-    "start": "node bin/index.js"
+    "dev": "npm run build && node dist/index",
+    "start": "node dist/index.js"
   },
   "dependencies": {
     "cashlib": "0.0.1",

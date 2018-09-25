@@ -1,15 +1,16 @@
 // @flow
 import Network from 'my-bitcoin-cash-lib/lib/Network';
 
-import MainMenu from './MainMenu';
-import ViewBase from './ViewBase';
+import Connection, { type History as ModelHistory } from '../../model/Connection';
 import List from '../components/List';
 import type { ListColumn } from '../components/List';
+import MainMenu from './MainMenu';
 import Menu from '../components/Menu';
 import MenuOption from '../components/MenuOption';
-import Connection, { type History as ModelHistory } from '../../model/Connection';
+import NetworkSelection from './NetworkSelection';
 import stack from '../stack';
 import state from '../../model/state';
+import ViewBase from './ViewBase';
 
 export default class ConnectionHistory extends ViewBase {
   _list: List
@@ -21,7 +22,8 @@ export default class ConnectionHistory extends ViewBase {
 
     this._menu = new Menu([
       new MenuOption('C', 'Connect', 'Connect to selected network', this.connectToSelected.bind(this)),
-    ]);
+      new MenuOption('N', 'New', 'Create new connection', this.toNetworkSelection.bind(this)),
+    ], false);
 
     const listData = this._getListData();
     const columns: Array<ListColumn> = [{
@@ -36,6 +38,10 @@ export default class ConnectionHistory extends ViewBase {
     }];
 
     this._list = new List(columns, listData, true, this._menu, true);
+  }
+
+  async toNetworkSelection() {
+    stack.replace(new NetworkSelection());
   }
 
   _getListData(): Array<Array<string>> {

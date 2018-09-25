@@ -78,7 +78,7 @@ export default class NetworkSelection extends ViewBase {
 
   async toConnectionHistory() {
     try {
-      stack.push(new ConnectionHistory());
+      stack.replace(new ConnectionHistory());
     } catch (err) {
       stack.setError(err.message);
     }

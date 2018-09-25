@@ -38,7 +38,7 @@ export default class List extends ComponentBase {
   ) {
     super();
     this._columns = columns;
-    this.setData(data)
+    this.setData(data);
     this._showHeadings = showHeadings;
     this._rowSelection = rowSelection;
     if (onEnter) {
@@ -46,8 +46,8 @@ export default class List extends ComponentBase {
     }
     if (menu) {
       // Add paging to menu
-      menu.addOption(new MenuOption('N', 'Next page', 'Go to next page', this.pageDown.bind(this)));
-      menu.addOption(new MenuOption('P', 'Previous page', 'Return to previous page', this.pageUp.bind(this)));
+      menu.addOption(new MenuOption('D', 'Page Down', 'Go to next page', this.pageDown.bind(this)));
+      menu.addOption(new MenuOption('U', 'Page Up', 'Return to previous page', this.pageUp.bind(this)));
     }
   }
 

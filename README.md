@@ -11,7 +11,7 @@ CashTUI (pronounced "cash-too-ee") is a [text-based user interface](https://en.w
 ## Requirements
 
 1. A current version of Node.js and NPM.
-2. A local or accessible Bitcoin Cash node running with the `-server` option.  The software is being developed against a Bitcoin Unlimited node but should also work with Bitcoin SV and Bitcoin ABC.
+2. A local or accessible Bitcoin Cash node running with the `-server` option.  CashTUI is being developed against a Bitcoin Unlimited node but should also work with Bitcoin SV and Bitcoin ABC.
 
 ## Installing
 
@@ -20,13 +20,13 @@ In a console window or shell, run:
 1. `npm install -g cashtui`
 2. `cashtui`
 
-if step two fails, then node global packages aren't in your environment's path variable.  In that case, you can run `npx cashtui` instead.
+If step two fails, then node global packages aren't in your environment's path variable.  In that case, you can run `npx cashtui` instead.
 
 ## Connecting to your node
 
 After selecting the network type, the Connection Settings page will be displayed with defaults that may work out of the box.  If not, you may need to check the options that you used to start your node.  Particularly important is that the node has been started with the `-server` flag.  
 
-CashTUI current supports authenticating via:
+CashTUI currently supports authenticating via:
 
 1. An automatically generated `.cookie` file in your node's data directory, or
 2. A user and password set with the `-rpcuser` and `-rpcpassword` node startup flags.

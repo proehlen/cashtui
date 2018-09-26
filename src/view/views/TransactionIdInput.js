@@ -8,16 +8,20 @@ import state from '../../model/state';
 import stack from '../stack';
 
 import Input from '../components/Input';
+import InputHelp from '../components/InputHelp';
 
 export default class TransactionIdInput extends ViewBase {
   _input: Input
+  _inputHelp: InputHelp
 
   constructor() {
     super('Enter Transaction ID');
     this._input = new Input(this.onEnter.bind(this));
+    this._inputHelp = new InputHelp();
   }
 
   render() {
+    this._inputHelp.render();
     this._input.render();
   }
 

@@ -45,8 +45,12 @@ class Output {
     return this.height - TITLE_HEIGHT - MENU_HEIGHT - STATUS_HEIGHT;
   }
 
+  get menuRow() {
+    return 0 + TITLE_HEIGHT;
+  }
+
   get contentStartRow() {
-    return 0 + TITLE_HEIGHT + MENU_HEIGHT;
+    return this.menuRow + MENU_HEIGHT;
   }
 
   get width() {

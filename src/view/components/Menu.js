@@ -47,7 +47,7 @@ export default class Menu extends ComponentBase {
 
   render() {
     // Build options text
-    output.cursorTo(0, 1);
+    output.cursorTo(0, output.menuRow);
     const ui = cliui();
     const text = this._options.reduce((acc, option, index) => {
       const separator = index > 0 ? ` ${String.fromCharCode(183)} ` : '';

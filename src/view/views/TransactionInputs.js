@@ -36,8 +36,8 @@ export default class TransactionInputs extends ViewBase {
 
   _mapInputToListRow(input: Input): Array<string> {
     return [
-      input.transactionId,
-      input.outputIndex.toString(),
+      input.isCoinbase ? 'Coinbase' : input.transactionId,
+      input.isCoinbase ? ' ' : input.outputIndex.toString(),
       input.signatureScript ? 'Yes' : '',
     ];
   }

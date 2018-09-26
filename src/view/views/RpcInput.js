@@ -5,6 +5,7 @@ import colors from 'colors';
 
 import ViewBase from './ViewBase';
 import Input from '../components/Input';
+import InputHelp, { DEFAULT_TEXT as INPUT_HELP_DEFAULT } from '../components/InputHelp';
 import OutputList from './OutputList';
 import OutputText from './OutputText';
 import stack from '../stack';
@@ -16,11 +17,15 @@ import { KEY_UP, KEY_DOWN } from '../keys';
 export default class RawInput extends ViewBase {
   _historyLevel: number
   _input: Input
+  _inputHelp: InputHelp
 
   constructor() {
     super('Enter RPC command');
     this._historyLevel = 0;
     this._input = new Input(this.onEnter.bind(this));
+
+    const inputHelpText = `${INPUT_HELP_DEFAULT}; ${colors.bold('Up')} and ${colors.bold('Down')} for history`;
+    this._inputHelp = new InputHelp(inputHelpText);
   }
 
   render() {
@@ -31,12 +36,12 @@ export default class RawInput extends ViewBase {
       ui.div({
         text: colors.gray('Enter an RPC command that will be sent to the bitcoin node. '
           + 'E.g. enter \'help\' (without the quotes) to get a list of commands or \'help\' '
-          + 'followed by a command name to get help for that command.\n\n'
-          + 'Use up and down arrows to navigate history.  Press Escape to clear the input\n'
-          + 'and/or go back to the previous screen.'),
+          + 'followed by a command name to get help for that command.'),
       });
       console.log(ui.toString());
     }
+
+    this._inputHelp.render();
 
     // Render input last for correct cursor positioning
     this._input.render();

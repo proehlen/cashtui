@@ -17,8 +17,10 @@ export default class TransactionOutputs extends ViewBase {
 
   constructor() {
     super('Transaction Outputs');
+    this._menu = new Menu();
+
     const transaction: Transaction = state.transactions.active;
-    const inputs = transaction.outputs
+    const outputs = transaction.outputs
       .map(TransactionOutputs._mapOutputToListRow);
     const columns: Array<ListColumn> = [{
       heading: 'Index',
@@ -33,8 +35,7 @@ export default class TransactionOutputs extends ViewBase {
       heading: 'Type',
       width: 10,
     }];
-    this._menu = new Menu();
-    this._list = new List(columns, inputs, true, this._menu);
+    this._list = new List(columns, outputs, true, this._menu);
   }
 
   static _mapOutputToListRow(output: Output, index: number): Array<string> {

@@ -111,7 +111,7 @@ export default class RawInput extends ViewBase {
       if (err.message.includes('ECONNREFUSED')) {
         errorMessage = 'Error: ECONNREFUSED (bitcoind possibly not running)';
       } else if (err.message.includes('401')) {
-        errorMessage = 'Error: 401 (Unauthorized)';
+        errorMessage = 'Error: 401 (Not authorized)';
       } else {
         [errorMessage] = err.message.split('\n');
       }

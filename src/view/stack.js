@@ -65,11 +65,19 @@ class Stack {
   }
 
   render() {
-    output.clear();
-    this._renderTitle();
-    this._renderStatus();
-    output.cursorTo(0, output.contentStartRow);
-    this.active.render();
+    try {
+      output.clear();
+      this._renderTitle();
+      this._renderStatus();
+      output.cursorTo(0, output.contentStartRow);
+      this.active.render();
+    } catch (err) {
+      // No errors should come up to this high level,
+      // Will probably need a coder to sort out
+      output.clear();
+      console.error(err);
+      process.exit(0);
+    }
   }
 
   _clearStatus() {
@@ -81,8 +89,17 @@ class Stack {
 
   async handle(key: string) {
     this._clearStatus();
-    await this.active.handle(key);
+    try {
+      await this.active.handle(key);
+    } catch (err) {
+      // No errors should come up to this high level,
+      // Will probably need a coder to sort out
+      output.clear();
+      console.error(err);
+      process.exit(0);
+    }
   }
+
 
   _renderStatus() {
     let bgColor;

@@ -1,7 +1,7 @@
 // @flow
 
 import ComponentBase from './ComponentBase';
-import Input from './Input';
+import Input, { type InputType } from './Input';
 import output from '../output';
 
 import {
@@ -11,7 +11,7 @@ import {
 export type FieldData = {
   label: string,
   default: string,
-  password: boolean,
+  type: InputType,
 }
 
 export type Field = {
@@ -37,7 +37,7 @@ export default class Form extends ComponentBase {
     super();
     this._fields = fields.map(data => ({
       label: data.label,
-      input: new Input(this._onEnter.bind(this), data.default),
+      input: new Input(this._onEnter.bind(this), data.default, data.type),
     }));
     if (onNoMoreFields) {
       this._onNoMoreFields = onNoMoreFields;
@@ -100,6 +100,7 @@ export default class Form extends ComponentBase {
     switch (key) {
       case KEY_ESCAPE:
         if (this._onEscape) {
+          this._selectedFieldIndex = undefined;
           await this._onEscape();
         }
         break;

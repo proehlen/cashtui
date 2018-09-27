@@ -18,8 +18,8 @@ export default class TransactionAddInput extends ViewBase {
 
     // Form fields
     const fields = [];
-    fields[fieldIdx.TRANSACTION_ID] = { label: 'Transaction Id', default: '', password: false };
-    fields[fieldIdx.OUTPUT_INDEX] = { label: 'Output index', default: '', password: false };
+    fields[fieldIdx.TRANSACTION_ID] = { label: 'Transaction Id', default: '', type: 'string' };
+    fields[fieldIdx.OUTPUT_INDEX] = { label: 'Output index', default: '', type: 'integer' };
 
     // Menu options
     const menuOptions = [

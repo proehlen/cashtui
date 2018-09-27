@@ -23,11 +23,11 @@ export default class ConnectionSettings extends ViewBase {
 
     // Form fields
     const fields = [];
-    fields[fieldIdx.HOST] = { label: 'Host', default: state.connection.host, password: false };
-    fields[fieldIdx.PORT] = { label: 'Port', default: state.connection.port.toString(), password: false };
-    fields[fieldIdx.COOKIE] = { label: 'Cookie file', default: state.connection.cookieFile, password: false };
-    fields[fieldIdx.USER] = { label: 'User', default: state.connection.user, password: false };
-    fields[fieldIdx.PASSWORD] = { label: 'Password', default: state.connection.password, password: true };
+    fields[fieldIdx.HOST] = { label: 'Host', default: state.connection.host, type: 'string' };
+    fields[fieldIdx.PORT] = { label: 'Port', default: state.connection.port.toString(), type: 'integer' };
+    fields[fieldIdx.COOKIE] = { label: 'Cookie file', default: state.connection.cookieFile, type: 'string' };
+    fields[fieldIdx.USER] = { label: 'User', default: state.connection.user, type: 'string' };
+    fields[fieldIdx.PASSWORD] = { label: 'Password', default: state.connection.password, type: 'password' };
 
     // Menu options
     const menuOptions = [

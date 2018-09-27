@@ -12,7 +12,7 @@ import state from '../../model/state';
 import stack from '../stack';
 
 
-export default class TransactionMenu extends ViewBase {
+export default class TransactionHeader extends ViewBase {
   _menu: Menu
 
   constructor() {

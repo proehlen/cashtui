@@ -21,7 +21,7 @@ export default class TransactionRaw extends ViewBase {
     // to the clipboard it will contain a linebreak char for each line.
     const data = [];
     const tx: Transaction = state.transactions.active;
-    const raw = tx.hex;
+    const raw = tx.serialize();
     const charsPerPage = output.width * output.contentHeight;
     const numPages = Math.ceil(raw.length / charsPerPage);
     for (let x = 0; x < numPages; x++) {

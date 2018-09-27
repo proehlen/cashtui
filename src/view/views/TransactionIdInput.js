@@ -33,7 +33,7 @@ export default class TransactionIdInput extends ViewBase {
     try {
       const raw = await state.rpc.request(`getrawtransaction ${this._input.value}`);
       if (typeof raw === 'string') {
-        const transaction = Transaction.fromHex(raw);
+        const transaction = Transaction.deserialize(raw);
         state.transactions.active = transaction;
         stack.replace(new TransactionMenu());
       } else {

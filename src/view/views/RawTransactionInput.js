@@ -29,7 +29,7 @@ export default class RawTransactionInput extends ViewBase {
 
   async onEnter() {
     try {
-      state.transactions.active = Transaction.fromHex(this._input.value);
+      state.transactions.active = Transaction.deserialize(this._input.value);
       stack.replace(new TransactionMenu());
     } catch (error) {
       stack.setError(error.message);

@@ -27,9 +27,15 @@ export default class TransactionHeader extends ViewBase {
 
   render() {
     // Render transaction info
-    const firstColWidth = 15;
+    const firstColWidth = 10;
     const ui = cliui();
     const transaction: Transaction = state.transactions.active;
+    ui.div({
+      text: 'Id: ',
+      width: firstColWidth,
+    }, {
+      text: transaction.getId(),
+    });
     ui.div({
       text: 'Inputs: ',
       width: firstColWidth,

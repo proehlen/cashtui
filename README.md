@@ -1,6 +1,6 @@
 # CashTUI
 
-**Warning: this software is experimental, under construction and in a pre-Alpha state.  Do not use with sensitive production nodes or nodes that contain wallet balances.**
+**Note: this software is experimental, under construction and in a pre-Alpha state.  As such, mainnet connections are currently disabled.**
 
 CashTUI (pronounced "cash-too-ee") is a [text-based user interface](https://en.wikipedia.org/wiki/Text-based_user_interface) for interacting with a Bitcoin Cash node.  It may be of benefit to:
 
@@ -34,5 +34,5 @@ CashTUI currently supports authenticating via:
 Choose one method (e.g. user/password) and clear the other values (e.g. cookie file) in the CashTUI connection settings.
 
 **WARNING**
-Any passwords entered into CashTUI are currently stored in plain text in the application data folder for your operating system.  Do not use CashTUI with sensitive production nodes or nodes with wallet balances.
+Any passwords entered into CashTUI are currently stored in plain text in the application data folder for your operating system.  Do not use CashTUI with reused, sensitive production passwords.
 

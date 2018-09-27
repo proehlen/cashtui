@@ -69,6 +69,13 @@ export default class NetworkSelection extends ViewBase {
   async toConnectionSettings() {
     try {
       const networkLabel = this._selectedNetwork;
+      if (networkLabel === 'mainnet') {
+        // Disallow mainnet connections until we have resolved all of
+        // the security issues (passwords are currently stored in plain text
+        // and we will need to store private keys for tx signing). Also
+        // immaturity of cashlib just creates to much risk.
+        throw new Error('Sorry, mainnet connections are not secure/supported yet');
+      }
       const network = Network.fromString(networkLabel);
       const connection = new Connection(network);
       state.connection = connection;

@@ -60,7 +60,7 @@ export default class TransactionOutputs extends ViewBase {
     this._list.render();
 
     // Render menu last for correct cursor positioning
-    this._menu.render();
+    this._menu.render(false);
   }
 
   async handle(key: string) {

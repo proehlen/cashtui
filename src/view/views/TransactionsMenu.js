@@ -44,6 +44,6 @@ export default class TransactionsMenu extends ViewBase {
   }
 
   render() {
-    this._menu.render();
+    this._menu.render(false);
   }
 }

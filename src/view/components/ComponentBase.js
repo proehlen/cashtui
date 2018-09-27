@@ -2,7 +2,8 @@
 export default class ComponentBase {
   _title: string
 
-  render() {
+  // eslint-disable-next-line no-unused-vars
+  render(inactive: boolean) {
     throw new Error('Method is abstract.  Override in subclass.');
   }
 

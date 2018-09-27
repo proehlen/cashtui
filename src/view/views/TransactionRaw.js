@@ -49,7 +49,7 @@ export default class TransactionRaw extends ViewBase {
     console.log(this._data[this._currentPage - 1]);
 
     // Render menu last for correct cursor positioning
-    this._menu.render();
+    this._menu.render(false);
   }
 
   async nextPage() {

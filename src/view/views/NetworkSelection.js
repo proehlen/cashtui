@@ -58,7 +58,7 @@ export default class NetworkSelection extends ViewBase {
     this._list.render();
 
     // Render menu last (for correct cursor positioning)
-    this._menu.render();
+    this._menu.render(false);
   }
 
   get _selectedNetwork(): string {

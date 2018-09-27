@@ -20,14 +20,14 @@ export default class Input extends ComponentBase {
   get value() { return this._value; }
   set value(value: string) { this._value = value; }
 
-  render(atColumn: number = 0, atRow: number = output.contentStartRow, active: boolean = true) {
+  render(inactive: boolean = false, atColumn: number = 0, atRow: number = output.contentStartRow) {
     // Output value
     const promptColumnWidth = 2;
     const valueColumnWidth = output.width - atColumn - promptColumnWidth;
     const rows = Math.trunc(this._value.length / valueColumnWidth) + 1;
     output.cursorTo(atColumn, atRow);
     for (let row = 0; row < rows; row++) {
-      const prompt = active && row === 0 ? '> ' : '  ';
+      const prompt = !inactive && row === 0 ? '> ' : '  ';
       let value = this.value.substr(row * valueColumnWidth, valueColumnWidth);
       if (this._isPassword) {
         value = '*'.repeat(value.length);

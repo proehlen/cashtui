@@ -89,7 +89,7 @@ export default class ConnectionHistory extends ViewBase {
     this._list.render();
 
     // Render menu last so cursor position is left in correct position
-    this._menu.render();
+    this._menu.render(false);
   }
 
   async handle(key: string) {

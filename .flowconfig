@@ -1,7 +1,9 @@
 [ignore]
 .*/bin/.*
+.*/dist/.*
 
 [include]
+  ../cashlib/
 
 [libs]
 

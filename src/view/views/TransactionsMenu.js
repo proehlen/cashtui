@@ -9,7 +9,7 @@ import RawTransactionInput from './RawTransactionInput';
 import TransactionIdInput from './TransactionIdInput';
 import stack from '../stack';
 import state from '../../model/state';
-import TransactionMenu from './TransactionMenu';
+import TransactionHeader from './TransactionHeader';
 
 export default class TransactionsMenu extends ViewBase {
   _menu: Menu
@@ -32,7 +32,7 @@ export default class TransactionsMenu extends ViewBase {
 
   async createTransaction() {
     state.transactions.active = new Transaction();
-    stack.push(new TransactionMenu());
+    stack.push(new TransactionHeader());
   }
 
   async toRawTransactionInput() {
@@ -44,6 +44,6 @@ export default class TransactionsMenu extends ViewBase {
   }
 
   render() {
-    this._menu.render();
+    this._menu.render(false);
   }
 }

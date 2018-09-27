@@ -8,22 +8,32 @@ import MenuOption from './MenuOption';
 import stack from '../stack';
 import output from '../output';
 import {
-  KEY_ENTER, KEY_ESCAPE, KEY_LEFT, KEY_RIGHT,
+  KEY_ENTER, KEY_ESCAPE, KEY_LEFT, KEY_RIGHT, KEY_TAB, KEY_SHIFT_TAB,
 } from '../keys';
+
 
 const OPTION_GAP = 3; // Render gap between options
 
+type Direction = -1 | 1
+type NoMoreOptionsCallback = (Direction) => Promise<void>
+
 export default class Menu extends ComponentBase {
   _options: MenuOption[]
-  _active: boolean
   _selectedIndex: number
   _hasBack: boolean
+  _onNoMoreOptions: NoMoreOptionsCallback
 
-  constructor(options?: MenuOption[] = [], allowBackOption: boolean = true) {
+  constructor(
+    options?: MenuOption[] = [],
+    allowBackOption: boolean = true,
+    onNoMoreOptions?: NoMoreOptionsCallback,
+  ) {
     super();
 
-    this._active = true;
     this._options = [];
+    if (onNoMoreOptions) {
+      this._onNoMoreOptions = onNoMoreOptions;
+    }
 
     // Every menu has to allow for quitting
     this.addOption(new MenuOption('Q', 'Quit', 'Exit the program'));
@@ -40,12 +50,10 @@ export default class Menu extends ComponentBase {
     options.reverse().forEach(option => this.addOption(option, 'start'));
 
     // Set active/default  action
-    this._selectedIndex = 0;
-    const option = this._options[this._selectedIndex];
-    stack.setInfo(option.help);
+    this.selectedIndex = 0;
   }
 
-  render() {
+  render(inactive: boolean) {
     // Build options text
     output.cursorTo(0, output.menuRow);
     const ui = cliui();
@@ -53,7 +61,7 @@ export default class Menu extends ComponentBase {
       const separator = index > 0 ? ` ${String.fromCharCode(183)} ` : '';
       const preKeyText = (option.keyPosition) ? option.label.substring(0, option.keyPosition) : '';
       const postKeyText = option.label.substr(option.keyPosition + 1);
-      const keyText = this._active
+      const keyText = !inactive
         ? colors.bold(option.key)
         : option.key;
       return `${acc}${separator}${preKeyText}${keyText}${postKeyText}`;
@@ -61,7 +69,7 @@ export default class Menu extends ComponentBase {
     ui.div(text);
 
     console.log(ui.toString());
-    if (this._active) {
+    if (!inactive) {
       this._cursorToselectedOption();
     }
   }
@@ -86,90 +94,99 @@ export default class Menu extends ComponentBase {
     if (index < 0) {
       throw new Error(`Cannot set selected menu option; missing key '${key}'`);
     }
+    this.selectedIndex = index;
+  }
 
-    this._selectedIndex = index;
+  setFirstOptionSelected() {
+    this.selectedIndex = 0;
+  }
+
+  setLastOptionSelected() {
+    this.selectedIndex = this._options.length - 1;
   }
 
   get selectedIndex() { return this._selectedIndex; }
-  set selectedIndex(index: number) { this._selectedIndex = index; }
   get selectedOption() { return this._options[this._selectedIndex]; }
   get options() { return this._options; }
 
-  get active() { return this._active; }
-  set active(active: boolean) {
-    const option = this._options[this._selectedIndex];
-    stack.setInfo(option.help);
-    this._active = active;
+  set selectedIndex(index: number) {
+    this._selectedIndex = index;
+    if (this.selectedOption) {
+      stack.setInfo(this.selectedOption.help);
+    }
   }
 
-  cycleSelectedOption(direction: 1 | -1) {
-    this._selectedIndex += direction;
+  async cycleSelectedOption(direction: 1 | -1) {
+    this.selectedIndex += direction;
 
-    if (this._selectedIndex < 0) {
-      this._selectedIndex = this._options.length - 1;
-    } else if (this._selectedIndex >= this._options.length) {
-      this._selectedIndex = 0;
+    if (this.selectedIndex < 0) {
+      if (this._onNoMoreOptions) {
+        await this._onNoMoreOptions(direction);
+      } else {
+        this.selectedIndex = this._options.length - 1;
+      }
+    } else if (this.selectedIndex >= this._options.length) {
+      if (this._onNoMoreOptions) {
+        await this._onNoMoreOptions(direction);
+      } else {
+        this.selectedIndex = 0;
+      }
     }
-
-    const option = this._options[this._selectedIndex];
-    stack.setInfo(option.help);
   }
 
   _cursorToselectedOption() {
     let x = 0;
-    for (let i = 0; i < this._selectedIndex; i++) {
+    for (let i = 0; i < this.selectedIndex; i++) {
       const option = this._options[i];
       x += (option.label.length + OPTION_GAP);
     }
-    const selectedOption = this._options[this._selectedIndex];
-    output.cursorTo(x + selectedOption.keyPosition, 1);
+    output.cursorTo(x + this.selectedOption.keyPosition, 1);
   }
 
 
   async handle(key: string): Promise<void> {
-    if (this._active) {
-      if (key === KEY_ENTER) {
-        // Call back this method (maybe in child class) with key
-        // for active option
-        const option = this._options[this._selectedIndex];
-        await this.handle(option.key);
-      } else {
-        switch (key.toUpperCase()) {
-          case KEY_ESCAPE:
-            if (stack.depth) {
-              stack.pop();
-            } else {
-              stack.quit();
-            }
-            break;
-          case KEY_LEFT:
-            this.cycleSelectedOption(-1);
-            break;
-          case KEY_RIGHT:
-            this.cycleSelectedOption(1);
-            break;
-          case 'B':
-            // Back
-            if (stack.depth) {
-              stack.pop();
-            }
-            break;
-          case 'Q':
-            // Quit
+    if (key === KEY_ENTER) {
+      // Call back this method (maybe in child class) with key
+      // for active option
+      await this.handle(this.selectedOption.key);
+    } else {
+      switch (key.toUpperCase()) {
+        case KEY_ESCAPE:
+          if (stack.depth) {
+            stack.pop();
+          } else {
             stack.quit();
-            break;
-          default: {
-            const option = this._options.find(candidate => candidate.key === key.toUpperCase());
-            if (option) {
-              if (option.execute) {
-                await option.execute();
-              } else {
-                // Valid option
-                stack.setWarning(`Sorry, the '${option.label}' feature is not implemented yet`);
-              }
-            }
-            break;
           }
+          break;
+        case KEY_LEFT:
+        case KEY_SHIFT_TAB:
+          await this.cycleSelectedOption(-1);
+          break;
+        case KEY_RIGHT:
+        case KEY_TAB:
+          await this.cycleSelectedOption(1);
+          break;
+        case 'B':
+          // Back
+          if (stack.depth) {
+            stack.pop();
+          }
+          break;
+        case 'Q':
+          // Quit
+          stack.quit();
+          break;
+        default: {
+          const option = this._options.find(candidate => candidate.key === key.toUpperCase());
+          if (option) {
+            if (option.execute) {
+              await option.execute();
+            } else {
+              // Valid option
+              stack.setWarning(`Sorry, the '${option.label}' feature is not implemented yet`);
+            }
+          }
+          break;
         }
       }
     }

@@ -12,7 +12,7 @@ import state from '../../model/state';
 import stack from '../stack';
 
 
-export default class TransactionMenu extends ViewBase {
+export default class TransactionHeader extends ViewBase {
   _menu: Menu
 
   constructor() {
@@ -21,15 +21,30 @@ export default class TransactionMenu extends ViewBase {
       new MenuOption('I', 'Inputs', 'Transaction inputs', async () => stack.push(new TransactionInputs())),
       new MenuOption('O', 'Outputs', 'Transaction outputs', async () => stack.push(new TransactionOutputs())),
       new MenuOption('R', 'Raw', 'Show raw serialized transaction', async () => stack.push(new TransactionRaw())),
+      new MenuOption('S', 'Send', 'Broadcast transaction to network', this.send.bind(this)),
     ];
     this._menu = new Menu(options);
   }
 
+  async send() {
+    try {
+      await state.rpc.request(`sendrawtransaction ${state.transactions.active.serialize()}`);
+    } catch (err) {
+      stack.setError(err.message);
+    }
+  }
+
   render() {
     // Render transaction info
-    const firstColWidth = 15;
+    const firstColWidth = 10;
     const ui = cliui();
     const transaction: Transaction = state.transactions.active;
+    ui.div({
+      text: 'Id: ',
+      width: firstColWidth,
+    }, {
+      text: transaction.getId(),
+    });
     ui.div({
       text: 'Inputs: ',
       width: firstColWidth,
@@ -45,7 +60,7 @@ export default class TransactionMenu extends ViewBase {
     console.log(ui.toString());
 
     // Render menu last for correct cursor positioning
-    this._menu.render();
+    this._menu.render(false);
   }
 
   async handle(key: string): Promise<void> {

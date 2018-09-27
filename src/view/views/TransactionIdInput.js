@@ -3,7 +3,7 @@
 import Transaction from 'cashlib/lib/Transaction';
 
 import ViewBase from './ViewBase';
-import TransactionMenu from './TransactionMenu';
+import TransactionHeader from './TransactionHeader';
 import state from '../../model/state';
 import stack from '../stack';
 
@@ -33,9 +33,9 @@ export default class TransactionIdInput extends ViewBase {
     try {
       const raw = await state.rpc.request(`getrawtransaction ${this._input.value}`);
       if (typeof raw === 'string') {
-        const transaction = Transaction.fromHex(raw);
+        const transaction = Transaction.deserialize(raw);
         state.transactions.active = transaction;
-        stack.replace(new TransactionMenu());
+        stack.replace(new TransactionHeader());
       } else {
         throw new Error('Unexpected value returned from RPC call');
       }

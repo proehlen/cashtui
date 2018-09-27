@@ -1,6 +1,6 @@
 {
   "name": "cashtui",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Text UI for Bitcoin Cash nodes",
   "homepage": "https://github.com/proehlen/cashtui#README.md",
   "main": "dist/index.js",
@@ -41,7 +41,7 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
-    "cashlib": "0.0.3",
+    "cashlib": "0.0.4",
     "clear-console": "^1.1.0",
     "cliui": "^4.1.0",
     "colors": "^1.3.2",

@@ -6,8 +6,11 @@ import Input from 'cashlib/lib/Input';
 import ViewBase from './ViewBase';
 import List from '../components/List';
 import Menu from '../components/Menu';
+import MenuOption from '../components/MenuOption';
+import TransactionAddInput from './TransactionAddInput';
 import type { ListColumn } from '../components/List';
 import state from '../../model/state';
+import stack from '../stack';
 
 export default class TransactionInputs extends ViewBase {
   _menu: Menu
@@ -15,7 +18,8 @@ export default class TransactionInputs extends ViewBase {
 
   constructor() {
     super('Transaction Inputs');
-    this._menu = new Menu();
+    const addInputOption = new MenuOption('A', 'Add', 'Add new input', async () => stack.push(new TransactionAddInput()));
+    this._menu = new Menu([addInputOption]);
 
     const transaction: Transaction = state.transactions.active;
     const inputs = transaction.inputs
@@ -47,7 +51,7 @@ export default class TransactionInputs extends ViewBase {
     this._list.render();
 
     // Render menu last for correct cursor positioning
-    this._menu.render();
+    this._menu.render(false);
   }
 
   async handle(key: string) {

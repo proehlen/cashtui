@@ -4,7 +4,7 @@ import Transaction from 'cashlib/lib/Transaction';
 import ViewBase from './ViewBase';
 import Input from '../components/Input';
 import InputHelp from '../components/InputHelp';
-import TransactionMenu from './TransactionMenu';
+import TransactionHeader from './TransactionHeader';
 import stack from '../stack';
 import state from '../../model/state';
 
@@ -29,8 +29,8 @@ export default class RawTransactionInput extends ViewBase {
 
   async onEnter() {
     try {
-      state.transactions.active = Transaction.fromHex(this._input.value);
-      stack.replace(new TransactionMenu());
+      state.transactions.active = Transaction.deserialize(this._input.value);
+      stack.replace(new TransactionHeader());
     } catch (error) {
       stack.setError(error.message);
     }

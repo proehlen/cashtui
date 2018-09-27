@@ -27,7 +27,7 @@ export default class MainMenu extends ViewBase {
   }
 
   render() {
-    this._menu.render();
+    this._menu.render(false);
   }
 
   async handle(key: string): Promise<void> {

@@ -70,7 +70,7 @@ class Stack {
       this._renderTitle();
       this._renderStatus();
       output.cursorTo(0, output.contentStartRow);
-      this.active.render();
+      this.active.render(false);
     } catch (err) {
       // No errors should come up to this high level,
       // Will probably need a coder to sort out

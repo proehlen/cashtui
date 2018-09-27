@@ -27,7 +27,7 @@ export default class Input extends ComponentBase {
     const rows = Math.trunc(this._value.length / valueColumnWidth) + 1;
     output.cursorTo(atColumn, atRow);
     for (let row = 0; row < rows; row++) {
-      const prompt = !inactive && row === 0 ? '> ' : '  ';
+      const prompt = !inactive && row === 0 ? '> ' : ': ';
       let value = this.value.substr(row * valueColumnWidth, valueColumnWidth);
       if (this._isPassword) {
         value = '*'.repeat(value.length);

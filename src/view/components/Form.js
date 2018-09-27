@@ -126,8 +126,10 @@ export default class Form extends ComponentBase {
     const row = output.contentStartRow + index;
     output.cursorTo(0, row);
     const field = this._fields[index];
-    console.log(field.label);
-    field.input.render(!active, 20, row);
+    if (field) {
+      console.log(field.label);
+      field.input.render(!active, 20, row);
+    }
   }
 
   render() {

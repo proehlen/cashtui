@@ -22,26 +22,57 @@ export default class Input extends ComponentBase {
   get value() { return this._value; }
   set value(value: string) { this._value = value; }
 
-  render(inactive: boolean = false, atColumn: number = 0, atRow: number = output.contentStartRow) {
+  render(
+    inactive: boolean = false,
+    atColumn: number = 0,
+    atRow: number = output.contentStartRow,
+    allowWrap: boolean = true,
+  ) {
     // Output value
     const promptColumnWidth = 2;
     const valueColumnWidth = output.width - atColumn - promptColumnWidth;
-    const rows = Math.trunc(this._value.length / valueColumnWidth) + 1;
-    output.cursorTo(atColumn, atRow);
+    const rows = allowWrap
+      ? Math.trunc(this._value.length / valueColumnWidth) + 1
+      : 1;
+
+    let overflow = false;
     for (let row = 0; row < rows; row++) {
-      const prompt = !inactive && row === 0 ? '> ' : ': ';
-      let value = this.value.substr(row * valueColumnWidth, valueColumnWidth);
+      let prompt;
+      if (row === 0) {
+        prompt = !inactive ? '> ' : ': ';
+      } else {
+        prompt = '  ';
+      }
+      let value;
+      if (allowWrap || inactive || this.value.length < valueColumnWidth) {
+        value = this.value.substr(row * valueColumnWidth, valueColumnWidth);
+      } else {
+        overflow = true;
+        const cursorWidth = 1;
+        const from = this.value.length - valueColumnWidth + cursorWidth;
+        const length = valueColumnWidth - cursorWidth;
+        value = this.value.substr(from, length);
+        value = `${value} `; // space for cursor
+      }
       if (this._type === 'password') {
         value = '*'.repeat(value.length);
       }
+      output.cursorTo(atColumn, atRow + row);
       console.log(`${prompt}${value}`);
     }
 
     // Put cursor back to next char after last character output - ie where
     // the user will be typing next
-    const cursorColumn = atColumn + (this._value.length % valueColumnWidth) + promptColumnWidth;
-    const cursorRow = Math.trunc(this._value.length / valueColumnWidth) + atRow;
-    output.cursorTo(cursorColumn, cursorRow);
+    if (!inactive) {
+      let cursorColumn;
+      if (!overflow) {
+        cursorColumn = atColumn + (this._value.length % valueColumnWidth) + promptColumnWidth;
+      } else {
+        cursorColumn = output.width;
+      }
+      const cursorRow = atRow + (rows - 1);
+      output.cursorTo(cursorColumn, cursorRow);
+    }
   }
 
   async handle(key: string): Promise<void> {

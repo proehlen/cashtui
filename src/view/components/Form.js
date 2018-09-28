@@ -129,7 +129,7 @@ export default class Form extends ComponentBase {
     const field = this._fields[index];
     if (field) {
       console.log(field.label);
-      field.input.render(!active, 20, row);
+      field.input.render(!active, 20, row, false);
     }
   }
 

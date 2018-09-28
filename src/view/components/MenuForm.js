@@ -33,6 +33,7 @@ export default class MenuForm extends ComponentBase {
 
   get menu() { return this._menu; }
   get form() { return this._form; }
+  get fields() { return this._form.fields; }
 
   async onNoMoreOptions(direction: number) {
     this._activeComponent = this._form;

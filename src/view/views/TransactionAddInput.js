@@ -24,9 +24,24 @@ export default class TransactionAddInput extends ViewBase {
     // Menu options
     const menuOptions = [
       new MenuOption('O', 'OK', 'Add input with entered details', this.addInput.bind(this)),
+      new MenuOption('L', 'Lookup Output', 'Lookup output in transaction', this.lookupOutput.bind(this)),
     ];
 
     this._menuForm = new MenuForm(fields, menuOptions);
+  }
+
+  async lookupOutput() {
+    try {
+      const txId = this._menuForm.fields[fieldIdx.TRANSACTION_ID].input.value;
+      if (!txId) {
+        stack.setError('Enter Transaction Id to lookup output in.');
+      } else {
+        stack.setWarning('Sorry, the Lookup feature is still under construction');
+      // stack.push();
+      }
+    } catch (err) {
+      stack.setError(err.message);
+    }
   }
 
   async addInput() {

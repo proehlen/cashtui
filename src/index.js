@@ -1,6 +1,6 @@
 // @flow
 
-import output from 'tooey';
+import output from 'tooey/lib/output';
 
 import Connection from './model/Connection';
 import app from './view/app';

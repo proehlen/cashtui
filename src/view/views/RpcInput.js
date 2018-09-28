@@ -6,8 +6,8 @@ import colors from 'colors';
 import ViewBase from './ViewBase';
 import Input from '../components/Input';
 import InputHelp, { DEFAULT_TEXT as INPUT_HELP_DEFAULT } from '../components/InputHelp';
-import OutputList from './OutputList';
-import OutputText from './OutputText';
+import GenericList from './GenericList';
+import GenericText from './GenericText';
 import stack from '../stack';
 import state from '../../model/state';
 import output from '../output';
@@ -92,19 +92,19 @@ export default class RawInput extends ViewBase {
       if (typeof rpcResult === 'string') {
         const outputLines = rpcResult.split('\n');
         if (outputLines.length > 1 || rpcResult.length < output.width) {
-          stack.push(new OutputList('RPC result', outputLines));
+          stack.push(new GenericList('RPC result', outputLines));
         } else {
-          stack.push(new OutputText('RPC result', rpcResult));
+          stack.push(new GenericText('RPC result', rpcResult));
         }
       } else if (typeof rpcResult === 'number') {
-        stack.push(new OutputText('RPC result', rpcResult.toString()));
+        stack.push(new GenericText('RPC result', rpcResult.toString()));
       } else if (typeof rpcResult === 'object') {
         const stringified = JSON.stringify(rpcResult, null, 2);
         const outputLines = stringified.split('\n');
-        stack.push(new OutputList('RPC result', outputLines));
+        stack.push(new GenericList('RPC result', outputLines));
       } else if (Array.isArray(rpcResult)) {
         const outputLines = rpcResult.map(entry => JSON.stringify(entry));
-        stack.push(new OutputList('RPC result', outputLines));
+        stack.push(new GenericList('RPC result', outputLines));
       } else {
         stack.setError('Unexpected output received; don\'t know how to display');
         return;

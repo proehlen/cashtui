@@ -6,7 +6,7 @@ import List from '../components/List';
 import type { ListColumn } from '../components/List';
 import Menu from '../components/Menu';
 
-export default class OutputList extends ViewBase {
+export default class GenericList extends ViewBase {
   _list: List
   _menu: Menu
 

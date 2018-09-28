@@ -1,10 +1,11 @@
+/* Generic view for displaying text with standard menu */
 // @flow
 
 import ViewBase from './ViewBase';
 import Text from '../components/Text';
 import Menu from '../components/Menu';
 
-export default class OutputText extends ViewBase {
+export default class GenericText extends ViewBase {
   _text: Text
   _menu: Menu
 

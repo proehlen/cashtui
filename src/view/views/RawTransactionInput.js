@@ -1,7 +1,7 @@
 // @flow
 import Transaction from 'cashlib/lib/Transaction';
 
-import ViewBase from './ViewBase';
+import ViewBase from '../components/ViewBase';
 import Input from '../components/Input';
 import InputHelp from '../components/InputHelp';
 import TransactionHeader from './TransactionHeader';

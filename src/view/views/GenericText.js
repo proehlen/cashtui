@@ -1,7 +1,7 @@
 /* Generic view for displaying text with standard menu */
 // @flow
 
-import ViewBase from './ViewBase';
+import ViewBase from '../components/ViewBase';
 import Text from '../components/Text';
 import Menu from '../components/Menu';
 

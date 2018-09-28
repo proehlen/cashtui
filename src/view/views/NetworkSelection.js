@@ -2,7 +2,7 @@
 
 import Network from 'cashlib/lib/Network';
 
-import ViewBase from './ViewBase';
+import ViewBase from '../components/ViewBase';
 import Connection from '../../model/Connection';
 import List from '../components/List';
 import Menu from '../components/Menu';

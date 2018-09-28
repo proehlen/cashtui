@@ -2,7 +2,7 @@
 
 import { Transaction } from 'cashlib';
 
-import ViewBase from './ViewBase';
+import ViewBase from '../components/ViewBase';
 import Menu from '../components/Menu';
 import MenuOption from '../components/MenuOption';
 import RawTransactionInput from './RawTransactionInput';

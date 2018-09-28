@@ -6,7 +6,7 @@ import cliui from 'cliui';
 import output from './output';
 import { version } from '../../package.json';
 import state from '../model/state';
-import ViewBase from './views/ViewBase';
+import ViewBase from './components/ViewBase';
 import Input from './components/Input';
 
 declare var process: any;

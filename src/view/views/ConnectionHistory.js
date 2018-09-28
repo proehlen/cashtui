@@ -10,7 +10,7 @@ import MenuOption from '../components/MenuOption';
 import NetworkSelection from './NetworkSelection';
 import stack from '../stack';
 import state from '../../model/state';
-import ViewBase from './ViewBase';
+import ViewBase from '../components/ViewBase';
 
 export default class ConnectionHistory extends ViewBase {
   _list: List

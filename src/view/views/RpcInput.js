@@ -3,7 +3,7 @@
 import cliui from 'cliui';
 import colors from 'colors';
 
-import ViewBase from './ViewBase';
+import ViewBase from '../components/ViewBase';
 import Input from '../components/Input';
 import InputHelp, { DEFAULT_TEXT as INPUT_HELP_DEFAULT } from '../components/InputHelp';
 import GenericList from './GenericList';

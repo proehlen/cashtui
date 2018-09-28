@@ -4,7 +4,7 @@ import Transaction from 'cashlib/lib/Transaction';
 import Output from 'cashlib/lib/Output';
 // import Address from 'cashlib/lib/Address';
 
-import ViewBase from './ViewBase';
+import ViewBase from '../components/ViewBase';
 import List from '../components/List';
 import Menu from '../components/Menu';
 import type { ListColumn } from '../components/List';

@@ -2,7 +2,7 @@
 import cliui from 'cliui';
 import Transaction from 'cashlib/lib/Transaction';
 
-import ViewBase from './ViewBase';
+import ViewBase from '../components/ViewBase';
 import Menu from '../components/Menu';
 import MenuOption from '../components/MenuOption';
 import TransactionInputs from './TransactionInputs';

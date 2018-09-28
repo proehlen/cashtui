@@ -1,7 +1,7 @@
 /* Generic single column list view with standard menu */
 // @flow
 
-import ViewBase from './ViewBase';
+import ViewBase from '../components/ViewBase';
 import List from '../components/List';
 import type { ListColumn } from '../components/List';
 import Menu from '../components/Menu';

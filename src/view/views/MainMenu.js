@@ -1,6 +1,6 @@
 // @flow
 
-import ViewBase from './ViewBase';
+import ViewBase from '../components/ViewBase';
 import Menu from '../components/Menu';
 import MenuOption from '../components/MenuOption';
 import TransactionsMenu from './TransactionsMenu';

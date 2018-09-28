@@ -1,7 +1,7 @@
 // @flow
 
 import MenuForm from '../components/MenuForm';
-import ViewBase from './ViewBase';
+import ViewBase from '../components/ViewBase';
 import MenuOption from '../components/MenuOption';
 import stack from '../stack';
 

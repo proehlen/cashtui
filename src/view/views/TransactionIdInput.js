@@ -2,7 +2,7 @@
 
 import Transaction from 'cashlib/lib/Transaction';
 
-import ViewBase from './ViewBase';
+import ViewBase from '../components/ViewBase';
 import TransactionHeader from './TransactionHeader';
 import state from '../../model/state';
 import stack from '../stack';

@@ -3,7 +3,7 @@
 import Transaction from 'cashlib/lib/Transaction';
 import Input from 'cashlib/lib/Input';
 
-import ViewBase from './ViewBase';
+import ViewBase from '../components/ViewBase';
 import List from '../components/List';
 import Menu from '../components/Menu';
 import MenuOption from '../components/MenuOption';

@@ -2,9 +2,9 @@
 
 import { Transaction } from 'cashlib';
 
-import ViewBase from '../components/ViewBase';
-import Menu from '../components/Menu';
-import MenuOption from '../components/MenuOption';
+import ViewBase from 'tooey/lib/ViewBase';
+import Menu from 'tooey/lib/Menu';
+import MenuOption from 'tooey/lib/MenuOption';
 import RawTransactionInput from './RawTransactionInput';
 import TransactionIdInput from './TransactionIdInput';
 import app from '../app';
@@ -23,7 +23,7 @@ export default class TransactionsMenu extends ViewBase {
       new MenuOption('D', 'Decode raw', 'Decode raw transaction', this.toRawTransactionInput.bind(this)),
       new MenuOption('R', 'Recent', 'Recent transactions'),
     ];
-    this._menu = new Menu(options);
+    this._menu = new Menu(app, options);
   }
 
   async toTransactionIdInput() {

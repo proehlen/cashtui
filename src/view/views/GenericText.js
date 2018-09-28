@@ -1,9 +1,10 @@
 /* Generic view for displaying text with standard menu */
 // @flow
 
-import ViewBase from '../components/ViewBase';
-import Text from '../components/Text';
-import Menu from '../components/Menu';
+import ViewBase from 'tooey/lib/ViewBase';
+import Text from 'tooey/lib/Text';
+import Menu from 'tooey/lib/Menu';
+import app from '../app';
 
 export default class GenericText extends ViewBase {
   _text: Text
@@ -12,8 +13,8 @@ export default class GenericText extends ViewBase {
   constructor(title: string, data: string) {
     super(title);
 
-    this._menu = new Menu();
-    this._text = new Text(data);
+    this._menu = new Menu(app);
+    this._text = new Text(app, data);
   }
 
   render() {

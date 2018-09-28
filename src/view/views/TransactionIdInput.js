@@ -1,14 +1,13 @@
 // @flow
 
+import Input from 'tooey/lib/Input';
+import InputHelp from 'tooey/lib/InputHelp';
+import ViewBase from 'tooey/lib/ViewBase';
 import Transaction from 'cashlib/lib/Transaction';
 
-import ViewBase from '../components/ViewBase';
 import TransactionHeader from './TransactionHeader';
 import state from '../../model/state';
 import app from '../app';
-
-import Input from '../components/Input';
-import InputHelp from '../components/InputHelp';
 
 export default class TransactionIdInput extends ViewBase {
   _input: Input

@@ -2,9 +2,9 @@
 import cliui from 'cliui';
 import Transaction from 'cashlib/lib/Transaction';
 
-import ViewBase from '../components/ViewBase';
-import Menu from '../components/Menu';
-import MenuOption from '../components/MenuOption';
+import ViewBase from 'tooey/lib/ViewBase';
+import Menu from 'tooey/lib/Menu';
+import MenuOption from 'tooey/lib/MenuOption';
 import TransactionInputs from './TransactionInputs';
 import TransactionOutputs from './TransactionOutputs';
 import TransactionRaw from './TransactionRaw';
@@ -23,7 +23,7 @@ export default class TransactionHeader extends ViewBase {
       new MenuOption('R', 'Raw', 'Show raw serialized transaction', async () => app.pushView(new TransactionRaw())),
       new MenuOption('S', 'Send', 'Broadcast transaction to network', this.send.bind(this)),
     ];
-    this._menu = new Menu(options);
+    this._menu = new Menu(app, options);
   }
 
   async send() {

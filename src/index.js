@@ -1,8 +1,9 @@
 // @flow
 
+import output from 'tooey';
+
 import Connection from './model/Connection';
 import app from './view/app';
-import output from './view/components/output';
 import NetworkSelection from './view/views/NetworkSelection';
 import ConnectionHistory from './view/views/ConnectionHistory';
 

@@ -1,13 +1,13 @@
 // @flow
 
 import Transaction from 'cashlib/lib/Transaction';
+import ViewBase from 'tooey/lib/ViewBase';
+import Menu from 'tooey/lib/Menu';
+import MenuOption from 'tooey/lib/MenuOption';
+import output from 'tooey/lib/output';
 
-import ViewBase from '../components/ViewBase';
-import Menu from '../components/Menu';
-import MenuOption from '../components/MenuOption';
 import state from '../../model/state';
 import app from '../app';
-import output from '../components/output';
 
 export default class TransactionRaw extends ViewBase {
   _data: Array<string>
@@ -33,7 +33,7 @@ export default class TransactionRaw extends ViewBase {
       options.push(new MenuOption('N', 'Next page', 'Go to next page', this.nextPage.bind(this)));
       options.push(new MenuOption('P', 'Previous page', 'Return to previous page', this.previousPage.bind(this)));
     }
-    this._menu = new Menu(options, true);
+    this._menu = new Menu(app, options, true);
     this._data = data;
     this._currentPage = 1;
     this._numPages = numPages;

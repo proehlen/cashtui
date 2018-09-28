@@ -2,17 +2,16 @@
 
 import cliui from 'cliui';
 import colors from 'colors';
+import output from 'tooey/lib/output';
+import ViewBase from 'tooey/lib/ViewBase';
+import Input from 'tooey/lib/Input';
+import InputHelp, { DEFAULT_TEXT as INPUT_HELP_DEFAULT } from 'tooey/lib/InputHelp';
+import { KEY_UP, KEY_DOWN } from 'tooey/lib/keys';
 
-import ViewBase from '../components/ViewBase';
-import Input from '../components/Input';
-import InputHelp, { DEFAULT_TEXT as INPUT_HELP_DEFAULT } from '../components/InputHelp';
 import GenericList from './GenericList';
 import GenericText from './GenericText';
-import app from '../app';
 import state from '../../model/state';
-import output from '../components/output';
-
-import { KEY_UP, KEY_DOWN } from '../components/keys';
+import app from '../app';
 
 export default class RawInput extends ViewBase {
   _historyLevel: number

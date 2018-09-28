@@ -1,11 +1,12 @@
 // @flow
 
-import app from '../app';
-import MenuForm from '../components/MenuForm';
-import ViewBase from '../components/ViewBase';
+import MenuForm from 'tooey/lib/MenuForm';
+import ViewBase from 'tooey/lib/ViewBase';
+import MenuOption from 'tooey/lib/MenuOption';
+
 import MainMenu from './MainMenu';
-import MenuOption from '../components/MenuOption';
 import state from '../../model/state';
+import app from '../app';
 
 const fieldIdx = {
   HOST: 0,

@@ -1,9 +1,9 @@
 // @flow
 import Transaction from 'cashlib/lib/Transaction';
+import ViewBase from 'tooey/lib/ViewBase';
+import Input from 'tooey/lib/Input';
+import InputHelp from 'tooey/lib/InputHelp';
 
-import ViewBase from '../components/ViewBase';
-import Input from '../components/Input';
-import InputHelp from '../components/InputHelp';
 import TransactionHeader from './TransactionHeader';
 import app from '../app';
 import state from '../../model/state';

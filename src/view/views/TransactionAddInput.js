@@ -1,8 +1,8 @@
 // @flow
 
-import MenuForm from '../components/MenuForm';
-import ViewBase from '../components/ViewBase';
-import MenuOption from '../components/MenuOption';
+import MenuForm from 'tooey/lib/MenuForm';
+import ViewBase from 'tooey/lib/ViewBase';
+import MenuOption from 'tooey/lib/MenuOption';
 import app from '../app';
 
 const fieldIdx = {

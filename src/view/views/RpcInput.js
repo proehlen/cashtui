@@ -2,17 +2,16 @@
 
 import cliui from 'cliui';
 import colors from 'colors';
+import output from 'tooey/lib/output';
+import ViewBase from 'tooey/lib/ViewBase';
+import Input from 'tooey/lib/Input';
+import InputHelp, { DEFAULT_TEXT as INPUT_HELP_DEFAULT } from 'tooey/lib/InputHelp';
+import { KEY_UP, KEY_DOWN } from 'tooey/lib/keys';
 
-import ViewBase from './ViewBase';
-import Input from '../components/Input';
-import InputHelp, { DEFAULT_TEXT as INPUT_HELP_DEFAULT } from '../components/InputHelp';
-import OutputList from './OutputList';
-import OutputText from './OutputText';
-import stack from '../stack';
+import GenericList from './GenericList';
+import GenericText from './GenericText';
 import state from '../../model/state';
-import output from '../output';
-
-import { KEY_UP, KEY_DOWN } from '../keys';
+import app from '../app';
 
 export default class RawInput extends ViewBase {
   _historyLevel: number
@@ -22,7 +21,7 @@ export default class RawInput extends ViewBase {
   constructor() {
     super('Enter RPC command');
     this._historyLevel = 0;
-    this._input = new Input(this.onEnter.bind(this));
+    this._input = new Input(app, this.onEnter.bind(this));
 
     const inputHelpText = `${INPUT_HELP_DEFAULT}; ${colors.bold('Up')} and ${colors.bold('Down')} for history`;
     this._inputHelp = new InputHelp(inputHelpText);
@@ -66,7 +65,7 @@ export default class RawInput extends ViewBase {
 
   _loadFromHistory() {
     if (!state.rpc.history.length) {
-      stack.setWarning('No history found');
+      app.setWarning('No history found');
       return;
     }
     const index = state.rpc.history.length - this._historyLevel;
@@ -92,21 +91,21 @@ export default class RawInput extends ViewBase {
       if (typeof rpcResult === 'string') {
         const outputLines = rpcResult.split('\n');
         if (outputLines.length > 1 || rpcResult.length < output.width) {
-          stack.push(new OutputList('RPC result', outputLines));
+          app.pushView(new GenericList('RPC result', outputLines));
         } else {
-          stack.push(new OutputText('RPC result', rpcResult));
+          app.pushView(new GenericText('RPC result', rpcResult));
         }
       } else if (typeof rpcResult === 'number') {
-        stack.push(new OutputText('RPC result', rpcResult.toString()));
+        app.pushView(new GenericText('RPC result', rpcResult.toString()));
       } else if (typeof rpcResult === 'object') {
         const stringified = JSON.stringify(rpcResult, null, 2);
         const outputLines = stringified.split('\n');
-        stack.push(new OutputList('RPC result', outputLines));
+        app.pushView(new GenericList('RPC result', outputLines));
       } else if (Array.isArray(rpcResult)) {
         const outputLines = rpcResult.map(entry => JSON.stringify(entry));
-        stack.push(new OutputList('RPC result', outputLines));
+        app.pushView(new GenericList('RPC result', outputLines));
       } else {
-        stack.setError('Unexpected output received; don\'t know how to display');
+        app.setError('Unexpected output received; don\'t know how to display');
         return;
       }
       this._input.value = '';
@@ -120,7 +119,7 @@ export default class RawInput extends ViewBase {
       } else {
         [errorMessage] = err.message.split('\n');
       }
-      stack.setError(errorMessage);
+      app.setError(errorMessage);
     }
   }
 }

@@ -1,14 +1,13 @@
 // @flow
 
+import Input from 'tooey/lib/Input';
+import InputHelp from 'tooey/lib/InputHelp';
+import ViewBase from 'tooey/lib/ViewBase';
 import Transaction from 'cashlib/lib/Transaction';
 
-import ViewBase from './ViewBase';
 import TransactionHeader from './TransactionHeader';
 import state from '../../model/state';
-import stack from '../stack';
-
-import Input from '../components/Input';
-import InputHelp from '../components/InputHelp';
+import app from '../app';
 
 export default class TransactionIdInput extends ViewBase {
   _input: Input
@@ -16,7 +15,7 @@ export default class TransactionIdInput extends ViewBase {
 
   constructor() {
     super('Enter Transaction ID');
-    this._input = new Input(this.onEnter.bind(this));
+    this._input = new Input(app, this.onEnter.bind(this));
     this._inputHelp = new InputHelp();
   }
 
@@ -35,12 +34,12 @@ export default class TransactionIdInput extends ViewBase {
       if (typeof raw === 'string') {
         const transaction = Transaction.deserialize(raw);
         state.transactions.active = transaction;
-        stack.replace(new TransactionHeader());
+        app.replaceView(new TransactionHeader());
       } else {
         throw new Error('Unexpected value returned from RPC call');
       }
     } catch (err) {
-      stack.setError(err.message);
+      app.setError(err.message);
     }
   }
 }

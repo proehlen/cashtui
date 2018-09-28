@@ -1,11 +1,11 @@
 // @flow
 import Transaction from 'cashlib/lib/Transaction';
+import ViewBase from 'tooey/lib/ViewBase';
+import Input from 'tooey/lib/Input';
+import InputHelp from 'tooey/lib/InputHelp';
 
-import ViewBase from './ViewBase';
-import Input from '../components/Input';
-import InputHelp from '../components/InputHelp';
 import TransactionHeader from './TransactionHeader';
-import stack from '../stack';
+import app from '../app';
 import state from '../../model/state';
 
 export default class RawTransactionInput extends ViewBase {
@@ -14,7 +14,7 @@ export default class RawTransactionInput extends ViewBase {
 
   constructor() {
     super('Enter raw transaction');
-    this._input = new Input(this.onEnter.bind(this));
+    this._input = new Input(app, this.onEnter.bind(this));
     this._inputHelp = new InputHelp();
   }
 
@@ -30,9 +30,9 @@ export default class RawTransactionInput extends ViewBase {
   async onEnter() {
     try {
       state.transactions.active = Transaction.deserialize(this._input.value);
-      stack.replace(new TransactionHeader());
+      app.replaceView(new TransactionHeader());
     } catch (error) {
-      stack.setError(error.message);
+      app.setError(error.message);
     }
   }
 }

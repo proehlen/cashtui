@@ -2,15 +2,15 @@
 
 import Transaction from 'cashlib/lib/Transaction';
 import Input from 'cashlib/lib/Input';
+import ViewBase from 'tooey/lib/ViewBase';
+import List from 'tooey/lib/List';
+import Menu from 'tooey/lib/Menu';
+import MenuOption from 'tooey/lib/MenuOption';
+import type { ListColumn } from 'tooey/lib/List';
 
-import ViewBase from './ViewBase';
-import List from '../components/List';
-import Menu from '../components/Menu';
-import MenuOption from '../components/MenuOption';
 import TransactionAddInput from './TransactionAddInput';
-import type { ListColumn } from '../components/List';
 import state from '../../model/state';
-import stack from '../stack';
+import app from '../app';
 
 export default class TransactionInputs extends ViewBase {
   _menu: Menu
@@ -18,8 +18,8 @@ export default class TransactionInputs extends ViewBase {
 
   constructor() {
     super('Transaction Inputs');
-    const addInputOption = new MenuOption('A', 'Add', 'Add new input', async () => stack.push(new TransactionAddInput()));
-    this._menu = new Menu([addInputOption]);
+    const addInputOption = new MenuOption('A', 'Add', 'Add new input', async () => app.pushView(new TransactionAddInput()));
+    this._menu = new Menu(app, [addInputOption]);
 
     const transaction: Transaction = state.transactions.active;
     const inputs = transaction.inputs
@@ -35,7 +35,7 @@ export default class TransactionInputs extends ViewBase {
       width: 4,
     }];
 
-    this._list = new List(columns, inputs, true, this._menu);
+    this._list = new List(app, columns, inputs, true, this._menu);
   }
 
   _mapInputToListRow(input: Input): Array<string> {

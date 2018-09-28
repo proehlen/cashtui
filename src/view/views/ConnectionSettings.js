@@ -1,11 +1,12 @@
 // @flow
 
-import MenuForm from '../components/MenuForm';
-import ViewBase from './ViewBase';
+import MenuForm from 'tooey/lib/MenuForm';
+import ViewBase from 'tooey/lib/ViewBase';
+import MenuOption from 'tooey/lib/MenuOption';
+
 import MainMenu from './MainMenu';
-import MenuOption from '../components/MenuOption';
 import state from '../../model/state';
-import stack from '../stack';
+import app from '../app';
 
 const fieldIdx = {
   HOST: 0,
@@ -34,7 +35,7 @@ export default class ConnectionSettings extends ViewBase {
       new MenuOption('C', 'Connect', 'Connect to the node', this.connect.bind(this)),
     ];
 
-    this._menuForm = new MenuForm(fields, menuOptions);
+    this._menuForm = new MenuForm(app, fields, menuOptions);
   }
 
   async connect() {
@@ -47,9 +48,9 @@ export default class ConnectionSettings extends ViewBase {
       state.connection.user = fields[fieldIdx.USER].input.value;
       state.connection.password = fields[fieldIdx.PASSWORD].input.value;
       await state.connection.connect();
-      stack.push(new MainMenu());
+      app.pushView(new MainMenu());
     } catch (err) {
-      stack.setError(err.message);
+      app.setError(err.message);
     }
   }
 

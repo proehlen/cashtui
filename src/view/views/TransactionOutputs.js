@@ -4,12 +4,12 @@ import Transaction from 'cashlib/lib/Transaction';
 import Output from 'cashlib/lib/Output';
 // import Address from 'cashlib/lib/Address';
 
-import ViewBase from './ViewBase';
-import List from '../components/List';
-import Menu from '../components/Menu';
-import type { ListColumn } from '../components/List';
+import ViewBase from 'tooey/lib/ViewBase';
+import List from 'tooey/lib/List';
+import Menu from 'tooey/lib/Menu';
+import type { ListColumn } from 'tooey/lib/List';
 import state from '../../model/state';
-import stack from '../stack';
+import app from '../app';
 
 export default class TransactionOutputs extends ViewBase {
   _menu: Menu
@@ -17,7 +17,7 @@ export default class TransactionOutputs extends ViewBase {
 
   constructor() {
     super('Transaction Outputs');
-    this._menu = new Menu();
+    this._menu = new Menu(app);
 
     const transaction: Transaction = state.transactions.active;
     const outputs = transaction.outputs
@@ -35,7 +35,7 @@ export default class TransactionOutputs extends ViewBase {
       heading: 'Type',
       width: 10,
     }];
-    this._list = new List(columns, outputs, true, this._menu);
+    this._list = new List(app, columns, outputs, true, this._menu);
   }
 
   static _mapOutputToListRow(output: Output, index: number): Array<string> {
@@ -47,7 +47,7 @@ export default class TransactionOutputs extends ViewBase {
         addressEncoded = address.toString();
       }
     } catch (err) {
-      stack.setWarning(err.message);
+      app.setWarning(err.message);
     }
     if (!addressEncoded) {
       addressEncoded = 'Sorry, not available yet';

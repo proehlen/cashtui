@@ -1,16 +1,16 @@
 // @flow
+import List from 'tooey/lib/List';
+import type { ListColumn } from 'tooey/lib/List';
+import Menu from 'tooey/lib/Menu';
+import MenuOption from 'tooey/lib/MenuOption';
+import ViewBase from 'tooey/lib/ViewBase';
 import Network from 'cashlib/lib/Network';
 
 import Connection, { type History as ModelHistory } from '../../model/Connection';
-import List from '../components/List';
-import type { ListColumn } from '../components/List';
 import MainMenu from './MainMenu';
-import Menu from '../components/Menu';
-import MenuOption from '../components/MenuOption';
 import NetworkSelection from './NetworkSelection';
-import stack from '../stack';
+import app from '../app';
 import state from '../../model/state';
-import ViewBase from './ViewBase';
 
 export default class ConnectionHistory extends ViewBase {
   _list: List
@@ -22,7 +22,7 @@ export default class ConnectionHistory extends ViewBase {
     super('Recent Connections');
 
     this._connectOption = new MenuOption('C', 'Connect', 'Connect to selected network', this.connectToSelected.bind(this));
-    this._menu = new Menu([
+    this._menu = new Menu(app, [
       this._connectOption,
       new MenuOption('N', 'New', 'Create new connection', this.toNetworkSelection.bind(this)),
     ], false);
@@ -43,7 +43,9 @@ export default class ConnectionHistory extends ViewBase {
       width: 40,
     }];
 
-    this._list = new List(columns, listData, true, this._menu, true, this.onListSelect.bind(this));
+    this._list = new List(
+      app, columns, listData, true, this._menu, true, this.onListSelect.bind(this),
+    );
   }
 
   async onListSelect() {
@@ -51,7 +53,7 @@ export default class ConnectionHistory extends ViewBase {
   }
 
   async toNetworkSelection() {
-    stack.replace(new NetworkSelection());
+    app.replaceView(new NetworkSelection());
   }
 
   _getListData(): Array<Array<string>> {
@@ -78,9 +80,9 @@ export default class ConnectionHistory extends ViewBase {
       state.connection = connection;
       await connection.connect();
       this._list.setData(this._getListData());
-      stack.push(new MainMenu());
+      app.pushView(new MainMenu());
     } catch (err) {
-      stack.setError(err.message);
+      app.setError(err.message);
     }
   }
 

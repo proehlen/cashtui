@@ -1,29 +1,29 @@
 // @flow
 
-import ViewBase from './ViewBase';
-import Menu from '../components/Menu';
-import MenuOption from '../components/MenuOption';
+import ViewBase from 'tooey/lib/ViewBase';
+import Menu from 'tooey/lib/Menu';
+import MenuOption from 'tooey/lib/MenuOption';
 import TransactionsMenu from './TransactionsMenu';
 import RpcInput from './RpcInput';
-import stack from '../stack';
+import app from '../app';
 
 export default class MainMenu extends ViewBase {
   _menu: Menu
 
   constructor() {
     super('Main Menu');
-    this._menu = new Menu([
+    this._menu = new Menu(app, [
       new MenuOption('T', 'Transactions', 'Work with transactions', this.toTransactions.bind(this)),
       new MenuOption('R', 'RPC', 'Execute JSON RPC commands', this.toRpc.bind(this)),
     ]);
   }
 
   async toRpc() {
-    stack.push(new RpcInput());
+    app.pushView(new RpcInput());
   }
 
   async toTransactions() {
-    stack.push(new TransactionsMenu());
+    app.pushView(new TransactionsMenu());
   }
 
   render() {

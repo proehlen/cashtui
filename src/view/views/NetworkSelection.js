@@ -1,16 +1,16 @@
 // @flow
 
 import Network from 'cashlib/lib/Network';
+import ViewBase from 'tooey/lib/ViewBase';
+import List from 'tooey/lib/List';
+import Menu from 'tooey/lib/Menu';
+import MenuOption from 'tooey/lib/MenuOption';
 
-import ViewBase from './ViewBase';
 import Connection from '../../model/Connection';
-import List from '../components/List';
-import Menu from '../components/Menu';
-import MenuOption from '../components/MenuOption';
 import ConnectionSettings from './ConnectionSettings';
 import ConnectionHistory from './ConnectionHistory';
 import state from '../../model/state';
-import stack from '../stack';
+import app from '../app';
 
 export default class NetworkSelection extends ViewBase {
   _networks: Array<Array<string>>
@@ -27,7 +27,7 @@ export default class NetworkSelection extends ViewBase {
       this._continueOption,
       new MenuOption('R', 'Recent', 'Recent connections', this.toConnectionHistory.bind(this)),
     ];
-    this._menu = new Menu(menuOptions, false);
+    this._menu = new Menu(app, menuOptions, false);
 
     // Build networks list
     this._networks = [
@@ -36,17 +36,10 @@ export default class NetworkSelection extends ViewBase {
       ['regtest'],
       ['nol'],
     ];
-    this._list = new List(
-      [{
-        heading: 'Network',
-        width: 25,
-      }],
-      this._networks,
-      false,
-      undefined,
-      true,
-      this.onListSelect.bind(this),
-    );
+    this._list = new List(app, [{
+      heading: 'Network',
+      width: 25,
+    }], this._networks, false, undefined, true, this.onListSelect.bind(this));
   }
 
   async onListSelect() {
@@ -79,17 +72,17 @@ export default class NetworkSelection extends ViewBase {
       const network = Network.fromString(networkLabel);
       const connection = new Connection(network);
       state.connection = connection;
-      stack.push(new ConnectionSettings());
+      app.pushView(new ConnectionSettings());
     } catch (err) {
-      stack.setError(err.message);
+      app.setError(err.message);
     }
   }
 
   async toConnectionHistory() {
     try {
-      stack.replace(new ConnectionHistory());
+      app.replaceView(new ConnectionHistory());
     } catch (err) {
-      stack.setError(err.message);
+      app.setError(err.message);
     }
   }
 

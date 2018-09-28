@@ -5,7 +5,7 @@ import Menu from '../components/Menu';
 import MenuOption from '../components/MenuOption';
 import TransactionsMenu from './TransactionsMenu';
 import RpcInput from './RpcInput';
-import stack from '../stack';
+import app from '../app';
 
 export default class MainMenu extends ViewBase {
   _menu: Menu
@@ -19,11 +19,11 @@ export default class MainMenu extends ViewBase {
   }
 
   async toRpc() {
-    stack.push(new RpcInput());
+    app.pushView(new RpcInput());
   }
 
   async toTransactions() {
-    stack.push(new TransactionsMenu());
+    app.pushView(new TransactionsMenu());
   }
 
   render() {

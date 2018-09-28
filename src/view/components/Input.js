@@ -1,9 +1,9 @@
 // @flow
 
+import App from './App';
 import ComponentBase from './ComponentBase';
-import stack from '../stack';
-import output from '../output';
-import { KEY_ESCAPE, KEY_ENTER, KEY_BACKSPACE } from '../keys';
+import output from './output';
+import { KEY_ESCAPE, KEY_ENTER, KEY_BACKSPACE } from './keys';
 
 export type InputType = 'string' | 'integer' | 'password';
 
@@ -11,9 +11,11 @@ export default class Input extends ComponentBase {
   _value: string
   _onEnter: () => Promise<void>
   _type: InputType
+  _app: App
 
-  constructor(onEnter: () => Promise<void>, initialValue: string = '', type: InputType = 'string') {
+  constructor(app: App, onEnter: () => Promise<void>, initialValue: string = '', type: InputType = 'string') {
     super();
+    this._app = app;
     this._onEnter = onEnter;
     this._value = initialValue;
     this._type = type;
@@ -87,7 +89,7 @@ export default class Input extends ComponentBase {
         if (this._value.length) {
           this._value = '';
         } else {
-          stack.pop();
+          this._app.popView();
         }
         break;
       default:

@@ -10,7 +10,7 @@ import MenuOption from '../components/MenuOption';
 import TransactionAddInput from './TransactionAddInput';
 import type { ListColumn } from '../components/List';
 import state from '../../model/state';
-import stack from '../stack';
+import app from '../app';
 
 export default class TransactionInputs extends ViewBase {
   _menu: Menu
@@ -18,7 +18,7 @@ export default class TransactionInputs extends ViewBase {
 
   constructor() {
     super('Transaction Inputs');
-    const addInputOption = new MenuOption('A', 'Add', 'Add new input', async () => stack.push(new TransactionAddInput()));
+    const addInputOption = new MenuOption('A', 'Add', 'Add new input', async () => app.pushView(new TransactionAddInput()));
     this._menu = new Menu([addInputOption]);
 
     const transaction: Transaction = state.transactions.active;

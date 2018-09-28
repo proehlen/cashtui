@@ -9,7 +9,7 @@ import List from '../components/List';
 import Menu from '../components/Menu';
 import type { ListColumn } from '../components/List';
 import state from '../../model/state';
-import stack from '../stack';
+import app from '../app';
 
 export default class TransactionOutputs extends ViewBase {
   _menu: Menu
@@ -47,7 +47,7 @@ export default class TransactionOutputs extends ViewBase {
         addressEncoded = address.toString();
       }
     } catch (err) {
-      stack.setWarning(err.message);
+      app.setWarning(err.message);
     }
     if (!addressEncoded) {
       addressEncoded = 'Sorry, not available yet';

@@ -5,11 +5,11 @@ import cliui from 'cliui';
 
 import ComponentBase from './ComponentBase';
 import MenuOption from './MenuOption';
-import stack from '../stack';
-import output from '../output';
+import app from '../app';
+import output from './output';
 import {
   KEY_ENTER, KEY_ESCAPE, KEY_LEFT, KEY_RIGHT, KEY_TAB, KEY_SHIFT_TAB,
-} from '../keys';
+} from './keys';
 
 
 const OPTION_GAP = 3; // Render gap between options
@@ -112,7 +112,7 @@ export default class Menu extends ComponentBase {
   set selectedIndex(index: number) {
     this._selectedIndex = index;
     if (this.selectedOption) {
-      stack.setInfo(this.selectedOption.help);
+      app.setInfo(this.selectedOption.help);
     }
   }
 
@@ -152,10 +152,10 @@ export default class Menu extends ComponentBase {
     } else {
       switch (key.toUpperCase()) {
         case KEY_ESCAPE:
-          if (stack.depth) {
-            stack.pop();
+          if (app.viewDepth) {
+            app.popView();
           } else {
-            stack.quit();
+            app.quit();
           }
           break;
         case KEY_LEFT:
@@ -168,13 +168,13 @@ export default class Menu extends ComponentBase {
           break;
         case 'B':
           // Back
-          if (stack.depth) {
-            stack.pop();
+          if (app.viewDepth) {
+            app.popView();
           }
           break;
         case 'Q':
           // Quit
-          stack.quit();
+          app.quit();
           break;
         default: {
           const option = this._options.find(candidate => candidate.key === key.toUpperCase());
@@ -183,7 +183,7 @@ export default class Menu extends ComponentBase {
               await option.execute();
             } else {
               // Valid option
-              stack.setWarning(`Sorry, the '${option.label}' feature is not implemented yet`);
+              app.setWarning(`Sorry, the '${option.label}' feature is not implemented yet`);
             }
           }
           break;

@@ -5,7 +5,7 @@ import Transaction from 'cashlib/lib/Transaction';
 import ViewBase from '../components/ViewBase';
 import TransactionHeader from './TransactionHeader';
 import state from '../../model/state';
-import stack from '../stack';
+import app from '../app';
 
 import Input from '../components/Input';
 import InputHelp from '../components/InputHelp';
@@ -16,7 +16,7 @@ export default class TransactionIdInput extends ViewBase {
 
   constructor() {
     super('Enter Transaction ID');
-    this._input = new Input(this.onEnter.bind(this));
+    this._input = new Input(app, this.onEnter.bind(this));
     this._inputHelp = new InputHelp();
   }
 
@@ -35,12 +35,12 @@ export default class TransactionIdInput extends ViewBase {
       if (typeof raw === 'string') {
         const transaction = Transaction.deserialize(raw);
         state.transactions.active = transaction;
-        stack.replace(new TransactionHeader());
+        app.replaceView(new TransactionHeader());
       } else {
         throw new Error('Unexpected value returned from RPC call');
       }
     } catch (err) {
-      stack.setError(err.message);
+      app.setError(err.message);
     }
   }
 }

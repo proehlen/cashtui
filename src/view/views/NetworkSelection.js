@@ -10,7 +10,7 @@ import MenuOption from '../components/MenuOption';
 import ConnectionSettings from './ConnectionSettings';
 import ConnectionHistory from './ConnectionHistory';
 import state from '../../model/state';
-import stack from '../stack';
+import app from '../app';
 
 export default class NetworkSelection extends ViewBase {
   _networks: Array<Array<string>>
@@ -79,17 +79,17 @@ export default class NetworkSelection extends ViewBase {
       const network = Network.fromString(networkLabel);
       const connection = new Connection(network);
       state.connection = connection;
-      stack.push(new ConnectionSettings());
+      app.pushView(new ConnectionSettings());
     } catch (err) {
-      stack.setError(err.message);
+      app.setError(err.message);
     }
   }
 
   async toConnectionHistory() {
     try {
-      stack.replace(new ConnectionHistory());
+      app.replaceView(new ConnectionHistory());
     } catch (err) {
-      stack.setError(err.message);
+      app.setError(err.message);
     }
   }
 

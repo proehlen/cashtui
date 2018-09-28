@@ -1,30 +1,30 @@
 // @flow
 
 import Connection from './model/Connection';
-import stack from './view/stack';
-import output from './view/output';
+import app from './view/app';
+import output from './view/components/output';
 import NetworkSelection from './view/views/NetworkSelection';
 import ConnectionHistory from './view/views/ConnectionHistory';
 
 // Render starting view
 if (Connection.getHistory().length) {
-  stack.push(new ConnectionHistory());
+  app.pushView(new ConnectionHistory());
 } else {
-  stack.push(new NetworkSelection());
+  app.pushView(new NetworkSelection());
 }
-stack.render();
+app.render();
 
 const { stdin } = process;
 // $flow-disable-line need raw mode; method appears to be available
 stdin.setRawMode(true);
 stdin.setEncoding('utf8');
 stdin.on('data', async (key) => {
-  await stack.handle(key);
-  stack.render();
+  await app.handle(key);
+  app.render();
 });
 
 // Re-render on window resize
 process.stdout.on('resize', () => {
   output.resize();
-  stack.render();
+  app.render();
 });

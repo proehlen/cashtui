@@ -1,12 +1,13 @@
 // @flow
 
 import ComponentBase from './ComponentBase';
+import App from './App';
 import Input, { type InputType } from './Input';
-import output from '../output';
+import output from './output';
 
 import {
   KEY_TAB, KEY_SHIFT_TAB, KEY_LEFT, KEY_RIGHT, KEY_ESCAPE, KEY_UP, KEY_DOWN, KEY_ENTER,
-} from '../keys';
+} from './keys';
 
 export type FieldData = {
   label: string,
@@ -30,6 +31,7 @@ export default class Form extends ComponentBase {
   _onEscape: EscapeCallback
 
   constructor(
+    app: App,
     fields: Array<FieldData>,
     onNoMoreFields?: NoMoreFieldsCallback,
     onEscape?: EscapeCallback,
@@ -37,7 +39,7 @@ export default class Form extends ComponentBase {
     super();
     this._fields = fields.map(data => ({
       label: data.label,
-      input: new Input(this._onEnter.bind(this), data.default, data.type),
+      input: new Input(app, this._onEnter.bind(this), data.default, data.type),
     }));
     if (onNoMoreFields) {
       this._onNoMoreFields = onNoMoreFields;

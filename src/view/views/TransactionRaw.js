@@ -6,8 +6,8 @@ import ViewBase from '../components/ViewBase';
 import Menu from '../components/Menu';
 import MenuOption from '../components/MenuOption';
 import state from '../../model/state';
-import stack from '../stack';
-import output from '../output';
+import app from '../app';
+import output from '../components/output';
 
 export default class TransactionRaw extends ViewBase {
   _data: Array<string>
@@ -54,7 +54,7 @@ export default class TransactionRaw extends ViewBase {
 
   async nextPage() {
     if (this._currentPage === this._numPages) {
-      stack.setInfo('No more pages');
+      app.setInfo('No more pages');
     } else {
       this._currentPage += 1;
     }
@@ -62,7 +62,7 @@ export default class TransactionRaw extends ViewBase {
 
   async previousPage() {
     if (this._currentPage === 1) {
-      stack.setInfo('Already at start');
+      app.setInfo('Already at start');
     } else {
       this._currentPage -= 1;
     }

@@ -1,5 +1,6 @@
 // @flow
 
+import App from './App';
 import ComponentBase from './ComponentBase';
 import Form, { type FieldData } from './Form';
 import Menu from './Menu';
@@ -7,18 +8,19 @@ import MenuOption from './MenuOption';
 
 import {
   KEY_UP, KEY_DOWN,
-} from '../keys';
+} from './keys';
 
 export default class MenuForm extends ComponentBase {
   _menu: Menu
   _form: Form
   _activeComponent: ComponentBase
 
-  constructor(fields: Array<FieldData>, menuOptions: Array<MenuOption>) {
+  constructor(app: App, fields: Array<FieldData>, menuOptions: Array<MenuOption>) {
     super();
 
     // Create form
     this._form = new Form(
+      app,
       fields,
       this.onNoMoreFields.bind(this),
       this.onEscapeFromField.bind(this),

@@ -9,7 +9,7 @@
 import colors from 'colors';
 
 import ComponentBase from './ComponentBase';
-import output from '../output';
+import output from './output';
 
 export const DEFAULT_TEXT = `Press ${colors.bold('Enter')} to accept; ${colors.bold('Esc')} to cancel`;
 

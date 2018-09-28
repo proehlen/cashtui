@@ -3,7 +3,7 @@
 import MenuForm from '../components/MenuForm';
 import ViewBase from '../components/ViewBase';
 import MenuOption from '../components/MenuOption';
-import stack from '../stack';
+import app from '../app';
 
 const fieldIdx = {
   TRANSACTION_ID: 0,
@@ -27,29 +27,29 @@ export default class TransactionAddInput extends ViewBase {
       new MenuOption('L', 'Lookup Output', 'Lookup output in transaction', this.lookupOutput.bind(this)),
     ];
 
-    this._menuForm = new MenuForm(fields, menuOptions);
+    this._menuForm = new MenuForm(app, fields, menuOptions);
   }
 
   async lookupOutput() {
     try {
       const txId = this._menuForm.fields[fieldIdx.TRANSACTION_ID].input.value;
       if (!txId) {
-        stack.setError('Enter Transaction Id to lookup output in.');
+        app.setError('Enter Transaction Id to lookup output in.');
       } else {
-        stack.setWarning('Sorry, the Lookup feature is still under construction');
-      // stack.push();
+        app.setWarning('Sorry, the Lookup feature is still under construction');
+      // app.pushView();
       }
     } catch (err) {
-      stack.setError(err.message);
+      app.setError(err.message);
     }
   }
 
   async addInput() {
     try {
-      stack.setWarning('Sorry, adding inputs is still under construction');
-      // stack.pop();
+      app.setWarning('Sorry, adding inputs is still under construction');
+      // app.popView();
     } catch (err) {
-      stack.setError(err.message);
+      app.setError(err.message);
     }
   }
 

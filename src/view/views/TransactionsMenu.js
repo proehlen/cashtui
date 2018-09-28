@@ -7,7 +7,7 @@ import Menu from '../components/Menu';
 import MenuOption from '../components/MenuOption';
 import RawTransactionInput from './RawTransactionInput';
 import TransactionIdInput from './TransactionIdInput';
-import stack from '../stack';
+import app from '../app';
 import state from '../../model/state';
 import TransactionHeader from './TransactionHeader';
 
@@ -27,16 +27,16 @@ export default class TransactionsMenu extends ViewBase {
   }
 
   async toTransactionIdInput() {
-    stack.push(new TransactionIdInput());
+    app.pushView(new TransactionIdInput());
   }
 
   async createTransaction() {
     state.transactions.active = new Transaction();
-    stack.push(new TransactionHeader());
+    app.pushView(new TransactionHeader());
   }
 
   async toRawTransactionInput() {
-    stack.push(new RawTransactionInput());
+    app.pushView(new RawTransactionInput());
   }
 
   async handle(key: string): Promise<void> {

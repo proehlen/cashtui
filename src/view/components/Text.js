@@ -1,12 +1,12 @@
 // @flow
 
 import ComponentBase from './ComponentBase';
-import output from '../output';
-import stack from '../stack';
+import output from './output';
+import app from '../app';
 
 import {
   KEY_DOWN, KEY_UP, KEY_PAGE_DOWN, KEY_PAGE_UP,
-} from '../keys';
+} from './keys';
 
 export default class List extends ComponentBase {
   _text: string
@@ -30,7 +30,7 @@ export default class List extends ComponentBase {
 
   async pageUp() {
     if (this._page === 1) {
-      stack.setInfo('Already at start');
+      app.setInfo('Already at start');
       return;
     }
     this._page--;
@@ -46,7 +46,7 @@ export default class List extends ComponentBase {
 
   async pageDown() {
     if (this._page >= this._pageCount) {
-      stack.setInfo('No more pages');
+      app.setInfo('No more pages');
       return;
     }
     this._page++;

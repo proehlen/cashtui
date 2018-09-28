@@ -4,10 +4,7 @@ import colors from 'colors';
 import cliui from 'cliui';
 
 import output from './output';
-import { version } from '../../package.json';
-import state from '../model/state';
-import ViewBase from './components/ViewBase';
-import Input from './components/Input';
+import ViewBase from './ViewBase';
 
 declare var process: any;
 
@@ -18,25 +15,41 @@ type Status = {
   message: string,
 }
 
-class Stack {
-  _stack: Array<ViewBase>
-
+export default class App {
+  _title: string
+  _subtitle: string
+  _state: string
+  _views: Array<ViewBase>
   _status: Status
 
-  constructor() {
-    this._stack = [];
+  constructor(title: string, subtitle?: string) {
+    this._title = title;
+    if (subtitle) {
+      this._subtitle = subtitle;
+    }
+    this._views = [];
     this._status = {
       type: 'info',
       message: 'Welcome',
     };
   }
 
-  get active(): ViewBase {
-    return this._stack[this._stack.length - 1];
+  set state(state: string) {
+    this._state = state;
   }
 
-  get depth() {
-    return this._stack.length - 1;
+  get state(): string {
+    return this._state
+      ? this._state
+      : '';
+  }
+
+  get activeView(): ViewBase {
+    return this._views[this._views.length - 1];
+  }
+
+  get viewDepth() {
+    return this._views.length - 1;
   }
 
   get status() {
@@ -70,7 +83,7 @@ class Stack {
       this._renderTitle();
       this._renderStatus();
       output.cursorTo(0, output.contentStartRow);
-      this.active.render(false);
+      this.activeView.render(false);
     } catch (err) {
       // No errors should come up to this high level,
       // Will probably need a coder to sort out
@@ -90,7 +103,7 @@ class Stack {
   async handle(key: string) {
     this._clearStatus();
     try {
-      await this.active.handle(key);
+      await this.activeView.handle(key);
     } catch (err) {
       // No errors should come up to this high level,
       // Will probably need a coder to sort out
@@ -99,7 +112,6 @@ class Stack {
       process.exit(0);
     }
   }
-
 
   _renderStatus() {
     let bgColor;
@@ -124,21 +136,15 @@ class Stack {
     output.cursorTo(0, output.height - 2);
     const ui = cliui({ wrap: false });
 
-    let networkName = '';
-    const { connection } = state;
-    if (connection && connection.isConnected) {
-      networkName = connection.network.label;
-    }
-
-    const networkWidth = networkName.length;
-    const messageWidth = output.width - networkWidth;
+    const stateWidth = this.state.length;
+    const messageWidth = output.width - stateWidth;
     const message = this.status.message.substr(0, messageWidth);
     ui.div({
       text: colors[bgColor][fgColor](message),
       width: messageWidth,
     }, {
-      text: networkName,
-      width: networkWidth,
+      text: this.state,
+      width: stateWidth,
     });
     console.log(ui.toString());
   }
@@ -146,43 +152,30 @@ class Stack {
   _renderTitle() {
     output.cursorTo(0, 0);
     const ui = cliui();
-    const versionText = `v${version}`;
     ui.div({
-      text: colors.blue(
-        'CashTUI',
-      ),
+      text: this._title,
       align: 'left',
     }, {
-      text: this.active.title,
+      text: this.activeView.title,
       align: 'center',
     }, {
-      text: versionText,
+      text: this._subtitle,
       align: 'right',
     });
     console.log(ui.toString());
   }
 
-  push(component: ViewBase) {
-    this._stack.push(component);
-    this._setStatusForActiveComponent();
+  pushView(component: ViewBase) {
+    this._views.push(component);
   }
 
-  pop() {
-    this._stack.pop();
-    this._setStatusForActiveComponent();
+  popView() {
+    this._views.pop();
   }
 
-  replace(component: ViewBase) {
-    this._stack.pop();
-    this._stack.push(component);
-    this._setStatusForActiveComponent();
-  }
-
-  _setStatusForActiveComponent() {
-    const activeComponent = this.active;
-    if (activeComponent instanceof Input) {
-      // Input
-    }
+  replaceView(component: ViewBase) {
+    this._views.pop();
+    this._views.push(component);
   }
 
   quit() {
@@ -191,6 +184,3 @@ class Stack {
     process.exit(0);
   }
 }
-
-const stack = new Stack();
-export default stack;

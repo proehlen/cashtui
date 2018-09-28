@@ -8,7 +8,7 @@ import MainMenu from './MainMenu';
 import Menu from '../components/Menu';
 import MenuOption from '../components/MenuOption';
 import NetworkSelection from './NetworkSelection';
-import stack from '../stack';
+import app from '../app';
 import state from '../../model/state';
 import ViewBase from '../components/ViewBase';
 
@@ -51,7 +51,7 @@ export default class ConnectionHistory extends ViewBase {
   }
 
   async toNetworkSelection() {
-    stack.replace(new NetworkSelection());
+    app.replaceView(new NetworkSelection());
   }
 
   _getListData(): Array<Array<string>> {
@@ -78,9 +78,9 @@ export default class ConnectionHistory extends ViewBase {
       state.connection = connection;
       await connection.connect();
       this._list.setData(this._getListData());
-      stack.push(new MainMenu());
+      app.pushView(new MainMenu());
     } catch (err) {
-      stack.setError(err.message);
+      app.setError(err.message);
     }
   }
 

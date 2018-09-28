@@ -7,12 +7,12 @@ import { stringFixedWidth } from 'cashlib/lib/string';
 import ComponentBase from './ComponentBase';
 import Menu from './Menu';
 import MenuOption from './MenuOption';
-import output from '../output';
-import stack from '../stack';
+import output from './output';
+import app from '../app';
 
 import {
   KEY_PAGE_DOWN, KEY_PAGE_UP, KEY_DOWN, KEY_UP, KEY_ENTER,
-} from '../keys';
+} from './keys';
 
 export type ListColumn = {
   heading: string,
@@ -99,7 +99,7 @@ export default class List extends ComponentBase {
 
   async pageUp() {
     if (this._startIndex === 0) {
-      stack.setInfo('Already at start');
+      app.setInfo('Already at start');
       return;
     }
     this._startIndex -= output.contentHeight;
@@ -131,7 +131,7 @@ export default class List extends ComponentBase {
 
   async pageDown() {
     if ((this._startIndex + output.contentHeight) > this._data.length) {
-      stack.setInfo('No more pages');
+      app.setInfo('No more pages');
       return;
     }
     this._startIndex += output.contentHeight;
@@ -165,7 +165,7 @@ export default class List extends ComponentBase {
     } else if (!isLastPage) {
       this._selectedPageRow++;
     } else {
-      stack.setInfo('No more records');
+      app.setInfo('No more records');
     }
     if (this._onSelect) {
       await this._onSelect();

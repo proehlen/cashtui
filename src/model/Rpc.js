@@ -2,6 +2,7 @@
 /* eslint-disable no-console */
 
 import http from 'http';
+import { isInteger } from 'stringfu';
 
 import state from './state';
 
@@ -41,7 +42,18 @@ export default class Rpc {
     }
 
     const commandComponents = command.split(' ');
-    const [method:string, ...params] = commandComponents;
+    const [method:string, ...params: Array<any>] = commandComponents;
+
+    // Coerce integer parameters into numeric types
+    const modifiedParams = params.map((value) => {
+      let result: any;
+      if (isInteger(value)) {
+        result = parseInt(value, 10);
+      } else {
+        result = value;
+      }
+      return result;
+    });
 
     // return new pending promise
     let responseData = '';
@@ -59,7 +71,7 @@ export default class Rpc {
         method,
       };
       if (params.length) {
-        rpcRequest.params = params;
+        rpcRequest.params = modifiedParams;
       }
       const postData = JSON.stringify(rpcRequest);
 

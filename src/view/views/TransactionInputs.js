@@ -42,7 +42,7 @@ export default class TransactionInputs extends ViewBase {
     return [
       input.isCoinbase ? 'Coinbase' : input.transactionId,
       input.isCoinbase ? ' ' : input.outputIndex.toString(),
-      input.signatureScript ? 'Yes' : '',
+      input.signatureScript.length ? 'Yes' : '',
     ];
   }
 

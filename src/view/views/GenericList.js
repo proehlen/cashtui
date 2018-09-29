@@ -8,7 +8,7 @@ import Menu from 'tooey/lib/Menu';
 import app from '../app';
 
 export default class GenericList extends ViewBase {
-  _list: List
+  _list: List<string>
   _menu: Menu
 
   constructor(title: string, data: Array<string>) {
@@ -16,7 +16,11 @@ export default class GenericList extends ViewBase {
 
     this._menu = new Menu(app);
 
-    const columns: Array<ListColumn> = [{ heading: 'Result', width: 999 }];
+    const columns: Array<ListColumn<string>> = [{
+      heading: 'Result',
+      width: 999,
+      value: row => row,
+    }];
     this._list = new List(app, columns, data, {
       dataMapper: rec => [rec],
       showHeadings: false,

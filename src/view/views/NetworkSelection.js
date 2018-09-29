@@ -2,7 +2,7 @@
 
 import Network from 'cashlib/lib/Network';
 import ViewBase from 'tooey/lib/ViewBase';
-import List from 'tooey/lib/List';
+import List, { type ListColumn } from 'tooey/lib/List';
 import Menu from 'tooey/lib/Menu';
 import MenuOption from 'tooey/lib/MenuOption';
 
@@ -13,9 +13,9 @@ import state from '../../model/state';
 import app from '../app';
 
 export default class NetworkSelection extends ViewBase {
-  _networks: Array<Array<string>>
+  _networks: Array<string>
   _menu: Menu
-  _list: List
+  _list: List<string>
   _continueOption: MenuOption
 
   constructor() {
@@ -31,15 +31,18 @@ export default class NetworkSelection extends ViewBase {
 
     // Build networks list
     this._networks = [
-      ['mainnet'],
-      ['testnet'],
-      ['regtest'],
-      ['nol'],
+      'mainnet',
+      'testnet',
+      'regtest',
+      'nol',
     ];
-    this._list = new List(app, [{
+
+    const columns: Array<ListColumn<string>> = [{
       heading: 'Network',
       width: 25,
-    }], this._networks, {
+      value: network => network,
+    }];
+    this._list = new List<string>(app, columns, this._networks, {
       showHeadings: false,
       rowSelection: true,
       onSelect: this.onListSelect.bind(this),

@@ -3,7 +3,7 @@ import Output from 'cashlib/lib/Output';
 import { leftPad } from 'stringfu';
 
 import ComponentBase from 'tooey/lib/ComponentBase';
-import List, { type ListColumn, type OutputRow } from 'tooey/lib/List';
+import List, { type ListColumn } from 'tooey/lib/List';
 import Menu from 'tooey/lib/Menu';
 import state from '../../model/state';
 import app from '../app';
@@ -11,47 +11,48 @@ import app from '../app';
 const VALUE_COLUMN_WIDTH = 15;
 
 export default class OutputsList extends ComponentBase {
-  _list: List
+  _list: List<Output>
 
-  constructor(outputs: Array<Output>, menu: Menu, selection?: boolean) {
+  constructor(outputs: Array<Output>, menu: Menu, rowSelection?: boolean) {
     super();
 
-    const columns: Array<ListColumn> = [{
+    const columns: Array<ListColumn<Output>> = [{
       heading: 'Index',
       width: 8,
+      value: (output, index) => index.toString(),
     }, {
       heading: 'Value (BCH)',
       width: VALUE_COLUMN_WIDTH,
+      value: (output) => {
+        const bch = (output.value / 100000000).toFixed(8);
+        return leftPad(bch, VALUE_COLUMN_WIDTH, ' ');
+      },
     }, {
       heading: 'Address',
       width: 40,
+      value: (output) => {
+        let addressEncoded = '';
+        try {
+          const address = output.getAddress(state.connection.network);
+          if (address) {
+            addressEncoded = address.toString();
+          }
+        } catch (err) {
+          app.setWarning(err.message);
+          addressEncoded = 'Sorry, not available yet';
+        }
+        return addressEncoded;
+      },
     }, {
       heading: 'Type',
       width: 10,
+      value: output => output.scriptType,
     }];
-    this._list = new List(app, columns, outputs, {
-      dataMapper: OutputsList._mapOutputToListRow,
-      menu,
-      rowSelection: selection,
-    });
-  }
 
-  static _mapOutputToListRow(output: Output, index: number): OutputRow {
-    const value = (output.value / 100000000).toFixed(8);
-    const formattedValue = leftPad(value, VALUE_COLUMN_WIDTH, ' ');
-    let addressEncoded;
-    try {
-      const address = output.getAddress(state.connection.network);
-      if (address) {
-        addressEncoded = address.toString();
-      }
-    } catch (err) {
-      app.setWarning(err.message);
-    }
-    if (!addressEncoded) {
-      addressEncoded = 'Sorry, not available yet';
-    }
-    return [index.toString(), formattedValue, addressEncoded, output.scriptType];
+    this._list = new List(app, columns, outputs, {
+      menu,
+      rowSelection,
+    });
   }
 
   get selectedOutputIndex(): number {

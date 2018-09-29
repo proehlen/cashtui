@@ -4,20 +4,20 @@ import Transaction from 'cashlib/lib/Transaction';
 import ViewBase from 'tooey/lib/ViewBase';
 import Menu from 'tooey/lib/Menu';
 
-import TransactionOutputsList from '../components/TransactionOutputsList';
+import OutputsList from '../components/OutputsList';
 import state from '../../model/state';
 import app from '../app';
 
 export default class TransactionOutputs extends ViewBase {
   _menu: Menu
-  _list: TransactionOutputsList
+  _list: OutputsList
 
   constructor() {
     super('Transaction Outputs');
     this._menu = new Menu(app);
 
     const transaction: Transaction = state.transactions.active;
-    this._list = new TransactionOutputsList(transaction.outputs, this._menu);
+    this._list = new OutputsList(transaction.outputs, this._menu);
   }
 
   render() {

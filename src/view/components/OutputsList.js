@@ -1,6 +1,6 @@
 // @flow
 import Output from 'cashlib/lib/Output';
-// import Address from 'cashlib/lib/Address';
+import { leftPad } from 'stringfu';
 
 import ComponentBase from 'tooey/lib/ComponentBase';
 import List, { type ListColumn, type ListData } from 'tooey/lib/List';
@@ -8,20 +8,22 @@ import Menu from 'tooey/lib/Menu';
 import state from '../../model/state';
 import app from '../app';
 
-export default class TransactionOutputsList extends ComponentBase {
+const VALUE_COLUMN_WIDTH = 15;
+
+export default class OutputsList extends ComponentBase {
   _outputs: ListData
   _list: List
 
-  constructor(outputs: Array<Output>, menu: Menu) {
+  constructor(outputs: Array<Output>, menu: Menu, selection?: boolean) {
     super();
 
-    this._outputs = outputs.map(TransactionOutputsList._mapOutputToListRow);
+    this._outputs = outputs.map(OutputsList._mapOutputToListRow);
     const columns: Array<ListColumn> = [{
       heading: 'Index',
       width: 8,
     }, {
       heading: 'Value (BCH)',
-      width: 15,
+      width: VALUE_COLUMN_WIDTH,
     }, {
       heading: 'Address',
       width: 40,
@@ -29,11 +31,12 @@ export default class TransactionOutputsList extends ComponentBase {
       heading: 'Type',
       width: 10,
     }];
-    this._list = new List(app, columns, this._outputs, true, menu);
+    this._list = new List(app, columns, this._outputs, true, menu, selection);
   }
 
   static _mapOutputToListRow(output: Output, index: number): Array<string> {
     const value = (output.value / 100000000).toFixed(8);
+    const formattedValue = leftPad(value, VALUE_COLUMN_WIDTH, ' ');
     let addressEncoded;
     try {
       const address = output.getAddress(state.connection.network);
@@ -46,7 +49,11 @@ export default class TransactionOutputsList extends ComponentBase {
     if (!addressEncoded) {
       addressEncoded = 'Sorry, not available yet';
     }
-    return [index.toString(), value, addressEncoded, output.scriptType];
+    return [index.toString(), formattedValue, addressEncoded, output.scriptType];
+  }
+
+  get selectedOutputIndex(): number {
+    return this._list.selectedRowIndex;
   }
 
   render() {

@@ -3,7 +3,11 @@
 import MenuForm from 'tooey/lib/MenuForm';
 import ViewBase from 'tooey/lib/ViewBase';
 import MenuOption from 'tooey/lib/MenuOption';
+import Transaction from 'cashlib/lib/Transaction';
+
 import app from '../app';
+import state from '../../model/state';
+import SelectOutput from './SelectOutput';
 
 const fieldIdx = {
   TRANSACTION_ID: 0,
@@ -36,12 +40,20 @@ export default class TransactionAddInput extends ViewBase {
       if (!txId) {
         app.setError('Enter Transaction Id to lookup output in.');
       } else {
-        app.setWarning('Sorry, the Lookup feature is still under construction');
-      // app.pushView();
+        const raw = await state.rpc.request(`getrawtransaction ${txId}`);
+        const transaction = Transaction.deserialize(raw.toString());
+        const select = new SelectOutput(transaction.outputs, this.onLookupSelection.bind(this));
+        app.pushView(select);
       }
     } catch (err) {
       app.setError(err.message);
     }
+  }
+
+  async onLookupSelection(outputIndex: number) {
+    this._menuForm.fields[fieldIdx.OUTPUT_INDEX].input.value = outputIndex.toString();
+    app.popView();
+    this._menuForm.menu.setFirstOptionSelected();
   }
 
   async addInput() {

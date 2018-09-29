@@ -16,12 +16,12 @@ export default class GenericList extends ViewBase {
 
     this._menu = new Menu(app);
 
-    // Transform data (array of strings) into format for List control
-    // Single column in Array of Array of strings
-    const listData: Array<Array<string>> = data
-      .map(rec => [rec]);
     const columns: Array<ListColumn> = [{ heading: 'Result', width: 999 }];
-    this._list = new List(app, columns, listData, false, this._menu);
+    this._list = new List(app, columns, data, {
+      dataMapper: rec => [rec],
+      showHeadings: false,
+      menu: this._menu,
+    });
   }
 
   render() {

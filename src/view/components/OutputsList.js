@@ -3,7 +3,7 @@ import Output from 'cashlib/lib/Output';
 import { leftPad } from 'stringfu';
 
 import ComponentBase from 'tooey/lib/ComponentBase';
-import List, { type ListColumn, type ListData } from 'tooey/lib/List';
+import List, { type ListColumn, type OutputRow } from 'tooey/lib/List';
 import Menu from 'tooey/lib/Menu';
 import state from '../../model/state';
 import app from '../app';
@@ -11,13 +11,11 @@ import app from '../app';
 const VALUE_COLUMN_WIDTH = 15;
 
 export default class OutputsList extends ComponentBase {
-  _outputs: ListData
   _list: List
 
   constructor(outputs: Array<Output>, menu: Menu, selection?: boolean) {
     super();
 
-    this._outputs = outputs.map(OutputsList._mapOutputToListRow);
     const columns: Array<ListColumn> = [{
       heading: 'Index',
       width: 8,
@@ -31,10 +29,14 @@ export default class OutputsList extends ComponentBase {
       heading: 'Type',
       width: 10,
     }];
-    this._list = new List(app, columns, this._outputs, true, menu, selection);
+    this._list = new List(app, columns, outputs, {
+      dataMapper: OutputsList._mapOutputToListRow,
+      menu,
+      rowSelection: selection,
+    });
   }
 
-  static _mapOutputToListRow(output: Output, index: number): Array<string> {
+  static _mapOutputToListRow(output: Output, index: number): OutputRow {
     const value = (output.value / 100000000).toFixed(8);
     const formattedValue = leftPad(value, VALUE_COLUMN_WIDTH, ' ');
     let addressEncoded;

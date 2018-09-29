@@ -1,6 +1,5 @@
 // @flow
-import List from 'tooey/lib/List';
-import type { ListColumn } from 'tooey/lib/List';
+import List, { type ListColumn, type OutputRow } from 'tooey/lib/List';
 import Menu from 'tooey/lib/Menu';
 import MenuOption from 'tooey/lib/MenuOption';
 import ViewBase from 'tooey/lib/ViewBase';
@@ -27,8 +26,8 @@ export default class ConnectionHistory extends ViewBase {
       new MenuOption('N', 'New', 'Create new connection', this.toNetworkSelection.bind(this)),
     ], false);
 
-    const listData = this._getListData();
-    if (!listData.length) {
+    this._history = Connection.getHistory();
+    if (!this._history.length) {
       throw new Error('No recent connections found.');
     }
 
@@ -43,9 +42,12 @@ export default class ConnectionHistory extends ViewBase {
       width: 40,
     }];
 
-    this._list = new List(
-      app, columns, listData, true, this._menu, true, this.onListSelect.bind(this),
-    );
+    this._list = new List(app, columns, this._history, {
+      dataMapper: ConnectionHistory.mapConnectionToListRow,
+      menu: this._menu,
+      rowSelection: true,
+      onSelect: this.onListSelect.bind(this),
+    });
   }
 
   async onListSelect() {
@@ -56,14 +58,12 @@ export default class ConnectionHistory extends ViewBase {
     app.replaceView(new NetworkSelection());
   }
 
-  _getListData(): Array<Array<string>> {
-    this._history = Connection.getHistory();
-    return this._history
-      .map(rec => [
-        rec.network,
-        `${rec.host}:${rec.port.toString()}`,
-        rec.cookieFile || `${rec.user}:${'*'.repeat(rec.password.length)}`,
-      ]);
+  static mapConnectionToListRow(rec: ModelHistory): OutputRow {
+    return [
+      rec.network,
+      `${rec.host}:${rec.port.toString()}`,
+      rec.cookieFile || `${rec.user}:${'*'.repeat(rec.password.length)}`,
+    ];
   }
 
   async connectToSelected() {
@@ -79,7 +79,7 @@ export default class ConnectionHistory extends ViewBase {
       connection.password = history.password;
       state.connection = connection;
       await connection.connect();
-      this._list.setData(this._getListData());
+      this._list.setData(Connection.getHistory());
       app.pushView(new MainMenu());
     } catch (err) {
       app.setError(err.message);

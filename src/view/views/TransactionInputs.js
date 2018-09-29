@@ -22,8 +22,6 @@ export default class TransactionInputs extends ViewBase {
     this._menu = new Menu(app, [addInputOption]);
 
     const transaction: Transaction = state.transactions.active;
-    const inputs = transaction.inputs
-      .map(this._mapInputToListRow);
     const columns: Array<ListColumn> = [{
       heading: 'Transaction Id',
       width: 64,
@@ -35,7 +33,10 @@ export default class TransactionInputs extends ViewBase {
       width: 4,
     }];
 
-    this._list = new List(app, columns, inputs, true, this._menu);
+    this._list = new List(app, columns, transaction.inputs, {
+      dataMapper: this._mapInputToListRow,
+      menu: this._menu,
+    });
   }
 
   _mapInputToListRow(input: Input): Array<string> {

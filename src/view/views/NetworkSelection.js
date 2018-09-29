@@ -39,7 +39,11 @@ export default class NetworkSelection extends ViewBase {
     this._list = new List(app, [{
       heading: 'Network',
       width: 25,
-    }], this._networks, false, undefined, true, this.onListSelect.bind(this));
+    }], this._networks, {
+      showHeadings: false,
+      rowSelection: true,
+      onSelect: this.onListSelect.bind(this),
+    });
   }
 
   async onListSelect() {

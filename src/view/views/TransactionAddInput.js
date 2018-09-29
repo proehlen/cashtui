@@ -68,9 +68,6 @@ export default class TransactionAddInput extends ViewBase {
       } else {
         const input = new Input(txId, parseInt(outputIdx, 10), new Uint8Array([]));
         state.transactions.active.addInput(input);
-        // Previous list is static - pop twice to go back to root Transaction menu
-        // which will be dynanimically updated with newly added input
-        app.popView();
         app.popView();
       }
     } catch (err) {

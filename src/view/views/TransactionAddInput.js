@@ -4,6 +4,7 @@ import MenuForm from 'tooey/lib/MenuForm';
 import ViewBase from 'tooey/lib/ViewBase';
 import MenuOption from 'tooey/lib/MenuOption';
 import Transaction from 'cashlib/lib/Transaction';
+import Input from 'cashlib/lib/Input';
 
 import app from '../app';
 import state from '../../model/state';
@@ -56,10 +57,22 @@ export default class TransactionAddInput extends ViewBase {
     this._menuForm.menu.setFirstOptionSelected();
   }
 
+
   async addInput() {
     try {
-      app.setWarning('Sorry, adding inputs is still under construction');
       // app.popView();
+      const txId = this._menuForm.fields[fieldIdx.TRANSACTION_ID].input.value;
+      const outputIdx = this._menuForm.fields[fieldIdx.OUTPUT_INDEX].input.value;
+      if (!txId || !outputIdx) {
+        app.setWarning('Enter Transaction Id and Output Index to continue.');
+      } else {
+        const input = new Input(txId, parseInt(outputIdx, 10), new Uint8Array([]));
+        state.transactions.active.addInput(input);
+        // Previous list is static - pop twice to go back to root Transaction menu
+        // which will be dynanimically updated with newly added input
+        app.popView();
+        app.popView();
+      }
     } catch (err) {
       app.setError(err.message);
     }

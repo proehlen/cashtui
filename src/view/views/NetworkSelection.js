@@ -42,7 +42,7 @@ export default class NetworkSelection extends ViewBase {
       width: 25,
       value: network => network,
     }];
-    this._list = new List<string>(app, columns, this._networks, {
+    this._list = new List(app, columns, this._networks, {
       showHeadings: false,
       rowSelection: true,
       onSelect: this.onListSelect.bind(this),
@@ -63,7 +63,7 @@ export default class NetworkSelection extends ViewBase {
 
   get _selectedNetwork(): string {
     const selectedIndex = this._list.selectedRowIndex;
-    return this._networks[selectedIndex][0];
+    return this._networks[selectedIndex];
   }
 
   async toConnectionSettings() {

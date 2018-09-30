@@ -3,7 +3,12 @@
 import MenuForm from 'tooey/lib/MenuForm';
 import ViewBase from 'tooey/lib/ViewBase';
 import MenuOption from 'tooey/lib/MenuOption';
+import Transaction from 'cashlib/lib/Transaction';
+import Input from 'cashlib/lib/Input';
+
 import app from '../app';
+import state from '../../model/state';
+import SelectOutput from './SelectOutput';
 
 const fieldIdx = {
   TRANSACTION_ID: 0,
@@ -36,18 +41,35 @@ export default class TransactionAddInput extends ViewBase {
       if (!txId) {
         app.setError('Enter Transaction Id to lookup output in.');
       } else {
-        app.setWarning('Sorry, the Lookup feature is still under construction');
-      // app.pushView();
+        const raw = await state.rpc.request(`getrawtransaction ${txId}`);
+        const transaction = Transaction.deserialize(raw.toString());
+        const select = new SelectOutput(transaction.outputs, this.onLookupSelection.bind(this));
+        app.pushView(select);
       }
     } catch (err) {
       app.setError(err.message);
     }
   }
 
+  async onLookupSelection(outputIndex: number) {
+    this._menuForm.fields[fieldIdx.OUTPUT_INDEX].input.value = outputIndex.toString();
+    app.popView();
+    this._menuForm.menu.setFirstOptionSelected();
+  }
+
+
   async addInput() {
     try {
-      app.setWarning('Sorry, adding inputs is still under construction');
       // app.popView();
+      const txId = this._menuForm.fields[fieldIdx.TRANSACTION_ID].input.value;
+      const outputIdx = this._menuForm.fields[fieldIdx.OUTPUT_INDEX].input.value;
+      if (!txId || !outputIdx) {
+        app.setWarning('Enter Transaction Id and Output Index to continue.');
+      } else {
+        const input = new Input(txId, parseInt(outputIdx, 10), new Uint8Array([]));
+        state.transactions.active.addInput(input);
+        app.popView();
+      }
     } catch (err) {
       app.setError(err.message);
     }

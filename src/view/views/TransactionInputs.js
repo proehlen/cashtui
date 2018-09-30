@@ -14,7 +14,7 @@ import app from '../app';
 
 export default class TransactionInputs extends ViewBase {
   _menu: Menu
-  _list: List
+  _list: List<Input>
 
   constructor() {
     super('Transaction Inputs');
@@ -22,28 +22,23 @@ export default class TransactionInputs extends ViewBase {
     this._menu = new Menu(app, [addInputOption]);
 
     const transaction: Transaction = state.transactions.active;
-    const inputs = transaction.inputs
-      .map(this._mapInputToListRow);
-    const columns: Array<ListColumn> = [{
+    const columns: Array<ListColumn<Input>> = [{
       heading: 'Transaction Id',
       width: 64,
+      value: input => input.isCoinbase ? 'Coinbase' : input.transactionId,
     }, {
       heading: 'Output',
       width: 8,
+      value: input => input.isCoinbase ? ' ' : input.outputIndex.toString(),
     }, {
       heading: 'Sig?',
       width: 4,
+      value: input => input.signatureScript.length ? 'Yes' : '',
     }];
 
-    this._list = new List(app, columns, inputs, true, this._menu);
-  }
-
-  _mapInputToListRow(input: Input): Array<string> {
-    return [
-      input.isCoinbase ? 'Coinbase' : input.transactionId,
-      input.isCoinbase ? ' ' : input.outputIndex.toString(),
-      input.signatureScript ? 'Yes' : '',
-    ];
+    this._list = new List(app, columns, transaction.inputs, {
+      menu: this._menu,
+    });
   }
 
   render() {

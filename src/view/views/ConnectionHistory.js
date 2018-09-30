@@ -1,6 +1,5 @@
 // @flow
-import List from 'tooey/lib/List';
-import type { ListColumn } from 'tooey/lib/List';
+import List, { type ListColumn } from 'tooey/lib/List';
 import Menu from 'tooey/lib/Menu';
 import MenuOption from 'tooey/lib/MenuOption';
 import ViewBase from 'tooey/lib/ViewBase';
@@ -13,7 +12,7 @@ import app from '../app';
 import state from '../../model/state';
 
 export default class ConnectionHistory extends ViewBase {
-  _list: List
+  _list: List<ModelHistory>
   _menu: Menu
   _history: Array<ModelHistory>
   _connectOption: MenuOption
@@ -21,31 +20,41 @@ export default class ConnectionHistory extends ViewBase {
   constructor() {
     super('Recent Connections');
 
+    // Create menu
     this._connectOption = new MenuOption('C', 'Connect', 'Connect to selected network', this.connectToSelected.bind(this));
     this._menu = new Menu(app, [
       this._connectOption,
       new MenuOption('N', 'New', 'Create new connection', this.toNetworkSelection.bind(this)),
     ], false);
 
-    const listData = this._getListData();
-    if (!listData.length) {
+    // Get history
+    this._history = Connection.getHistory();
+    if (!this._history.length) {
       throw new Error('No recent connections found.');
     }
 
-    const columns: Array<ListColumn> = [{
+    // Create list columns
+    const columns: Array<ListColumn<ModelHistory>> = [{
       heading: 'Network',
       width: 10,
+      value: history => history.network,
     }, {
       heading: 'Host',
       width: 30,
+      value: history => `${history.host}:${history.port.toString()}`,
     }, {
       heading: 'Authentication',
       width: 40,
+      value: history => history.cookieFile
+        || `${history.user}:${'*'.repeat(history.password.length)}`,
     }];
 
-    this._list = new List(
-      app, columns, listData, true, this._menu, true, this.onListSelect.bind(this),
-    );
+    // Create list
+    this._list = new List(app, columns, this._history, {
+      menu: this._menu,
+      rowSelection: true,
+      onSelect: this.onListSelect.bind(this),
+    });
   }
 
   async onListSelect() {
@@ -54,16 +63,6 @@ export default class ConnectionHistory extends ViewBase {
 
   async toNetworkSelection() {
     app.replaceView(new NetworkSelection());
-  }
-
-  _getListData(): Array<Array<string>> {
-    this._history = Connection.getHistory();
-    return this._history
-      .map(rec => [
-        rec.network,
-        `${rec.host}:${rec.port.toString()}`,
-        rec.cookieFile || `${rec.user}:${'*'.repeat(rec.password.length)}`,
-      ]);
   }
 
   async connectToSelected() {
@@ -79,7 +78,7 @@ export default class ConnectionHistory extends ViewBase {
       connection.password = history.password;
       state.connection = connection;
       await connection.connect();
-      this._list.setData(this._getListData());
+      this._list.setData(Connection.getHistory());
       app.pushView(new MainMenu());
     } catch (err) {
       app.setError(err.message);

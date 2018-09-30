@@ -19,5 +19,6 @@ module.exports = {
     'no-plusplus': 'off', // Life is too short; learn the problem this rule is designed to circumvent
     'class-methods-use-this': 'off', // Allow "abstract" methods
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+    'no-confusing-arrow': 'off',  // Who is confused?
   }
 };

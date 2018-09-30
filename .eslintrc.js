@@ -20,5 +20,6 @@ module.exports = {
     'class-methods-use-this': 'off', // Allow "abstract" methods
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
     'no-confusing-arrow': 'off',  // Who is confused?
+    'prefer-destructuring': 'off', // Doesn't play well with Flow
   }
 };

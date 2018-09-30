@@ -120,13 +120,15 @@ export default class Connection {
   static getDefaultDataDir() {
     let datadir;
     switch (process.platform) {
-      case 'win32':
+      case 'win32': {
         // Windows >= Vista:
-        if (process.env.user) {
-          datadir = `C:\\Users\\${process.env.user}\\AppData\\Roaming\\Bitcoin`;
+        const username = process.env.user || process.env.USERNAME;
+        if (username) {
+          datadir = `C:\\Users\\${username}\\AppData\\Roaming\\Bitcoin`;
         } else {
           throw new Error('Unable to detect data directory for current user');
         }
+      }
         break;
       case 'linux':
         // Unix:

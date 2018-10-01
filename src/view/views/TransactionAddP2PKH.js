@@ -44,7 +44,6 @@ export default class TransactionAddP2PKH extends ViewBase {
         state.transactions.active.addOutput(output);
         app.popView();
       }
-      app.setWarning('Sorry, this feature is under construction.');
     } catch (err) {
       app.setError(err.message);
     }

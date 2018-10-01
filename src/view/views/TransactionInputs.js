@@ -8,6 +8,7 @@ import Menu from 'tooey/lib/Menu';
 import MenuOption from 'tooey/lib/MenuOption';
 import type { ListColumn } from 'tooey/lib/List';
 
+import TransactionInput from './TransactionInput';
 import TransactionAddInput from './TransactionAddInput';
 import state from '../../model/state';
 import app from '../app';
@@ -18,8 +19,15 @@ export default class TransactionInputs extends ViewBase {
 
   constructor() {
     super('Transaction Inputs');
-    const addInputOption = new MenuOption('A', 'Add', 'Add new input', async () => app.pushView(new TransactionAddInput()));
-    this._menu = new Menu(app, [addInputOption]);
+
+    // Build menu
+    const menuOptions = [
+      new MenuOption('S', 'Show', 'Show details for selected input',
+        this.toDetails.bind(this)),
+      new MenuOption('A', 'Add', 'Add new input',
+        async () => app.pushView(new TransactionAddInput())),
+    ];
+    this._menu = new Menu(app, menuOptions);
 
     const transaction: Transaction = state.transactions.active;
     const columns: Array<ListColumn<Input>> = [{
@@ -37,8 +45,22 @@ export default class TransactionInputs extends ViewBase {
     }];
 
     this._list = new List(app, columns, transaction.inputs, {
+      rowSelection: true,
       menu: this._menu,
     });
+  }
+
+  async toDetails() {
+    const input = state.transactions.active.inputs[this._list.selectedRowIndex];
+    if (input) {
+      app.pushView(new TransactionInput(
+        input,
+        state.transactions.active.getId(),
+        this._list.selectedRowIndex,
+      ));
+    } else {
+      app.setWarning('No input selected');
+    }
   }
 
   render() {

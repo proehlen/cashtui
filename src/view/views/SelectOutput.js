@@ -2,7 +2,7 @@
 
 import ViewBase from 'tooey/lib/ViewBase';
 import Menu from 'tooey/lib/Menu';
-import MenuOption from 'tooey/lib/MenuOption';
+import MenuItem from 'tooey/lib/MenuItem';
 import Output from 'cashlib/lib/Output';
 
 import app from '../app';
@@ -20,7 +20,7 @@ export default class SelectOutput extends ViewBase {
     super('Select Output');
 
     this._outputs = outputs;
-    const ok = new MenuOption('O', 'OK', 'Continue with selected output', this.onOk.bind(this));
+    const ok = new MenuItem('O', 'OK', 'Continue with selected output', this.onOk.bind(this));
     this._menu = new Menu(app, [ok], true);
     this._outputsList = new OutputsList(outputs, this._menu, true);
     this._onSelected = onSelected;

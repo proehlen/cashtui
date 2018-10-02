@@ -2,7 +2,7 @@
 
 import MenuForm from 'tooey/lib/MenuForm';
 import ViewBase from 'tooey/lib/ViewBase';
-import MenuOption from 'tooey/lib/MenuOption';
+import MenuItem from 'tooey/lib/MenuItem';
 import Transaction from 'cashlib/lib/Transaction';
 import Input from 'cashlib/lib/Input';
 
@@ -26,13 +26,13 @@ export default class TransactionAddInput extends ViewBase {
     fields[fieldIdx.TRANSACTION_ID] = { label: 'Transaction Id', default: '', type: 'string' };
     fields[fieldIdx.OUTPUT_INDEX] = { label: 'Output index', default: '', type: 'integer' };
 
-    // Menu options
-    const menuOptions = [
-      new MenuOption('O', 'OK', 'Add input with entered details', this.addInput.bind(this)),
-      new MenuOption('L', 'Lookup Output', 'Lookup output in transaction', this.lookupOutput.bind(this)),
+    // Menu items
+    const menuItems = [
+      new MenuItem('O', 'OK', 'Add input with entered details', this.addInput.bind(this)),
+      new MenuItem('L', 'Lookup Output', 'Lookup output in transaction', this.lookupOutput.bind(this)),
     ];
 
-    this._menuForm = new MenuForm(app, fields, menuOptions);
+    this._menuForm = new MenuForm(app, fields, menuItems);
   }
 
   async lookupOutput() {
@@ -54,7 +54,7 @@ export default class TransactionAddInput extends ViewBase {
   async onLookupSelection(outputIndex: number) {
     this._menuForm.fields[fieldIdx.OUTPUT_INDEX].input.value = outputIndex.toString();
     app.popView();
-    this._menuForm.menu.setFirstOptionSelected();
+    this._menuForm.menu.setFirstItemSelected();
   }
 
 

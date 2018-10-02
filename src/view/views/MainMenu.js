@@ -2,7 +2,7 @@
 
 import ViewBase from 'tooey/lib/ViewBase';
 import Menu from 'tooey/lib/Menu';
-import MenuOption from 'tooey/lib/MenuOption';
+import MenuItem from 'tooey/lib/MenuItem';
 import TransactionsMenu from './TransactionsMenu';
 import RpcInput from './RpcInput';
 import app from '../app';
@@ -13,8 +13,8 @@ export default class MainMenu extends ViewBase {
   constructor() {
     super('Main Menu');
     this._menu = new Menu(app, [
-      new MenuOption('T', 'Transactions', 'Work with transactions', this.toTransactions.bind(this)),
-      new MenuOption('R', 'RPC', 'Execute JSON RPC commands', this.toRpc.bind(this)),
+      new MenuItem('T', 'Transactions', 'Work with transactions', this.toTransactions.bind(this)),
+      new MenuItem('R', 'RPC', 'Execute JSON RPC commands', this.toRpc.bind(this)),
     ]);
   }
 

@@ -1,6 +1,6 @@
 // @flow
 import MenuForm from 'tooey/lib/MenuForm';
-import { type FieldData } from 'tooey/lib/Form';
+import { type FormFieldDescription } from 'tooey/lib/Form';
 import ViewBase from 'tooey/lib/ViewBase';
 import Input from 'cashlib/lib/Input';
 import { fromBytes } from 'stringfu';
@@ -28,7 +28,7 @@ export default class ConnectionSettings extends ViewBase {
     }
 
     // Form fields
-    const fields: Array<FieldData> = [];
+    const fields: Array<FormFieldDescription> = [];
     fields[fieldIdx.TRANSACTION_ID] = { label: 'Transaction Id', default: blankIfUndefined(transactionId), type: 'string' };
     fields[fieldIdx.INPUT_INDEX] = { label: 'Input number', default: blankIfUndefined(inputIndex), type: 'integer' };
     fields[fieldIdx.OUTPUT_TRANSACTION] = { label: 'Output tx', default: input.transactionId, type: 'string' };

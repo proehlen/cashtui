@@ -4,7 +4,7 @@ import Transaction from 'cashlib/lib/Transaction';
 
 import ViewBase from 'tooey/lib/ViewBase';
 import Menu from 'tooey/lib/Menu';
-import MenuOption from 'tooey/lib/MenuOption';
+import MenuItem from 'tooey/lib/MenuItem';
 import TransactionInputs from './TransactionInputs';
 import TransactionOutputs from './TransactionOutputs';
 import TransactionRaw from './TransactionRaw';
@@ -17,13 +17,13 @@ export default class TransactionHeader extends ViewBase {
 
   constructor() {
     super('Transaction');
-    const options: MenuOption[] = [
-      new MenuOption('I', 'Inputs', 'Transaction inputs', async () => app.pushView(new TransactionInputs())),
-      new MenuOption('O', 'Outputs', 'Transaction outputs', async () => app.pushView(new TransactionOutputs())),
-      new MenuOption('R', 'Raw', 'Show raw serialized transaction', async () => app.pushView(new TransactionRaw())),
-      new MenuOption('S', 'Send', 'Broadcast transaction to network', this.send.bind(this)),
+    const items: MenuItem[] = [
+      new MenuItem('I', 'Inputs', 'Transaction inputs', async () => app.pushView(new TransactionInputs())),
+      new MenuItem('O', 'Outputs', 'Transaction outputs', async () => app.pushView(new TransactionOutputs())),
+      new MenuItem('R', 'Raw', 'Show raw serialized transaction', async () => app.pushView(new TransactionRaw())),
+      new MenuItem('S', 'Send', 'Broadcast transaction to network', this.send.bind(this)),
     ];
-    this._menu = new Menu(app, options);
+    this._menu = new Menu(app, items);
   }
 
   async send() {

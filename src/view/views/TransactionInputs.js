@@ -5,7 +5,7 @@ import Input from 'cashlib/lib/Input';
 import ViewBase from 'tooey/lib/ViewBase';
 import List from 'tooey/lib/List';
 import Menu from 'tooey/lib/Menu';
-import MenuOption from 'tooey/lib/MenuOption';
+import MenuItem from 'tooey/lib/MenuItem';
 import type { ListColumn } from 'tooey/lib/List';
 
 import TransactionInput from './TransactionInput';
@@ -21,13 +21,13 @@ export default class TransactionInputs extends ViewBase {
     super('Transaction Inputs');
 
     // Build menu
-    const menuOptions = [
-      new MenuOption('S', 'Show', 'Show details for selected input',
+    const menuItems = [
+      new MenuItem('S', 'Show', 'Show details for selected input',
         this.toDetails.bind(this)),
-      new MenuOption('A', 'Add', 'Add new input',
+      new MenuItem('A', 'Add', 'Add new input',
         async () => app.pushView(new TransactionAddInput())),
     ];
-    this._menu = new Menu(app, menuOptions);
+    this._menu = new Menu(app, menuItems);
 
     const transaction: Transaction = state.transactions.active;
     const columns: Array<ListColumn<Input>> = [{

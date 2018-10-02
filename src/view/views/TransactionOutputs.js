@@ -4,7 +4,7 @@ import Transaction from 'cashlib/lib/Transaction';
 import Output from 'cashlib/lib/Output';
 import ViewBase from 'tooey/lib/ViewBase';
 import Menu from 'tooey/lib/Menu';
-import MenuOption from 'tooey/lib/MenuOption';
+import MenuItem from 'tooey/lib/MenuItem';
 
 import OutputsList from '../components/OutputsList';
 import TransactionOutput from './TransactionOutput';
@@ -20,13 +20,13 @@ export default class TransactionOutputs extends ViewBase {
     super('Transaction Outputs');
     const transaction: Transaction = state.transactions.active;
 
-    const menuOptions = [
-      new MenuOption('S', 'Show', 'Show details for selected output',
+    const menuItems = [
+      new MenuItem('S', 'Show', 'Show details for selected output',
         this.toDetails.bind(this)),
-      new MenuOption('A', 'Add P2PKH', 'Add new Pay To Public Key Hash output',
+      new MenuItem('A', 'Add P2PKH', 'Add new Pay To Public Key Hash output',
         async () => app.pushView(new TransactionAddP2PKH())),
     ];
-    this._menu = new Menu(app, menuOptions);
+    this._menu = new Menu(app, menuItems);
 
     this._list = new OutputsList(transaction.outputs, this._menu, true);
   }

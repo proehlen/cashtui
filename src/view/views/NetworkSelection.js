@@ -4,7 +4,7 @@ import Network from 'cashlib/lib/Network';
 import ViewBase from 'tooey/lib/ViewBase';
 import List, { type ListColumn } from 'tooey/lib/List';
 import Menu from 'tooey/lib/Menu';
-import MenuOption from 'tooey/lib/MenuOption';
+import MenuItem from 'tooey/lib/MenuItem';
 
 import Connection from '../../model/Connection';
 import ConnectionSettings from './ConnectionSettings';
@@ -16,18 +16,18 @@ export default class NetworkSelection extends ViewBase {
   _networks: Array<string>
   _menu: Menu
   _list: List<string>
-  _continueOption: MenuOption
+  _continueItem: MenuItem
 
   constructor() {
     super('Connect to node');
 
     // Build menu
-    this._continueOption = new MenuOption('C', 'Continue', 'Connect to Network', this.toConnectionSettings.bind(this));
-    const menuOptions = [
-      this._continueOption,
-      new MenuOption('R', 'Recent', 'Recent connections', this.toConnectionHistory.bind(this)),
+    this._continueItem = new MenuItem('C', 'Continue', 'Connect to Network', this.toConnectionSettings.bind(this));
+    const menuItems = [
+      this._continueItem,
+      new MenuItem('R', 'Recent', 'Recent connections', this.toConnectionHistory.bind(this)),
     ];
-    this._menu = new Menu(app, menuOptions, false);
+    this._menu = new Menu(app, menuItems, false);
 
     // Build networks list
     this._networks = [
@@ -50,7 +50,7 @@ export default class NetworkSelection extends ViewBase {
   }
 
   async onListSelect() {
-    this._menu.setSelectedOption(this._continueOption.key);
+    this._menu.setSelectedItem(this._continueItem.key);
   }
 
   render() {

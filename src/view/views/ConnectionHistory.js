@@ -1,7 +1,7 @@
 // @flow
 import List, { type ListColumn } from 'tooey/lib/List';
 import Menu from 'tooey/lib/Menu';
-import MenuOption from 'tooey/lib/MenuOption';
+import MenuItem from 'tooey/lib/MenuItem';
 import ViewBase from 'tooey/lib/ViewBase';
 import Network from 'cashlib/lib/Network';
 
@@ -15,16 +15,16 @@ export default class ConnectionHistory extends ViewBase {
   _list: List<ModelHistory>
   _menu: Menu
   _history: Array<ModelHistory>
-  _connectOption: MenuOption
+  _connectItem: MenuItem
 
   constructor() {
     super('Recent Connections');
 
     // Create menu
-    this._connectOption = new MenuOption('C', 'Connect', 'Connect to selected network', this.connectToSelected.bind(this));
+    this._connectItem = new MenuItem('C', 'Connect', 'Connect to selected network', this.connectToSelected.bind(this));
     this._menu = new Menu(app, [
-      this._connectOption,
-      new MenuOption('N', 'New', 'Create new connection', this.toNetworkSelection.bind(this)),
+      this._connectItem,
+      new MenuItem('N', 'New', 'Create new connection', this.toNetworkSelection.bind(this)),
     ], false);
 
     // Get history
@@ -58,7 +58,7 @@ export default class ConnectionHistory extends ViewBase {
   }
 
   async onListSelect() {
-    this._menu.setSelectedOption(this._connectOption.key);
+    this._menu.setSelectedItem(this._connectItem.key);
   }
 
   async toNetworkSelection() {

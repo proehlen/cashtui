@@ -1,10 +1,12 @@
 // @flow
 import MenuForm from 'tooey/lib/MenuForm';
+import MenuItem from 'tooey/lib/MenuItem';
 import { type FormFieldDescription } from 'tooey/lib/Form';
 import ViewBase from 'tooey/lib/ViewBase';
 import Input from 'cashlib/lib/Input';
 import { fromBytes } from 'stringfu';
 
+import GenericText from './GenericText';
 import app from '../app';
 
 const fieldIdx = {
@@ -35,9 +37,18 @@ export default class ConnectionSettings extends ViewBase {
     fields[fieldIdx.OUTPUT_INDEX] = { label: 'Output number', default: input.outputIndex.toString(), type: 'integer' };
     fields[fieldIdx.SCRIPT] = { label: 'Signature script', default: fromBytes(input.signatureScript), type: 'string' };
 
-    this._menuForm = new MenuForm(app, fields, [], {
+    this._menuForm = new MenuForm(app, fields, [
+      new MenuItem('S', 'Script', 'Show entire signature script', this.toScript.bind(this)),
+    ], {
       readOnly: true,
     });
+  }
+
+  async toScript() {
+    const scriptText = fromBytes(this._input.signatureScript);
+    // TODO nav to script parser
+    const scriptView = new GenericText('Signature Script', scriptText);
+    app.pushView(scriptView);
   }
 
   async handle(key: string) {

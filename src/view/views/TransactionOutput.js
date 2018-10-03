@@ -1,10 +1,12 @@
 // @flow
 import MenuForm from 'tooey/lib/MenuForm';
+import MenuItem from 'tooey/lib/MenuItem';
 import { type FormFieldDescription } from 'tooey/lib/Form';
 import ViewBase from 'tooey/lib/ViewBase';
 import Output from 'cashlib/lib/Output';
 import { fromBytes } from 'stringfu';
 
+import GenericText from './GenericText';
 import state from '../../model/state';
 import app from '../app';
 
@@ -39,9 +41,18 @@ export default class ConnectionSettings extends ViewBase {
     fields[fieldIdx.TYPE] = { label: 'Type', default: blankIfUndefined(output.scriptType), type: 'string' };
     fields[fieldIdx.SCRIPT] = { label: 'Public key script', default: fromBytes(output.pubKeyScript), type: 'string' };
 
-    this._menuForm = new MenuForm(app, fields, [], {
+    this._menuForm = new MenuForm(app, fields, [
+      new MenuItem('S', 'Script', 'Show entire public key script', this.toScript.bind(this)),
+    ], {
       readOnly: true,
     });
+  }
+
+  async toScript() {
+    const scriptText = fromBytes(this._output._pubKeyScript);
+    // TODO nav to script parser
+    const scriptView = new GenericText('Public Key Script', scriptText);
+    app.pushView(scriptView);
   }
 
   async handle(key: string) {

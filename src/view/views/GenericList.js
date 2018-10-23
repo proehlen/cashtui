@@ -14,14 +14,14 @@ export default class GenericList extends ViewBase {
   constructor(title: string, data: Array<string>) {
     super(title);
 
-    this._menu = new Menu(app);
+    this._menu = new Menu(app.activeTab);
 
     const columns: Array<ListColumn<string>> = [{
       heading: 'Result',
       width: 999,
       value: row => row,
     }];
-    this._list = new List(app, columns, data, {
+    this._list = new List(app.activeTab, columns, data, {
       dataMapper: rec => [rec],
       showHeadings: false,
       menu: this._menu,

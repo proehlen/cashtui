@@ -5,21 +5,23 @@ import ViewBase from 'tooey/lib/ViewBase';
 import List, { type ListColumn } from 'tooey/lib/List';
 import Menu from 'tooey/lib/Menu';
 import MenuItem from 'tooey/lib/MenuItem';
+import Tab from 'tooey/lib/Tab';
 
 import Connection from '../../model/Connection';
 import ConnectionSettings from './ConnectionSettings';
 import ConnectionHistory from './ConnectionHistory';
 import state from '../../model/state';
-import app from '../app';
 
 export default class NetworkSelection extends ViewBase {
+  _tab: Tab
   _networks: Array<string>
   _menu: Menu
   _list: List<string>
   _continueItem: MenuItem
 
-  constructor() {
+  constructor(tab: Tab) {
     super('Connect to node');
+    this._tab = tab;
 
     // Build menu
     this._continueItem = new MenuItem('C', 'Continue', 'Connect to Network', this.toConnectionSettings.bind(this));
@@ -27,7 +29,7 @@ export default class NetworkSelection extends ViewBase {
       this._continueItem,
       new MenuItem('R', 'Recent', 'Recent connections', this.toConnectionHistory.bind(this)),
     ];
-    this._menu = new Menu(app, menuItems, false);
+    this._menu = new Menu(tab, menuItems, false);
 
     // Build networks list
     this._networks = [
@@ -42,7 +44,7 @@ export default class NetworkSelection extends ViewBase {
       width: 25,
       value: network => network,
     }];
-    this._list = new List(app, columns, this._networks, {
+    this._list = new List(tab, columns, this._networks, {
       showHeadings: false,
       rowSelection: true,
       onSelect: this.onListSelect.bind(this),
@@ -79,17 +81,17 @@ export default class NetworkSelection extends ViewBase {
       const network = Network.fromString(networkLabel);
       const connection = new Connection(network);
       state.connection = connection;
-      app.pushView(new ConnectionSettings());
+      this._tab.pushView(new ConnectionSettings(this._tab));
     } catch (err) {
-      app.setError(err.message);
+      this._tab.setError(err.message);
     }
   }
 
   async toConnectionHistory() {
     try {
-      app.replaceView(new ConnectionHistory());
+      this._tab.replaceView(new ConnectionHistory(this._tab));
     } catch (err) {
-      app.setError(err.message);
+      this._tab.setError(err.message);
     }
   }
 

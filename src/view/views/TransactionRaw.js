@@ -33,7 +33,7 @@ export default class TransactionRaw extends ViewBase {
       items.push(new MenuItem('N', 'Next page', 'Go to next page', this.nextPage.bind(this)));
       items.push(new MenuItem('P', 'Previous page', 'Return to previous page', this.previousPage.bind(this)));
     }
-    this._menu = new Menu(app, items, true);
+    this._menu = new Menu(app.activeTab, items, true);
     this._data = data;
     this._currentPage = 1;
     this._numPages = numPages;

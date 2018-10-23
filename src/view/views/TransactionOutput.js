@@ -41,7 +41,7 @@ export default class ConnectionSettings extends ViewBase {
     fields[fieldIdx.TYPE] = { label: 'Type', default: blankIfUndefined(output.scriptType), type: 'string' };
     fields[fieldIdx.SCRIPT] = { label: 'Public key script', default: fromBytes(output.pubKeyScript), type: 'string' };
 
-    this._menuForm = new MenuForm(app, fields, [
+    this._menuForm = new MenuForm(app.activeTab, fields, [
       new MenuItem('S', 'Script', 'Show entire public key script', this.toScript.bind(this)),
     ], {
       readOnly: true,

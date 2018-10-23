@@ -13,8 +13,8 @@ export default class GenericText extends ViewBase {
   constructor(title: string, data: string) {
     super(title);
 
-    this._menu = new Menu(app);
-    this._text = new Text(app, data);
+    this._menu = new Menu(app.activeTab);
+    this._text = new Text(app.activeTab, data);
   }
 
   render() {

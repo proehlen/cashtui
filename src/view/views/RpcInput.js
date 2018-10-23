@@ -21,7 +21,7 @@ export default class RawInput extends ViewBase {
   constructor() {
     super('RPC command');
     this._historyLevel = 0;
-    this._input = new Input(app, this.onEnter.bind(this));
+    this._input = new Input(app.activeTab, this.onEnter.bind(this));
 
     const inputHelpText = `${INPUT_HELP_DEFAULT}; ${colors.bold('Up')} and ${colors.bold('Down')} for history`;
     this._inputHelp = new InputHelp(inputHelpText);

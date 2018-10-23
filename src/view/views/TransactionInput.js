@@ -37,7 +37,7 @@ export default class ConnectionSettings extends ViewBase {
     fields[fieldIdx.OUTPUT_INDEX] = { label: 'Output number', default: input.outputIndex.toString(), type: 'integer' };
     fields[fieldIdx.SCRIPT] = { label: 'Signature script', default: fromBytes(input.signatureScript), type: 'string' };
 
-    this._menuForm = new MenuForm(app, fields, [
+    this._menuForm = new MenuForm(app.activeTab, fields, [
       new MenuItem('S', 'Script', 'Show entire signature script', this.toScript.bind(this)),
     ], {
       readOnly: true,

@@ -5,42 +5,44 @@ import Output from 'cashlib/lib/Output';
 import ViewBase from 'tooey/lib/ViewBase';
 import Menu from 'tooey/lib/Menu';
 import MenuItem from 'tooey/lib/MenuItem';
+import Tab from 'tooey/lib/Tab';
 
 import OutputsList from '../components/OutputsList';
 import TransactionOutput from './TransactionOutput';
 import TransactionAddP2PKH from './TransactionAddP2PKH';
 import state from '../../model/state';
-import app from '../app';
 
 export default class TransactionOutputs extends ViewBase {
+  _tab: Tab
   _menu: Menu
   _list: OutputsList
 
-  constructor() {
+  constructor(tab: Tab) {
     super('Transaction Outputs');
+    this._tab = tab;
     const transaction: Transaction = state.transactions.active;
 
     const menuItems = [
       new MenuItem('S', 'Show', 'Show details for selected output',
         this.toDetails.bind(this)),
       new MenuItem('A', 'Add P2PKH', 'Add new Pay To Public Key Hash output',
-        async () => app.pushView(new TransactionAddP2PKH())),
+        async () => tab.pushView(new TransactionAddP2PKH())),
     ];
-    this._menu = new Menu(app, menuItems);
+    this._menu = new Menu(tab, menuItems);
 
-    this._list = new OutputsList(transaction.outputs, this._menu, true);
+    this._list = new OutputsList(tab, transaction.outputs, this._menu, true);
   }
 
   async toDetails() {
     const output = state.transactions.active.outputs[this._list.selectedOutputIndex];
     if (output) {
-      app.pushView(new TransactionOutput(
+      this._tab.pushView(new TransactionOutput(
         output,
         state.transactions.active.getId(),
         this._list.selectedOutputIndex,
       ));
     } else {
-      app.setWarning('No output selected');
+      this._tab.setWarning('No output selected');
     }
   }
 

@@ -5,29 +5,32 @@ import Input from 'cashlib/lib/Input';
 import ViewBase from 'tooey/lib/ViewBase';
 import List from 'tooey/lib/List';
 import Menu from 'tooey/lib/Menu';
+import Tab from 'tooey/lib/Tab';
 import MenuItem from 'tooey/lib/MenuItem';
 import type { ListColumn } from 'tooey/lib/List';
 
 import TransactionInput from './TransactionInput';
 import TransactionAddInput from './TransactionAddInput';
 import state from '../../model/state';
-import app from '../app';
 
 export default class TransactionInputs extends ViewBase {
+  _tab: Tab
   _menu: Menu
   _list: List<Input>
 
-  constructor() {
+  constructor(tab: Tab) {
     super('Transaction Inputs');
+
+    this._tab = tab;
 
     // Build menu
     const menuItems = [
       new MenuItem('S', 'Show', 'Show details for selected input',
         this.toDetails.bind(this)),
       new MenuItem('A', 'Add', 'Add new input',
-        async () => app.pushView(new TransactionAddInput())),
+        async () => this._tab.pushView(new TransactionAddInput(tab))),
     ];
-    this._menu = new Menu(app, menuItems);
+    this._menu = new Menu(tab, menuItems);
 
     const transaction: Transaction = state.transactions.active;
     const columns: Array<ListColumn<Input>> = [{
@@ -44,7 +47,7 @@ export default class TransactionInputs extends ViewBase {
       value: input => input.signatureScript.length ? 'Yes' : '',
     }];
 
-    this._list = new List(app, columns, transaction.inputs, {
+    this._list = new List(tab, columns, transaction.inputs, {
       rowSelection: true,
       menu: this._menu,
     });
@@ -53,13 +56,13 @@ export default class TransactionInputs extends ViewBase {
   async toDetails() {
     const input = state.transactions.active.inputs[this._list.selectedRowIndex];
     if (input) {
-      app.pushView(new TransactionInput(
+      this._tab.pushView(new TransactionInput(
         input,
         state.transactions.active.getId(),
         this._list.selectedRowIndex,
       ));
     } else {
-      app.setWarning('No input selected');
+      this._tab.setWarning('No input selected');
     }
   }
 

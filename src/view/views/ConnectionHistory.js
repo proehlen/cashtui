@@ -1,28 +1,30 @@
 // @flow
+import Network from 'cashlib/lib/Network';
 import List, { type ListColumn } from 'tooey/lib/List';
 import Menu from 'tooey/lib/Menu';
 import MenuItem from 'tooey/lib/MenuItem';
 import ViewBase from 'tooey/lib/ViewBase';
-import Network from 'cashlib/lib/Network';
+import Tab from 'tooey/lib/Tab';
 
 import Connection, { type History as ModelHistory } from '../../model/Connection';
 import MainMenu from './MainMenu';
 import NetworkSelection from './NetworkSelection';
-import app from '../app';
 import state from '../../model/state';
 
 export default class ConnectionHistory extends ViewBase {
+  _tab: Tab
   _list: List<ModelHistory>
   _menu: Menu
   _history: Array<ModelHistory>
   _connectItem: MenuItem
 
-  constructor() {
+  constructor(tab: Tab) {
     super('Recent Connections');
+    this._tab = tab;
 
     // Create menu
     this._connectItem = new MenuItem('C', 'Connect', 'Connect to selected network', this.connectToSelected.bind(this));
-    this._menu = new Menu(app, [
+    this._menu = new Menu(tab, [
       this._connectItem,
       new MenuItem('N', 'New', 'Create new connection', this.toNetworkSelection.bind(this)),
     ], false);
@@ -50,7 +52,7 @@ export default class ConnectionHistory extends ViewBase {
     }];
 
     // Create list
-    this._list = new List(app, columns, this._history, {
+    this._list = new List(tab, columns, this._history, {
       menu: this._menu,
       rowSelection: true,
       onSelect: this.onListSelect.bind(this),
@@ -62,7 +64,7 @@ export default class ConnectionHistory extends ViewBase {
   }
 
   async toNetworkSelection() {
-    app.replaceView(new NetworkSelection());
+    this._tab.replaceView(new NetworkSelection(this._tab));
   }
 
   async connectToSelected() {
@@ -78,11 +80,11 @@ export default class ConnectionHistory extends ViewBase {
       connection.password = history.password;
       state.connection = connection;
       await connection.connect();
-      app.state = state.connection.network.label;
+      this._tab.stateMessage = state.connection.network.label;
       this._list.setData(Connection.getHistory());
-      app.pushView(new MainMenu());
+      this._tab.pushView(new MainMenu(this._tab));
     } catch (err) {
-      app.setError(err.message);
+      this._tab.setError(err.message);
     }
   }
 

@@ -30,7 +30,7 @@ export default class TransactionAddP2PKH extends ViewBase {
       new MenuItem('O', 'OK', 'Add output with entered details', this.addOutput.bind(this)),
     ];
 
-    this._menuForm = new MenuForm(app, fields, menuItems);
+    this._menuForm = new MenuForm(app.activeTab, fields, menuItems);
   }
 
   async addOutput() {

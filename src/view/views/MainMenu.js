@@ -3,27 +3,30 @@
 import ViewBase from 'tooey/lib/ViewBase';
 import Menu from 'tooey/lib/Menu';
 import MenuItem from 'tooey/lib/MenuItem';
+import Tab from 'tooey/lib/Tab';
+
 import TransactionsMenu from './TransactionsMenu';
 import RpcInput from './RpcInput';
-import app from '../app';
 
 export default class MainMenu extends ViewBase {
+  _tab: Tab
   _menu: Menu
 
-  constructor() {
+  constructor(tab: Tab) {
     super('Main Menu');
-    this._menu = new Menu(app, [
+    this._tab = tab;
+    this._menu = new Menu(tab, [
       new MenuItem('T', 'Transactions', 'Work with transactions', this.toTransactions.bind(this)),
       new MenuItem('R', 'RPC', 'Execute JSON RPC commands', this.toRpc.bind(this)),
     ]);
   }
 
   async toRpc() {
-    app.pushView(new RpcInput());
+    this._tab.pushView(new RpcInput());
   }
 
   async toTransactions() {
-    app.pushView(new TransactionsMenu());
+    this._tab.pushView(new TransactionsMenu(this._tab));
   }
 
   render() {

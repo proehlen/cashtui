@@ -96,7 +96,7 @@ export default class ConnectionHistory extends ViewBase {
 
   async handle(key: string): Promise<boolean> {
     let handled = false;
-    handled = this._menu.handle(key);
+    handled = await this._menu.handle(key);
     if (!handled) {
       handled = await this._list.handle(key);
     }

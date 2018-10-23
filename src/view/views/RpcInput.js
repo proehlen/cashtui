@@ -19,7 +19,7 @@ export default class RawInput extends ViewBase {
   _inputHelp: InputHelp
 
   constructor() {
-    super('Enter RPC command');
+    super('RPC command');
     this._historyLevel = 0;
     this._input = new Input(app, this.onEnter.bind(this));
 

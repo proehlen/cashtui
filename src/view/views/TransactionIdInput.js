@@ -14,7 +14,7 @@ export default class TransactionIdInput extends ViewBase {
   _inputHelp: InputHelp
 
   constructor() {
-    super('Enter Transaction ID');
+    super('Transaction ID');
     this._input = new Input(app, this.onEnter.bind(this));
     this._inputHelp = new InputHelp();
   }

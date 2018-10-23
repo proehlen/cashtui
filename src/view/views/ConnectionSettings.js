@@ -48,6 +48,7 @@ export default class ConnectionSettings extends ViewBase {
       state.connection.user = fields[fieldIdx.USER].input.value;
       state.connection.password = fields[fieldIdx.PASSWORD].input.value;
       await state.connection.connect();
+      app.state = state.connection.network.label;
       app.pushView(new MainMenu());
     } catch (err) {
       app.setError(err.message);

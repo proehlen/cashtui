@@ -78,6 +78,7 @@ export default class ConnectionHistory extends ViewBase {
       connection.password = history.password;
       state.connection = connection;
       await connection.connect();
+      app.state = state.connection.network.label;
       this._list.setData(Connection.getHistory());
       app.pushView(new MainMenu());
     } catch (err) {

@@ -24,8 +24,8 @@ export default class TransactionIdInput extends ViewBase {
     this._input.render();
   }
 
-  async handle(key: string) {
-    await this._input.handle(key);
+  async handle(key: string): Promise<boolean> {
+    return this._input.handle(key);
   }
 
   async onEnter() {

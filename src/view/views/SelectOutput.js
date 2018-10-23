@@ -35,8 +35,11 @@ export default class SelectOutput extends ViewBase {
     this._menu.render(false);
   }
 
-  async handle(input: string) {
-    await this._outputsList.handle(input);
-    await this._menu.handle(input);
+  async handle(input: string): Promise<boolean> {
+    let handled = await this._outputsList.handle(input);
+    if (!handled) {
+      handled = await this._menu.handle(input);
+    }
+    return handled;
   }
 }

@@ -36,8 +36,12 @@ export default class GenericList extends ViewBase {
     this._menu.render(false);
   }
 
-  async handle(key: string) {
-    await this._menu.handle(key);
-    await this._list.handle(key);
+  async handle(key: string): Promise<boolean> {
+    let handled = false;
+    handled = await this._menu.handle(key);
+    if (!handled) {
+      handled = await this._list.handle(key);
+    }
+    return handled;
   }
 }

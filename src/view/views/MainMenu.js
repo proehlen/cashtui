@@ -30,7 +30,7 @@ export default class MainMenu extends ViewBase {
     this._menu.render(false);
   }
 
-  async handle(key: string): Promise<void> {
-    this._menu.handle(key);
+  async handle(key: string): Promise<boolean> {
+    return this._menu.handle(key);
   }
 }

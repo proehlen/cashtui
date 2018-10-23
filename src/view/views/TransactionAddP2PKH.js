@@ -49,8 +49,8 @@ export default class TransactionAddP2PKH extends ViewBase {
     }
   }
 
-  async handle(key: string) {
-    await this._menuForm.handle(key);
+  async handle(key: string): Promise<boolean> {
+    return this._menuForm.handle(key);
   }
 
   render() {

@@ -68,7 +68,7 @@ export default class TransactionRaw extends ViewBase {
     }
   }
 
-  async handle(key: string): Promise<void> {
-    await this._menu.handle(key);
+  async handle(key: string): Promise<boolean> {
+    return this._menu.handle(key);
   }
 }

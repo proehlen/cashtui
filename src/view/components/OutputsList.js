@@ -64,7 +64,7 @@ export default class OutputsList extends ComponentBase {
     this._list.render();
   }
 
-  async handle(key: string) {
-    await this._list.handle(key);
+  async handle(key: string): Promise<boolean> {
+    return this._list.handle(key);
   }
 }

@@ -93,8 +93,11 @@ export default class NetworkSelection extends ViewBase {
     }
   }
 
-  async handle(key: string) {
-    await this._menu.handle(key);
-    await this._list.handle(key);
+  async handle(key: string): Promise<boolean> {
+    let handled = await this._menu.handle(key);
+    if (!handled) {
+      handled = await this._list.handle(key);
+    }
+    return handled;
   }
 }

@@ -72,17 +72,21 @@ export default class RawInput extends ViewBase {
     this._input.value = state.rpc.history[index];
   }
 
-  async handle(key: string): Promise<void> {
+  async handle(key: string): Promise<boolean> {
+    let handled = false;
     switch (key) {
       case KEY_DOWN:
         this._loadLater();
+        handled = true;
         break;
       case KEY_UP:
         this._loadEarlier();
+        handled = true;
         break;
       default:
-        await this._input.handle(key);
+        handled = await this._input.handle(key);
     }
+    return handled;
   }
 
   async onEnter() {

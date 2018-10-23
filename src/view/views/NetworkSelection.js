@@ -4,30 +4,32 @@ import Network from 'cashlib/lib/Network';
 import ViewBase from 'tooey/lib/ViewBase';
 import List, { type ListColumn } from 'tooey/lib/List';
 import Menu from 'tooey/lib/Menu';
-import MenuOption from 'tooey/lib/MenuOption';
+import MenuItem from 'tooey/lib/MenuItem';
+import Tab from 'tooey/lib/Tab';
 
 import Connection from '../../model/Connection';
 import ConnectionSettings from './ConnectionSettings';
 import ConnectionHistory from './ConnectionHistory';
 import state from '../../model/state';
-import app from '../app';
 
 export default class NetworkSelection extends ViewBase {
+  _tab: Tab
   _networks: Array<string>
   _menu: Menu
   _list: List<string>
-  _continueOption: MenuOption
+  _continueItem: MenuItem
 
-  constructor() {
+  constructor(tab: Tab) {
     super('Connect to node');
+    this._tab = tab;
 
     // Build menu
-    this._continueOption = new MenuOption('C', 'Continue', 'Connect to Network', this.toConnectionSettings.bind(this));
-    const menuOptions = [
-      this._continueOption,
-      new MenuOption('R', 'Recent', 'Recent connections', this.toConnectionHistory.bind(this)),
+    this._continueItem = new MenuItem('C', 'Continue', 'Connect to Network', this.toConnectionSettings.bind(this));
+    const menuItems = [
+      this._continueItem,
+      new MenuItem('R', 'Recent', 'Recent connections', this.toConnectionHistory.bind(this)),
     ];
-    this._menu = new Menu(app, menuOptions, false);
+    this._menu = new Menu(tab, menuItems, false);
 
     // Build networks list
     this._networks = [
@@ -42,7 +44,7 @@ export default class NetworkSelection extends ViewBase {
       width: 25,
       value: network => network,
     }];
-    this._list = new List(app, columns, this._networks, {
+    this._list = new List(tab, columns, this._networks, {
       showHeadings: false,
       rowSelection: true,
       onSelect: this.onListSelect.bind(this),
@@ -50,7 +52,7 @@ export default class NetworkSelection extends ViewBase {
   }
 
   async onListSelect() {
-    this._menu.setSelectedOption(this._continueOption.key);
+    this._menu.setSelectedItem(this._continueItem.key);
   }
 
   render() {
@@ -79,22 +81,25 @@ export default class NetworkSelection extends ViewBase {
       const network = Network.fromString(networkLabel);
       const connection = new Connection(network);
       state.connection = connection;
-      app.pushView(new ConnectionSettings());
+      this._tab.pushView(new ConnectionSettings(this._tab));
     } catch (err) {
-      app.setError(err.message);
+      this._tab.setError(err.message);
     }
   }
 
   async toConnectionHistory() {
     try {
-      app.replaceView(new ConnectionHistory());
+      this._tab.replaceView(new ConnectionHistory(this._tab));
     } catch (err) {
-      app.setError(err.message);
+      this._tab.setError(err.message);
     }
   }
 
-  async handle(key: string) {
-    await this._menu.handle(key);
-    await this._list.handle(key);
+  async handle(key: string): Promise<boolean> {
+    let handled = await this._menu.handle(key);
+    if (!handled) {
+      handled = await this._list.handle(key);
+    }
+    return handled;
   }
 }

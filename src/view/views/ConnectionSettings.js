@@ -2,11 +2,11 @@
 
 import MenuForm from 'tooey/lib/MenuForm';
 import ViewBase from 'tooey/lib/ViewBase';
-import MenuOption from 'tooey/lib/MenuOption';
+import MenuItem from 'tooey/lib/MenuItem';
+import Tab from 'tooey/lib/Tab';
 
 import MainMenu from './MainMenu';
 import state from '../../model/state';
-import app from '../app';
 
 const fieldIdx = {
   HOST: 0,
@@ -17,10 +17,12 @@ const fieldIdx = {
 };
 
 export default class ConnectionSettings extends ViewBase {
+  _tab: Tab
   _menuForm: MenuForm
 
-  constructor() {
+  constructor(tab: Tab) {
     super('Connection Settings');
+    this._tab = tab;
 
     // Form fields
     const fields = [];
@@ -30,12 +32,12 @@ export default class ConnectionSettings extends ViewBase {
     fields[fieldIdx.USER] = { label: 'User', default: state.connection.user, type: 'string' };
     fields[fieldIdx.PASSWORD] = { label: 'Password', default: state.connection.password, type: 'password' };
 
-    // Menu options
-    const menuOptions = [
-      new MenuOption('C', 'Connect', 'Connect to the node', this.connect.bind(this)),
+    // Menu items
+    const menuItems = [
+      new MenuItem('C', 'Connect', 'Connect to the node', this.connect.bind(this)),
     ];
 
-    this._menuForm = new MenuForm(app, fields, menuOptions);
+    this._menuForm = new MenuForm(tab, fields, menuItems);
   }
 
   async connect() {
@@ -48,14 +50,15 @@ export default class ConnectionSettings extends ViewBase {
       state.connection.user = fields[fieldIdx.USER].input.value;
       state.connection.password = fields[fieldIdx.PASSWORD].input.value;
       await state.connection.connect();
-      app.pushView(new MainMenu());
+      this._tab.stateMessage = state.connection.network.label;
+      this._tab.pushView(new MainMenu(this._tab));
     } catch (err) {
-      app.setError(err.message);
+      this._tab.setError(err.message);
     }
   }
 
-  async handle(key: string) {
-    await this._menuForm.handle(key);
+  async handle(key: string): Promise<boolean> {
+    return this._menuForm.handle(key);
   }
 
   render() {

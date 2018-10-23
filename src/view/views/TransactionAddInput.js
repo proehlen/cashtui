@@ -2,11 +2,11 @@
 
 import MenuForm from 'tooey/lib/MenuForm';
 import ViewBase from 'tooey/lib/ViewBase';
-import MenuOption from 'tooey/lib/MenuOption';
+import MenuItem from 'tooey/lib/MenuItem';
+import Tab from 'tooey/lib/Tab';
 import Transaction from 'cashlib/lib/Transaction';
 import Input from 'cashlib/lib/Input';
 
-import app from '../app';
 import state from '../../model/state';
 import SelectOutput from './SelectOutput';
 
@@ -17,44 +17,51 @@ const fieldIdx = {
 
 export default class TransactionAddInput extends ViewBase {
   _menuForm: MenuForm
+  _tab: Tab
 
-  constructor() {
+  constructor(tab: Tab) {
     super('Add Input');
+
+    this._tab = tab;
 
     // Form fields
     const fields = [];
     fields[fieldIdx.TRANSACTION_ID] = { label: 'Transaction Id', default: '', type: 'string' };
     fields[fieldIdx.OUTPUT_INDEX] = { label: 'Output index', default: '', type: 'integer' };
 
-    // Menu options
-    const menuOptions = [
-      new MenuOption('O', 'OK', 'Add input with entered details', this.addInput.bind(this)),
-      new MenuOption('L', 'Lookup Output', 'Lookup output in transaction', this.lookupOutput.bind(this)),
+    // Menu items
+    const menuItems = [
+      new MenuItem('O', 'OK', 'Add input with entered details', this.addInput.bind(this)),
+      new MenuItem('L', 'Lookup Output', 'Lookup output in transaction', this.lookupOutput.bind(this)),
     ];
 
-    this._menuForm = new MenuForm(app, fields, menuOptions);
+    this._menuForm = new MenuForm(tab, fields, menuItems);
   }
 
   async lookupOutput() {
     try {
       const txId = this._menuForm.fields[fieldIdx.TRANSACTION_ID].input.value;
       if (!txId) {
-        app.setError('Enter Transaction Id to lookup output in.');
+        this._tab.setError('Enter Transaction Id to lookup output in.');
       } else {
         const raw = await state.rpc.request(`getrawtransaction ${txId}`);
         const transaction = Transaction.deserialize(raw.toString());
-        const select = new SelectOutput(transaction.outputs, this.onLookupSelection.bind(this));
-        app.pushView(select);
+        const select = new SelectOutput(
+          this._tab,
+          transaction.outputs,
+          this.onLookupSelection.bind(this),
+        );
+        this._tab.pushView(select);
       }
     } catch (err) {
-      app.setError(err.message);
+      this._tab.setError(err.message);
     }
   }
 
   async onLookupSelection(outputIndex: number) {
     this._menuForm.fields[fieldIdx.OUTPUT_INDEX].input.value = outputIndex.toString();
-    app.popView();
-    this._menuForm.menu.setFirstOptionSelected();
+    this._tab.popView();
+    this._menuForm.menu.setFirstItemSelected();
   }
 
 
@@ -64,19 +71,19 @@ export default class TransactionAddInput extends ViewBase {
       const txId = this._menuForm.fields[fieldIdx.TRANSACTION_ID].input.value;
       const outputIdx = this._menuForm.fields[fieldIdx.OUTPUT_INDEX].input.value;
       if (!txId || !outputIdx) {
-        app.setWarning('Enter Transaction Id and Output Index to continue.');
+        this._tab.setWarning('Enter Transaction Id and Output Index to continue.');
       } else {
         const input = new Input(txId, parseInt(outputIdx, 10), new Uint8Array([]));
         state.transactions.active.addInput(input);
-        app.popView();
+        this._tab.popView();
       }
     } catch (err) {
-      app.setError(err.message);
+      this._tab.setError(err.message);
     }
   }
 
-  async handle(key: string) {
-    await this._menuForm.handle(key);
+  async handle(key: string): Promise<boolean> {
+    return this._menuForm.handle(key);
   }
 
   render() {

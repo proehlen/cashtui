@@ -1,10 +1,12 @@
 // @flow
 import MenuForm from 'tooey/lib/MenuForm';
-import { type FieldData } from 'tooey/lib/Form';
+import MenuItem from 'tooey/lib/MenuItem';
+import { type FormFieldDescription } from 'tooey/lib/Form';
 import ViewBase from 'tooey/lib/ViewBase';
 import Input from 'cashlib/lib/Input';
 import { fromBytes } from 'stringfu';
 
+import GenericText from './GenericText';
 import app from '../app';
 
 const fieldIdx = {
@@ -28,18 +30,29 @@ export default class ConnectionSettings extends ViewBase {
     }
 
     // Form fields
-    const fields: Array<FieldData> = [];
+    const fields: Array<FormFieldDescription> = [];
     fields[fieldIdx.TRANSACTION_ID] = { label: 'Transaction Id', default: blankIfUndefined(transactionId), type: 'string' };
     fields[fieldIdx.INPUT_INDEX] = { label: 'Input number', default: blankIfUndefined(inputIndex), type: 'integer' };
     fields[fieldIdx.OUTPUT_TRANSACTION] = { label: 'Output tx', default: input.transactionId, type: 'string' };
     fields[fieldIdx.OUTPUT_INDEX] = { label: 'Output number', default: input.outputIndex.toString(), type: 'integer' };
     fields[fieldIdx.SCRIPT] = { label: 'Signature script', default: fromBytes(input.signatureScript), type: 'string' };
 
-    this._menuForm = new MenuForm(app, fields, []);
+    this._menuForm = new MenuForm(app.activeTab, fields, [
+      new MenuItem('S', 'Script', 'Show entire signature script', this.toScript.bind(this)),
+    ], {
+      readOnly: true,
+    });
   }
 
-  async handle(key: string) {
-    await this._menuForm.handle(key);
+  async toScript() {
+    const scriptText = fromBytes(this._input.signatureScript);
+    // TODO nav to script parser
+    const scriptView = new GenericText('Signature Script', scriptText);
+    app.pushView(scriptView);
+  }
+
+  async handle(key: string): Promise<boolean> {
+    return this._menuForm.handle(key);
   }
 
   render() {

@@ -1,20 +1,23 @@
 // @flow
 import Output from 'cashlib/lib/Output';
 import { leftPad } from 'stringfu';
+import Tab from 'tooey/lib/Tab';
 
 import ComponentBase from 'tooey/lib/ComponentBase';
 import List, { type ListColumn } from 'tooey/lib/List';
 import Menu from 'tooey/lib/Menu';
 import state from '../../model/state';
-import app from '../app';
 
 const VALUE_COLUMN_WIDTH = 15;
 
 export default class OutputsList extends ComponentBase {
   _list: List<Output>
+  _tab: Tab
 
-  constructor(outputs: Array<Output>, menu: Menu, rowSelection?: boolean) {
+  constructor(tab: Tab, outputs: Array<Output>, menu: Menu, rowSelection?: boolean) {
     super();
+
+    this._tab = tab;
 
     const columns: Array<ListColumn<Output>> = [{
       heading: 'Index',
@@ -38,7 +41,7 @@ export default class OutputsList extends ComponentBase {
             addressEncoded = address.toString();
           }
         } catch (err) {
-          app.setWarning(err.message);
+          tab.setWarning(err.message);
           addressEncoded = 'Sorry, not available yet';
         }
         return addressEncoded;
@@ -49,7 +52,7 @@ export default class OutputsList extends ComponentBase {
       value: output => output.scriptType,
     }];
 
-    this._list = new List(app, columns, outputs, {
+    this._list = new List(tab, columns, outputs, {
       menu,
       rowSelection,
     });
@@ -64,7 +67,7 @@ export default class OutputsList extends ComponentBase {
     this._list.render();
   }
 
-  async handle(key: string) {
-    await this._list.handle(key);
+  async handle(key: string): Promise<boolean> {
+    return this._list.handle(key);
   }
 }

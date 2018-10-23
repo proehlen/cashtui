@@ -2,10 +2,10 @@
 
 import ViewBase from 'tooey/lib/ViewBase';
 import Menu from 'tooey/lib/Menu';
-import MenuOption from 'tooey/lib/MenuOption';
+import MenuItem from 'tooey/lib/MenuItem';
 import Output from 'cashlib/lib/Output';
+import Tab from 'tooey/lib/Tab';
 
-import app from '../app';
 import OutputsList from '../components/OutputsList';
 
 export type OnSelectedCallback = (number) => Promise<void>
@@ -15,14 +15,17 @@ export default class SelectOutput extends ViewBase {
   _outputsList: OutputsList
   _outputs: Array<Output>
   _onSelected: OnSelectedCallback
+  _tab: Tab
 
-  constructor(outputs: Array<Output>, onSelected: OnSelectedCallback) {
+  constructor(tab: Tab, outputs: Array<Output>, onSelected: OnSelectedCallback) {
     super('Select Output');
 
+    this._tab = tab;
+
     this._outputs = outputs;
-    const ok = new MenuOption('O', 'OK', 'Continue with selected output', this.onOk.bind(this));
-    this._menu = new Menu(app, [ok], true);
-    this._outputsList = new OutputsList(outputs, this._menu, true);
+    const ok = new MenuItem('O', 'OK', 'Continue with selected output', this.onOk.bind(this));
+    this._menu = new Menu(tab, [ok], true);
+    this._outputsList = new OutputsList(tab, outputs, this._menu, true);
     this._onSelected = onSelected;
   }
 
@@ -35,8 +38,11 @@ export default class SelectOutput extends ViewBase {
     this._menu.render(false);
   }
 
-  async handle(input: string) {
-    await this._outputsList.handle(input);
-    await this._menu.handle(input);
+  async handle(input: string): Promise<boolean> {
+    let handled = await this._outputsList.handle(input);
+    if (!handled) {
+      handled = await this._menu.handle(input);
+    }
+    return handled;
   }
 }

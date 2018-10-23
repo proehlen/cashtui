@@ -19,9 +19,9 @@ export default class RawInput extends ViewBase {
   _inputHelp: InputHelp
 
   constructor() {
-    super('Enter RPC command');
+    super('RPC command');
     this._historyLevel = 0;
-    this._input = new Input(app, this.onEnter.bind(this));
+    this._input = new Input(app.activeTab, this.onEnter.bind(this));
 
     const inputHelpText = `${INPUT_HELP_DEFAULT}; ${colors.bold('Up')} and ${colors.bold('Down')} for history`;
     this._inputHelp = new InputHelp(inputHelpText);
@@ -72,17 +72,21 @@ export default class RawInput extends ViewBase {
     this._input.value = state.rpc.history[index];
   }
 
-  async handle(key: string): Promise<void> {
+  async handle(key: string): Promise<boolean> {
+    let handled = false;
     switch (key) {
       case KEY_DOWN:
         this._loadLater();
+        handled = true;
         break;
       case KEY_UP:
         this._loadEarlier();
+        handled = true;
         break;
       default:
-        await this._input.handle(key);
+        handled = await this._input.handle(key);
     }
+    return handled;
   }
 
   async onEnter() {

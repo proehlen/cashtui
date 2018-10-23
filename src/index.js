@@ -2,17 +2,8 @@
 
 import output from 'tooey/lib/output';
 
-import Connection from './model/Connection';
 import app from './view/app';
-import NetworkSelection from './view/views/NetworkSelection';
-import ConnectionHistory from './view/views/ConnectionHistory';
 
-// Render starting view
-if (Connection.getHistory().length) {
-  app.pushView(new ConnectionHistory());
-} else {
-  app.pushView(new NetworkSelection());
-}
 app.render();
 
 const { stdin } = process;

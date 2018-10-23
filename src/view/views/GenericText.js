@@ -13,8 +13,8 @@ export default class GenericText extends ViewBase {
   constructor(title: string, data: string) {
     super(title);
 
-    this._menu = new Menu(app);
-    this._text = new Text(app, data);
+    this._menu = new Menu(app.activeTab);
+    this._text = new Text(app.activeTab, data);
   }
 
   render() {
@@ -25,8 +25,11 @@ export default class GenericText extends ViewBase {
     this._menu.render(false);
   }
 
-  async handle(key: string) {
-    await this._menu.handle(key);
-    await this._text.handle(key);
+  async handle(key: string): Promise<boolean> {
+    let handled = await this._menu.handle(key);
+    if (!handled) {
+      handled = await this._text.handle(key);
+    }
+    return handled;
   }
 }

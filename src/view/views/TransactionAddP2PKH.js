@@ -2,7 +2,7 @@
 
 import MenuForm from 'tooey/lib/MenuForm';
 import ViewBase from 'tooey/lib/ViewBase';
-import MenuOption from 'tooey/lib/MenuOption';
+import MenuItem from 'tooey/lib/MenuItem';
 import Output from 'cashlib/lib/Output';
 
 import app from '../app';
@@ -25,12 +25,12 @@ export default class TransactionAddP2PKH extends ViewBase {
     // TODO - enter values in BCH (requires 'float' type to be added tooey)
     fields[fieldIdx.VALUE] = { label: 'Value (Satoshis)', default: '', type: 'integer' };
 
-    // Menu options
-    const menuOptions = [
-      new MenuOption('O', 'OK', 'Add output with entered details', this.addOutput.bind(this)),
+    // Menu items
+    const menuItems = [
+      new MenuItem('O', 'OK', 'Add output with entered details', this.addOutput.bind(this)),
     ];
 
-    this._menuForm = new MenuForm(app, fields, menuOptions);
+    this._menuForm = new MenuForm(app.activeTab, fields, menuItems);
   }
 
   async addOutput() {
@@ -49,8 +49,8 @@ export default class TransactionAddP2PKH extends ViewBase {
     }
   }
 
-  async handle(key: string) {
-    await this._menuForm.handle(key);
+  async handle(key: string): Promise<boolean> {
+    return this._menuForm.handle(key);
   }
 
   render() {

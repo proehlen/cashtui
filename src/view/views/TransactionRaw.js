@@ -3,7 +3,7 @@
 import Transaction from 'cashlib/lib/Transaction';
 import ViewBase from 'tooey/lib/ViewBase';
 import Menu from 'tooey/lib/Menu';
-import MenuOption from 'tooey/lib/MenuOption';
+import MenuItem from 'tooey/lib/MenuItem';
 import output from 'tooey/lib/output';
 
 import state from '../../model/state';
@@ -28,12 +28,12 @@ export default class TransactionRaw extends ViewBase {
       data.push(raw.substr(x * charsPerPage, charsPerPage));
     }
 
-    const options: MenuOption[] = [];
+    const items: MenuItem[] = [];
     if (numPages) {
-      options.push(new MenuOption('N', 'Next page', 'Go to next page', this.nextPage.bind(this)));
-      options.push(new MenuOption('P', 'Previous page', 'Return to previous page', this.previousPage.bind(this)));
+      items.push(new MenuItem('N', 'Next page', 'Go to next page', this.nextPage.bind(this)));
+      items.push(new MenuItem('P', 'Previous page', 'Return to previous page', this.previousPage.bind(this)));
     }
-    this._menu = new Menu(app, options, true);
+    this._menu = new Menu(app.activeTab, items, true);
     this._data = data;
     this._currentPage = 1;
     this._numPages = numPages;
@@ -68,7 +68,7 @@ export default class TransactionRaw extends ViewBase {
     }
   }
 
-  async handle(key: string): Promise<void> {
-    await this._menu.handle(key);
+  async handle(key: string): Promise<boolean> {
+    return this._menu.handle(key);
   }
 }

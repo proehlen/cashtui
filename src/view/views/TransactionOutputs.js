@@ -9,7 +9,7 @@ import Tab from 'tooey/lib/Tab';
 
 import OutputsList from '../components/OutputsList';
 import TransactionOutput from './TransactionOutput';
-import TransactionAddP2PKH from './TransactionAddP2PKH';
+import TransactionAddOutput from './TransactionAddOutput';
 import state from '../../model/state';
 
 export default class TransactionOutputs extends ViewBase {
@@ -25,16 +25,27 @@ export default class TransactionOutputs extends ViewBase {
     const menuItems = [
       new MenuItem('S', 'Show', 'Show details for selected output',
         this.toDetails.bind(this)),
-      new MenuItem('A', 'Add P2PKH', 'Add new Pay To Public Key Hash output',
-        async () => tab.pushView(new TransactionAddP2PKH())),
+      new MenuItem('A', 'Add', 'Add new output',
+        async () => tab.pushView(new TransactionAddOutput(tab))),
+      new MenuItem('R', 'Remove', 'Remove selected output',
+        this.removeSelectedOutput.bind(this),
+        () => state.transactions.active.outputs.length > 0),
     ];
     this._menu = new Menu(tab, menuItems);
 
     this._list = new OutputsList(tab, transaction.outputs, this._menu, true);
   }
 
+  get _selectedOutput() {
+    return state.transactions.active.outputs[this._list.selectedOutputIndex];
+  }
+
+  async removeSelectedOutput() {
+    state.transactions.active.removeOutput(this._list.selectedOutputIndex);
+  }
+
   async toDetails() {
-    const output = state.transactions.active.outputs[this._list.selectedOutputIndex];
+    const output = this._selectedOutput;
     if (output) {
       this._tab.pushView(new TransactionOutput(
         output,

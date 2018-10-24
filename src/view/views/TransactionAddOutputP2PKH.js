@@ -13,7 +13,7 @@ const fieldIdx = {
   VALUE: 1,
 };
 
-export default class TransactionAddP2PKH extends ViewBase {
+export default class TransactionAddOutputP2PKH extends ViewBase {
   _menuForm: MenuForm
 
   constructor() {

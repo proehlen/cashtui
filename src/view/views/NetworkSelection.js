@@ -52,7 +52,7 @@ export default class NetworkSelection extends ViewBase {
   }
 
   async onListSelect() {
-    this._menu.setSelectedItem(this._continueItem.key);
+    this._menu.setSelectedItem(this._continueItem);
   }
 
   render() {

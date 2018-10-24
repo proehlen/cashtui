@@ -60,7 +60,7 @@ export default class ConnectionHistory extends ViewBase {
   }
 
   async onListSelect() {
-    this._menu.setSelectedItem(this._connectItem.key);
+    this._menu.setSelectedItem(this._connectItem);
   }
 
   async toNetworkSelection() {

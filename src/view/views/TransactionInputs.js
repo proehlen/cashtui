@@ -26,7 +26,11 @@ export default class TransactionInputs extends ViewBase {
     // Build menu
     const menuItems = [
       new MenuItem('S', 'Show', 'Show details for selected input',
-        this.toDetails.bind(this)),
+        this.toDetails.bind(this),
+        () => state.transactions.active.inputs.length > 0),
+      new MenuItem('R', 'Remove', 'Remove selected input',
+        this.removeSelectedInput.bind(this),
+        () => state.transactions.active.inputs.length > 0),
       new MenuItem('A', 'Add', 'Add new input',
         async () => this._tab.pushView(new TransactionAddInput(tab))),
     ];
@@ -65,6 +69,11 @@ export default class TransactionInputs extends ViewBase {
       this._tab.setWarning('No input selected');
     }
   }
+
+  async removeSelectedInput() {
+    state.transactions.active.removeInput(this._list.selectedRowIndex);
+  }
+
 
   render() {
     // Render outputs list

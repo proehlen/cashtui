@@ -7,21 +7,23 @@ import ViewBase from 'tooey/lib/ViewBase';
 import Input from 'tooey/lib/Input';
 import InputHelp, { DEFAULT_TEXT as INPUT_HELP_DEFAULT } from 'tooey/lib/InputHelp';
 import { KEY_UP, KEY_DOWN } from 'tooey/lib/keys';
+import Tab from 'tooey/lib/Tab';
 
 import GenericList from './GenericList';
 import GenericText from './GenericText';
 import state from '../../model/state';
-import app from '../app';
 
 export default class RawInput extends ViewBase {
+  _tab: Tab
   _historyLevel: number
   _input: Input
   _inputHelp: InputHelp
 
-  constructor() {
+  constructor(tab: Tab) {
     super('RPC command');
+    this._tab = tab;
     this._historyLevel = 0;
-    this._input = new Input(app.activeTab, this.onEnter.bind(this));
+    this._input = new Input(tab, this.onEnter.bind(this));
 
     const inputHelpText = `${INPUT_HELP_DEFAULT}; ${colors.bold('Up')} and ${colors.bold('Down')} for history`;
     this._inputHelp = new InputHelp(inputHelpText);
@@ -65,7 +67,7 @@ export default class RawInput extends ViewBase {
 
   _loadFromHistory() {
     if (!state.rpc.history.length) {
-      app.setWarning('No history found');
+      this._tab.setWarning('No history found');
       return;
     }
     const index = state.rpc.history.length - this._historyLevel;
@@ -95,21 +97,21 @@ export default class RawInput extends ViewBase {
       if (typeof rpcResult === 'string') {
         const outputLines = rpcResult.split('\n');
         if (outputLines.length > 1 || rpcResult.length < output.width) {
-          app.pushView(new GenericList('RPC result', outputLines));
+          this._tab.pushView(new GenericList(this._tab, 'RPC result', outputLines));
         } else {
-          app.pushView(new GenericText('RPC result', rpcResult));
+          this._tab.pushView(new GenericText('RPC result', rpcResult));
         }
       } else if (typeof rpcResult === 'number') {
-        app.pushView(new GenericText('RPC result', rpcResult.toString()));
+        this._tab.pushView(new GenericText('RPC result', rpcResult.toString()));
       } else if (typeof rpcResult === 'object') {
         const stringified = JSON.stringify(rpcResult, null, 2);
         const outputLines = stringified.split('\n');
-        app.pushView(new GenericList('RPC result', outputLines));
+        this._tab.pushView(new GenericList(this._tab, 'RPC result', outputLines, true));
       } else if (Array.isArray(rpcResult)) {
         const outputLines = rpcResult.map(entry => JSON.stringify(entry));
-        app.pushView(new GenericList('RPC result', outputLines));
+        this._tab.pushView(new GenericList(this._tab, 'RPC result', outputLines, true));
       } else {
-        app.setError('Unexpected output received; don\'t know how to display');
+        this._tab.setError('Unexpected output received; don\'t know how to display');
         return;
       }
       this._input.value = '';
@@ -123,7 +125,7 @@ export default class RawInput extends ViewBase {
       } else {
         [errorMessage] = err.message.split('\n');
       }
-      app.setError(errorMessage);
+      this._tab.setError(errorMessage);
     }
   }
 }

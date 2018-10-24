@@ -22,7 +22,7 @@ export default class MainMenu extends ViewBase {
   }
 
   async toRpc() {
-    this._tab.pushView(new RpcInput());
+    this._tab.pushView(new RpcInput(this._tab));
   }
 
   async toTransactions() {

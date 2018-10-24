@@ -3,14 +3,14 @@
 import Transaction from 'cashlib/lib/Transaction';
 import Input from 'cashlib/lib/Input';
 import ViewBase from 'tooey/lib/ViewBase';
-import List from 'tooey/lib/List';
+import List, { type ListColumn } from 'tooey/lib/List';
 import Menu from 'tooey/lib/Menu';
 import Tab from 'tooey/lib/Tab';
 import MenuItem from 'tooey/lib/MenuItem';
-import type { ListColumn } from 'tooey/lib/List';
+import SelectView, { type SelectViewItem } from 'tooey/lib/SelectView';
 
 import TransactionInput from './TransactionInput';
-import TransactionAddInput from './TransactionAddInput';
+import TransactionAddInputManual from './TransactionAddInputManual';
 import state from '../../model/state';
 
 export default class TransactionInputs extends ViewBase {
@@ -32,7 +32,7 @@ export default class TransactionInputs extends ViewBase {
         this.removeSelectedInput.bind(this),
         () => state.transactions.active.inputs.length > 0),
       new MenuItem('A', 'Add', 'Add new input',
-        async () => this._tab.pushView(new TransactionAddInput(tab))),
+        this.onAddInput.bind(this)),
     ];
     this._menu = new Menu(tab, menuItems);
 
@@ -55,6 +55,17 @@ export default class TransactionInputs extends ViewBase {
       rowSelection: true,
       menu: this._menu,
     });
+  }
+
+  async onAddInput() {
+    const items: SelectViewItem[] = [{
+      label: 'Select unspent output from node wallet',
+    }, {
+      label: 'Enter utxo manually',
+      execute: async () => this._tab.replaceView(new TransactionAddInputManual(this._tab)),
+    }];
+    const selectView = new SelectView(this._tab, 'Add input from...', items);
+    this._tab.pushView(selectView);
   }
 
   async toDetails() {

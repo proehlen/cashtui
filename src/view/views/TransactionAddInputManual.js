@@ -15,7 +15,7 @@ const fieldIdx = {
   OUTPUT_INDEX: 1,
 };
 
-export default class TransactionAddInput extends ViewBase {
+export default class TransactionAddInputManual extends ViewBase {
   _menuForm: MenuForm
   _tab: Tab
 

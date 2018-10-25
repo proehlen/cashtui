@@ -1,6 +1,6 @@
 // @flow
 
-import MenuForm from 'tooey/lib/MenuForm';
+import FormView from 'tooey/lib/FormView';
 import ViewBase from 'tooey/lib/ViewBase';
 import { type MenuItem } from 'tooey/lib/Menu';
 import Tab from 'tooey/lib/Tab';
@@ -16,7 +16,7 @@ const fieldIdx = {
 };
 
 export default class TransactionAddInputManual extends ViewBase {
-  _menuForm: MenuForm
+  _formView: FormView
   _tab: Tab
 
   constructor(tab: Tab) {
@@ -43,7 +43,7 @@ export default class TransactionAddInputManual extends ViewBase {
       visible: () => this._getFieldValue(fieldIdx.TRANSACTION_ID) !== '',
     }];
 
-    this._menuForm = new MenuForm(tab, fields, menuItems);
+    this._formView = new FormView(tab, fields, menuItems);
   }
 
   async lookupOutput() {
@@ -67,15 +67,15 @@ export default class TransactionAddInputManual extends ViewBase {
   }
 
   async onLookupSelection(outputIndex: number) {
-    this._menuForm.fields[fieldIdx.OUTPUT_INDEX].input.value = outputIndex.toString();
+    this._formView.fields[fieldIdx.OUTPUT_INDEX].input.value = outputIndex.toString();
     this._tab.popView();
-    this._menuForm.menu.setFirstItemSelected();
+    this._formView.menu.setFirstItemSelected();
   }
 
   _getFieldValue(index: number) {
     let result;
-    if (this._menuForm) {
-      result = this._menuForm.fields[index].input.value;
+    if (this._formView) {
+      result = this._formView.fields[index].input.value;
     }
     return result;
   }
@@ -83,8 +83,8 @@ export default class TransactionAddInputManual extends ViewBase {
   async addInput() {
     try {
       // app.popView();
-      const txId = this._menuForm.fields[fieldIdx.TRANSACTION_ID].input.value;
-      const outputIdx = this._menuForm.fields[fieldIdx.OUTPUT_INDEX].input.value;
+      const txId = this._formView.fields[fieldIdx.TRANSACTION_ID].input.value;
+      const outputIdx = this._formView.fields[fieldIdx.OUTPUT_INDEX].input.value;
       if (!txId || !outputIdx) {
         this._tab.setWarning('Enter Transaction Id and Output Index to continue.');
       } else {
@@ -98,10 +98,10 @@ export default class TransactionAddInputManual extends ViewBase {
   }
 
   async handle(key: string): Promise<boolean> {
-    return this._menuForm.handle(key);
+    return this._formView.handle(key);
   }
 
   render() {
-    this._menuForm.render();
+    this._formView.render();
   }
 }

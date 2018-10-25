@@ -1,5 +1,5 @@
 // @flow
-import MenuForm from 'tooey/lib/MenuForm';
+import FormView from 'tooey/lib/FormView';
 import { type FormFieldDescription } from 'tooey/lib/Form';
 import ViewBase from 'tooey/lib/ViewBase';
 import Input from 'cashlib/lib/Input';
@@ -17,7 +17,7 @@ const fieldIdx = {
 };
 
 export default class ConnectionSettings extends ViewBase {
-  _menuForm: MenuForm
+  _formView: FormView
   _input: Input
 
   constructor(input: Input, transactionId?: string, inputIndex?: number) {
@@ -36,7 +36,7 @@ export default class ConnectionSettings extends ViewBase {
     fields[fieldIdx.OUTPUT_INDEX] = { label: 'Output number', default: input.outputIndex.toString(), type: 'integer' };
     fields[fieldIdx.SCRIPT] = { label: 'Signature script', default: fromBytes(input.signatureScript), type: 'string' };
 
-    this._menuForm = new MenuForm(app.activeTab, fields, [{
+    this._formView = new FormView(app.activeTab, fields, [{
       key: 'S',
       label: 'Script',
       help: 'Show entire signature script',
@@ -54,10 +54,10 @@ export default class ConnectionSettings extends ViewBase {
   }
 
   async handle(key: string): Promise<boolean> {
-    return this._menuForm.handle(key);
+    return this._formView.handle(key);
   }
 
   render() {
-    this._menuForm.render();
+    this._formView.render();
   }
 }

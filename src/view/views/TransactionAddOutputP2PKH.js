@@ -1,6 +1,6 @@
 // @flow
 
-import MenuForm from 'tooey/lib/MenuForm';
+import FormView from 'tooey/lib/FormView';
 import ViewBase from 'tooey/lib/ViewBase';
 import { type MenuItem } from 'tooey/lib/Menu';
 import Output from 'cashlib/lib/Output';
@@ -14,7 +14,7 @@ const fieldIdx = {
 };
 
 export default class TransactionAddOutputP2PKH extends ViewBase {
-  _menuForm: MenuForm
+  _formView: FormView
 
   constructor() {
     super('Add P2PKH Output');
@@ -33,13 +33,13 @@ export default class TransactionAddOutputP2PKH extends ViewBase {
       execute: this.addOutput.bind(this),
     }];
 
-    this._menuForm = new MenuForm(app.activeTab, fields, menuItems);
+    this._formView = new FormView(app.activeTab, fields, menuItems);
   }
 
   async addOutput() {
     try {
-      const address = this._menuForm.fields[fieldIdx.ADDRESS].input.value;
-      const value = parseInt(this._menuForm.fields[fieldIdx.VALUE].input.value, 10);
+      const address = this._formView.fields[fieldIdx.ADDRESS].input.value;
+      const value = parseInt(this._formView.fields[fieldIdx.VALUE].input.value, 10);
       if (!address || !value) {
         app.setWarning('Enter Address and Value to continue.');
       } else {
@@ -55,10 +55,10 @@ export default class TransactionAddOutputP2PKH extends ViewBase {
   }
 
   async handle(key: string): Promise<boolean> {
-    return this._menuForm.handle(key);
+    return this._formView.handle(key);
   }
 
   render() {
-    this._menuForm.render();
+    this._formView.render();
   }
 }

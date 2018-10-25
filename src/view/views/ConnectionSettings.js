@@ -1,6 +1,6 @@
 // @flow
 
-import MenuForm from 'tooey/lib/MenuForm';
+import FormView from 'tooey/lib/FormView';
 import ViewBase from 'tooey/lib/ViewBase';
 import Tab from 'tooey/lib/Tab';
 
@@ -17,7 +17,7 @@ const fieldIdx = {
 
 export default class ConnectionSettings extends ViewBase {
   _tab: Tab
-  _menuForm: MenuForm
+  _formView: FormView
 
   constructor(tab: Tab) {
     super('Connection Settings');
@@ -39,13 +39,13 @@ export default class ConnectionSettings extends ViewBase {
       execute: this.connect.bind(this),
     }];
 
-    this._menuForm = new MenuForm(tab, fields, menuItems);
+    this._formView = new FormView(tab, fields, menuItems);
   }
 
   async connect() {
     try {
       // Update connection settings from form and connect
-      const { fields } = this._menuForm.form;
+      const { fields } = this._formView.form;
       state.connection.host = fields[fieldIdx.HOST].input.value;
       state.connection.port = parseInt(fields[fieldIdx.PORT].input.value, 10);
       state.connection.cookieFile = fields[fieldIdx.COOKIE].input.value;
@@ -60,10 +60,10 @@ export default class ConnectionSettings extends ViewBase {
   }
 
   async handle(key: string): Promise<boolean> {
-    return this._menuForm.handle(key);
+    return this._formView.handle(key);
   }
 
   render() {
-    this._menuForm.render();
+    this._formView.render();
   }
 }

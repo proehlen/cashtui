@@ -2,8 +2,7 @@
 import cliui from 'cliui';
 import Transaction from 'cashlib/lib/Transaction';
 import ViewBase from 'tooey/lib/ViewBase';
-import Menu from 'tooey/lib/Menu';
-import MenuItem from 'tooey/lib/MenuItem';
+import Menu, { type MenuItem } from 'tooey/lib/Menu';
 import Tab from 'tooey/lib/Tab';
 
 import TransactionInputs from './TransactionInputs';
@@ -19,12 +18,27 @@ export default class TransactionHeader extends ViewBase {
   constructor(tab: Tab) {
     super('Transaction');
     this._tab = tab;
-    const items: MenuItem[] = [
-      new MenuItem('I', 'Inputs', 'Transaction inputs', async () => tab.pushView(new TransactionInputs(tab))),
-      new MenuItem('O', 'Outputs', 'Transaction outputs', async () => tab.pushView(new TransactionOutputs(tab))),
-      new MenuItem('R', 'Raw', 'Show raw serialized transaction', async () => tab.pushView(new TransactionRaw())),
-      new MenuItem('S', 'Send', 'Broadcast transaction to network', this.send.bind(this)),
-    ];
+    const items: MenuItem[] = [{
+      key: 'I',
+      label: 'Inputs',
+      help: 'Transaction inputs',
+      execute: async () => tab.pushView(new TransactionInputs(tab)),
+    }, {
+      key: 'O',
+      label: 'Outputs',
+      help: 'Transaction outputs',
+      execute: async () => tab.pushView(new TransactionOutputs(tab)),
+    }, {
+      key: 'R',
+      label: 'Raw',
+      help: 'Show raw serialized transaction',
+      execute: async () => tab.pushView(new TransactionRaw()),
+    }, {
+      key: 'S',
+      label: 'Send',
+      help: 'Broadcast transaction to network',
+      execute: this.send.bind(this),
+    }];
     this._menu = new Menu(tab, items);
   }
 

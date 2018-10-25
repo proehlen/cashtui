@@ -3,8 +3,7 @@
 import Transaction from 'cashlib/lib/Transaction';
 import Output from 'cashlib/lib/Output';
 import ViewBase from 'tooey/lib/ViewBase';
-import Menu from 'tooey/lib/Menu';
-import MenuItem from 'tooey/lib/MenuItem';
+import Menu, { type MenuItem } from 'tooey/lib/Menu';
 import Tab from 'tooey/lib/Tab';
 
 import OutputsList from '../components/OutputsList';
@@ -22,15 +21,23 @@ export default class TransactionOutputs extends ViewBase {
     this._tab = tab;
     const transaction: Transaction = state.transactions.active;
 
-    const menuItems = [
-      new MenuItem('S', 'Show', 'Show details for selected output',
-        this.toDetails.bind(this)),
-      new MenuItem('A', 'Add', 'Add new output',
-        async () => tab.pushView(new TransactionAddOutput(tab))),
-      new MenuItem('R', 'Remove', 'Remove selected output',
-        this.removeSelectedOutput.bind(this),
-        () => state.transactions.active.outputs.length > 0),
-    ];
+    const menuItems: MenuItem[] = [{
+      key: 'S',
+      label: 'Show',
+      help: 'Show details for selected output',
+      execute: this.toDetails.bind(this),
+    }, {
+      key: 'A',
+      label: 'Add',
+      help: 'Add new output',
+      execute: async () => tab.pushView(new TransactionAddOutput(tab)),
+    }, {
+      key: 'R',
+      label: 'Remove',
+      help: 'Remove selected output',
+      execute: this.removeSelectedOutput.bind(this),
+      checkVisible: () => state.transactions.active.outputs.length > 0,
+    }];
     this._menu = new Menu(tab, menuItems);
 
     this._list = new OutputsList(tab, transaction.outputs, this._menu, true);

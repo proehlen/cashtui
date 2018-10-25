@@ -3,8 +3,7 @@
 import Network from 'cashlib/lib/Network';
 import ViewBase from 'tooey/lib/ViewBase';
 import List, { type ListColumn } from 'tooey/lib/List';
-import Menu from 'tooey/lib/Menu';
-import MenuItem from 'tooey/lib/MenuItem';
+import Menu, { type MenuItem } from 'tooey/lib/Menu';
 import Tab from 'tooey/lib/Tab';
 
 import Connection from '../../model/Connection';
@@ -24,10 +23,20 @@ export default class NetworkSelection extends ViewBase {
     this._tab = tab;
 
     // Build menu
-    this._continueItem = new MenuItem('C', 'Continue', 'Connect to Network', this.toConnectionSettings.bind(this));
+    this._continueItem = {
+      key: 'C',
+      label: 'Continue',
+      help: 'Connect to Network',
+      execute: this.toConnectionSettings.bind(this),
+    };
     const menuItems = [
       this._continueItem,
-      new MenuItem('R', 'Recent', 'Recent connections', this.toConnectionHistory.bind(this)),
+      {
+        key: 'R',
+        label: 'Recent',
+        help: 'Recent connections',
+        execute: this.toConnectionHistory.bind(this),
+      },
     ];
     this._menu = new Menu(tab, menuItems, false);
 

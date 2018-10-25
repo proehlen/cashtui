@@ -2,8 +2,7 @@
 
 import Transaction from 'cashlib/lib/Transaction';
 import ViewBase from 'tooey/lib/ViewBase';
-import Menu from 'tooey/lib/Menu';
-import MenuItem from 'tooey/lib/MenuItem';
+import Menu, { type MenuItem } from 'tooey/lib/Menu';
 import output from 'tooey/lib/output';
 
 import state from '../../model/state';
@@ -28,12 +27,21 @@ export default class TransactionRaw extends ViewBase {
       data.push(raw.substr(x * charsPerPage, charsPerPage));
     }
 
-    const items: MenuItem[] = [];
+    let menuItems: MenuItem[] = [];
     if (numPages) {
-      items.push(new MenuItem('N', 'Next page', 'Go to next page', this.nextPage.bind(this)));
-      items.push(new MenuItem('P', 'Previous page', 'Return to previous page', this.previousPage.bind(this)));
+      menuItems = [{
+        key: 'N',
+        label: 'Next page',
+        help: 'Go to next page',
+        execute: this.nextPage.bind(this),
+      }, {
+        key: 'P',
+        label: 'Previous page',
+        help: 'Return to previous page',
+        execute: this.previousPage.bind(this),
+      }];
     }
-    this._menu = new Menu(app.activeTab, items, true);
+    this._menu = new Menu(app.activeTab, menuItems, true);
     this._data = data;
     this._currentPage = 1;
     this._numPages = numPages;

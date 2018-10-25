@@ -1,6 +1,5 @@
 // @flow
 import MenuForm from 'tooey/lib/MenuForm';
-import MenuItem from 'tooey/lib/MenuItem';
 import { type FormFieldDescription } from 'tooey/lib/Form';
 import ViewBase from 'tooey/lib/ViewBase';
 import Output from 'cashlib/lib/Output';
@@ -41,9 +40,12 @@ export default class ConnectionSettings extends ViewBase {
     fields[fieldIdx.TYPE] = { label: 'Type', default: blankIfUndefined(output.scriptType), type: 'string' };
     fields[fieldIdx.SCRIPT] = { label: 'Public key script', default: fromBytes(output.pubKeyScript), type: 'string' };
 
-    this._menuForm = new MenuForm(app.activeTab, fields, [
-      new MenuItem('S', 'Script', 'Show entire public key script', this.toScript.bind(this)),
-    ], {
+    this._menuForm = new MenuForm(app.activeTab, fields, [{
+      key: 'S',
+      label: 'Script',
+      help: 'Show entire public key script',
+      execute: this.toScript.bind(this),
+    }], {
       readOnly: true,
     });
   }

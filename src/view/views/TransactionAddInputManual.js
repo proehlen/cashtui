@@ -2,7 +2,7 @@
 
 import MenuForm from 'tooey/lib/MenuForm';
 import ViewBase from 'tooey/lib/ViewBase';
-import MenuItem from 'tooey/lib/MenuItem';
+import { type MenuItem } from 'tooey/lib/Menu';
 import Tab from 'tooey/lib/Tab';
 import Transaction from 'cashlib/lib/Transaction';
 import Input from 'cashlib/lib/Input';
@@ -30,10 +30,17 @@ export default class TransactionAddInputManual extends ViewBase {
     fields[fieldIdx.OUTPUT_INDEX] = { label: 'Output index', default: '', type: 'integer' };
 
     // Menu items
-    const menuItems = [
-      new MenuItem('O', 'OK', 'Add input with entered details', this.addInput.bind(this)),
-      new MenuItem('L', 'Lookup Output', 'Lookup output in transaction', this.lookupOutput.bind(this)),
-    ];
+    const menuItems: MenuItem[] = [{
+      key: 'O',
+      label: 'OK',
+      help: 'Add input with entered details',
+      execute: this.addInput.bind(this),
+    }, {
+      key: 'L',
+      label: 'Lookup Output',
+      help: 'Lookup output in transaction',
+      execute: this.lookupOutput.bind(this),
+    }];
 
     this._menuForm = new MenuForm(tab, fields, menuItems);
   }

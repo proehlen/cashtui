@@ -4,9 +4,8 @@ import Transaction from 'cashlib/lib/Transaction';
 import Input from 'cashlib/lib/Input';
 import ViewBase from 'tooey/lib/ViewBase';
 import List, { type ListColumn } from 'tooey/lib/List';
-import Menu from 'tooey/lib/Menu';
+import Menu, { type MenuItem } from 'tooey/lib/Menu';
 import Tab from 'tooey/lib/Tab';
-import MenuItem from 'tooey/lib/MenuItem';
 import SelectView, { type SelectViewItem } from 'tooey/lib/SelectView';
 
 import TransactionInput from './TransactionInput';
@@ -24,16 +23,28 @@ export default class TransactionInputs extends ViewBase {
     this._tab = tab;
 
     // Build menu
-    const menuItems = [
-      new MenuItem('S', 'Show', 'Show details for selected input',
-        this.toDetails.bind(this),
-        () => state.transactions.active.inputs.length > 0),
-      new MenuItem('R', 'Remove', 'Remove selected input',
-        this.removeSelectedInput.bind(this),
-        () => state.transactions.active.inputs.length > 0),
-      new MenuItem('A', 'Add', 'Add new input',
-        this.onAddInput.bind(this)),
-    ];
+    const menuItems: MenuItem[] = [{
+      key: 'S',
+      label: 'Show',
+      help: 'Show details for selected input',
+      execute: this.toDetails.bind(this),
+      checkVisible: () => state.transactions.active.inputs.length > 0,
+    }, {
+      key: 'R',
+      label: 'Remove',
+      help: 'Remove selected input',
+      execute: this.removeSelectedInput.bind(this),
+      checkVisibile: () => state.transactions.active.inputs.length > 0,
+    }, {
+      key: 'R', label: 'Remove', help: 'Remove selected input',
+    }, {
+      key: 'R', label: 'Remove', help: 'Remove selected input',
+    }, {
+      key: 'A',
+      label: 'Add',
+      help: 'Add new input',
+      execute: this.onAddInput.bind(this),
+    }];
     this._menu = new Menu(tab, menuItems);
 
     const transaction: Transaction = state.transactions.active;

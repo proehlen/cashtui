@@ -2,7 +2,7 @@
 
 import MenuForm from 'tooey/lib/MenuForm';
 import ViewBase from 'tooey/lib/ViewBase';
-import MenuItem from 'tooey/lib/MenuItem';
+import { type MenuItem } from 'tooey/lib/Menu';
 import Output from 'cashlib/lib/Output';
 
 import app from '../app';
@@ -26,9 +26,12 @@ export default class TransactionAddOutputP2PKH extends ViewBase {
     fields[fieldIdx.VALUE] = { label: 'Value (Satoshis)', default: '', type: 'integer' };
 
     // Menu items
-    const menuItems = [
-      new MenuItem('O', 'OK', 'Add output with entered details', this.addOutput.bind(this)),
-    ];
+    const menuItems: MenuItem[] = [{
+      key: 'O',
+      label: 'OK',
+      help: 'Add output with entered details',
+      execute: this.addOutput.bind(this),
+    }];
 
     this._menuForm = new MenuForm(app.activeTab, fields, menuItems);
   }

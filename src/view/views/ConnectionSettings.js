@@ -2,7 +2,6 @@
 
 import MenuForm from 'tooey/lib/MenuForm';
 import ViewBase from 'tooey/lib/ViewBase';
-import MenuItem from 'tooey/lib/MenuItem';
 import Tab from 'tooey/lib/Tab';
 
 import MainMenu from './MainMenu';
@@ -33,9 +32,12 @@ export default class ConnectionSettings extends ViewBase {
     fields[fieldIdx.PASSWORD] = { label: 'Password', default: state.connection.password, type: 'password' };
 
     // Menu items
-    const menuItems = [
-      new MenuItem('C', 'Connect', 'Connect to the node', this.connect.bind(this)),
-    ];
+    const menuItems = [{
+      key: 'C',
+      label: 'Connect',
+      help: 'Connect to the node',
+      execute: this.connect.bind(this),
+    }];
 
     this._menuForm = new MenuForm(tab, fields, menuItems);
   }

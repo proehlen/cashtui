@@ -1,8 +1,7 @@
 // @flow
 import Network from 'cashlib/lib/Network';
 import List, { type ListColumn } from 'tooey/lib/List';
-import Menu from 'tooey/lib/Menu';
-import MenuItem from 'tooey/lib/MenuItem';
+import Menu, { type MenuItem } from 'tooey/lib/Menu';
 import ViewBase from 'tooey/lib/ViewBase';
 import Tab from 'tooey/lib/Tab';
 
@@ -23,10 +22,20 @@ export default class ConnectionHistory extends ViewBase {
     this._tab = tab;
 
     // Create menu
-    this._connectItem = new MenuItem('C', 'Connect', 'Connect to selected network', this.connectToSelected.bind(this));
+    this._connectItem = {
+      key: 'C',
+      label: 'Connect',
+      help: 'Connect to selected network',
+      execute: this.connectToSelected.bind(this),
+    };
     this._menu = new Menu(tab, [
       this._connectItem,
-      new MenuItem('N', 'New', 'Create new connection', this.toNetworkSelection.bind(this)),
+      {
+        key: 'N',
+        label: 'New',
+        help: 'Create new connection',
+        execute: this.toNetworkSelection.bind(this),
+      },
     ], false);
 
     // Get history

@@ -2,8 +2,7 @@
 
 import { Transaction } from 'cashlib';
 import ViewBase from 'tooey/lib/ViewBase';
-import Menu from 'tooey/lib/Menu';
-import MenuItem from 'tooey/lib/MenuItem';
+import Menu, { type MenuItem } from 'tooey/lib/Menu';
 import Tab from 'tooey/lib/Tab';
 
 import RawTransactionInput from './RawTransactionInput';
@@ -19,12 +18,26 @@ export default class TransactionsMenu extends ViewBase {
     super('Transactions');
     this._tab = tab;
 
-    const items: MenuItem[] = [
-      new MenuItem('I', 'By Id', 'Retrieve transaction from full node', this.toTransactionIdInput.bind(this)),
-      new MenuItem('C', 'Create', 'Create new transaction', this.createTransaction.bind(this)),
-      new MenuItem('D', 'Decode raw', 'Decode raw transaction', this.toRawTransactionInput.bind(this)),
-      new MenuItem('R', 'Recent', 'Recent transactions'),
-    ];
+    const items: MenuItem[] = [{
+      key: 'I',
+      label: 'By Id',
+      help: 'Retrieve transaction from full node',
+      execute: this.toTransactionIdInput.bind(this),
+    }, {
+      key: 'C',
+      label: 'Create',
+      help: 'Create new transaction',
+      execute: this.createTransaction.bind(this),
+    }, {
+      key: 'D',
+      label: 'Decode raw',
+      help: 'Decode raw transaction',
+      execute: this.toRawTransactionInput.bind(this),
+    }, {
+      key: 'R',
+      label: 'Recent',
+      help: 'Recent transactions',
+    }];
     this._menu = new Menu(tab, items);
   }
 

@@ -1,6 +1,5 @@
 // @flow
 import MenuForm from 'tooey/lib/MenuForm';
-import MenuItem from 'tooey/lib/MenuItem';
 import { type FormFieldDescription } from 'tooey/lib/Form';
 import ViewBase from 'tooey/lib/ViewBase';
 import Input from 'cashlib/lib/Input';
@@ -37,9 +36,12 @@ export default class ConnectionSettings extends ViewBase {
     fields[fieldIdx.OUTPUT_INDEX] = { label: 'Output number', default: input.outputIndex.toString(), type: 'integer' };
     fields[fieldIdx.SCRIPT] = { label: 'Signature script', default: fromBytes(input.signatureScript), type: 'string' };
 
-    this._menuForm = new MenuForm(app.activeTab, fields, [
-      new MenuItem('S', 'Script', 'Show entire signature script', this.toScript.bind(this)),
-    ], {
+    this._menuForm = new MenuForm(app.activeTab, fields, [{
+      key: 'S',
+      label: 'Script',
+      help: 'Show entire signature script',
+      execute: this.toScript.bind(this),
+    }], {
       readOnly: true,
     });
   }

@@ -10,6 +10,7 @@ import SelectView, { type SelectViewItem } from 'tooey/lib/view/SelectView';
 
 import TransactionInput from './TransactionInput';
 import TransactionAddInputManual from './TransactionAddInputManual';
+import UnspentOutputs from './UnspentOutputs';
 import state from '../../model/state';
 
 export default class TransactionInputs extends ViewBase {
@@ -67,12 +68,33 @@ export default class TransactionInputs extends ViewBase {
   async onAddInput() {
     const items: SelectViewItem[] = [{
       label: 'Select unspent output from node wallet',
+      execute: this.toSelectUnspentOutputs.bind(this),
     }, {
       label: 'Enter utxo manually',
       execute: async () => this._tab.replaceView(new TransactionAddInputManual(this._tab)),
     }];
     const selectView = new SelectView(this._tab, 'Add input from...', items);
     this._tab.pushView(selectView);
+  }
+
+  async toSelectUnspentOutputs() {
+    const rpcResult = await state.rpc.request('listunspent');
+    debugger;
+    if (!Array.isArray(rpcResult) || !rpcResult.length) {
+      this._tab.setError('No unspent outputs returned by node wallet.');
+    } else {
+      const view = new UnspentOutputs(
+        this._tab,
+        'Select UTXO',
+        rpcResult,
+        async (utxo) => {
+          const input = new Input(utxo.txid, utxo.vout, new Uint8Array([]));
+          state.transactions.active.addInput(input);
+          this._tab.popView();
+        },
+      );
+      this._tab.replaceView(view);
+    }
   }
 
   async toDetails() {

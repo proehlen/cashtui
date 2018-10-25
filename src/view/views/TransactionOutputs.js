@@ -36,7 +36,7 @@ export default class TransactionOutputs extends ViewBase {
       label: 'Remove',
       help: 'Remove selected output',
       execute: this.removeSelectedOutput.bind(this),
-      checkVisible: () => state.transactions.active.outputs.length > 0,
+      visible: () => state.transactions.active.outputs.length > 0,
     }];
     this._menu = new Menu(tab, menuItems);
 

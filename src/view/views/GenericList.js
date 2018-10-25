@@ -30,7 +30,7 @@ export default class GenericList extends ViewBase {
         label: 'Show',
         help: 'Show details for selected row',
         execute: this.toDetails.bind(this),
-        checkVisible: this.isSelectedRowWiderThanOutput.bind(this),
+        visible: this.isSelectedRowWiderThanOutput.bind(this),
       });
     }
     this._menu = new Menu(tab, menuItems);

@@ -28,13 +28,13 @@ export default class TransactionInputs extends ViewBase {
       label: 'Show',
       help: 'Show details for selected input',
       execute: this.toDetails.bind(this),
-      checkVisible: () => state.transactions.active.inputs.length > 0,
+      visible: () => state.transactions.active.inputs.length > 0,
     }, {
       key: 'R',
       label: 'Remove',
       help: 'Remove selected input',
       execute: this.removeSelectedInput.bind(this),
-      checkVisible: () => state.transactions.active.inputs.length > 0,
+      visible: () => state.transactions.active.inputs.length > 0,
     }, {
       key: 'A',
       label: 'Add',

@@ -45,6 +45,8 @@ export default class TransactionAddOutputP2PKH extends ViewBase {
       } else {
         const output = Output.createP2PKH(address, value);
         state.transactions.active.addOutput(output);
+        // Go back to Outputs
+        app.popView();
         app.popView();
       }
     } catch (err) {

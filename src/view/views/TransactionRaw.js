@@ -27,24 +27,27 @@ export default class TransactionRaw extends ViewBase {
       data.push(raw.substr(x * charsPerPage, charsPerPage));
     }
 
+    this._currentPage = 1;
+    this._numPages = numPages;
+
     let menuItems: MenuItem[] = [];
-    if (numPages) {
+    if (numPages > 1) {
       menuItems = [{
         key: 'N',
         label: 'Next page',
         help: 'Go to next page',
         execute: this.nextPage.bind(this),
+        visible: () => this._currentPage < this._numPages,
       }, {
         key: 'P',
         label: 'Previous page',
         help: 'Return to previous page',
         execute: this.previousPage.bind(this),
+        visible: () => this._currentPage > 1,
       }];
     }
     this._menu = new Menu(app.activeTab, menuItems, true);
     this._data = data;
-    this._currentPage = 1;
-    this._numPages = numPages;
   }
 
   render() {

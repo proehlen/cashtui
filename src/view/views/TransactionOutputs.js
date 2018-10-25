@@ -26,6 +26,7 @@ export default class TransactionOutputs extends ViewBase {
       label: 'Show',
       help: 'Show details for selected output',
       execute: this.toDetails.bind(this),
+      visible: () => state.transactions.active.outputs.length > 0,
     }, {
       key: 'A',
       label: 'Add',

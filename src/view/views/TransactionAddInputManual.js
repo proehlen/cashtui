@@ -40,6 +40,7 @@ export default class TransactionAddInputManual extends ViewBase {
       label: 'Lookup Output',
       help: 'Lookup output in transaction',
       execute: this.lookupOutput.bind(this),
+      visible: () => this._getFieldValue(fieldIdx.TRANSACTION_ID) !== '',
     }];
 
     this._menuForm = new MenuForm(tab, fields, menuItems);
@@ -47,7 +48,7 @@ export default class TransactionAddInputManual extends ViewBase {
 
   async lookupOutput() {
     try {
-      const txId = this._menuForm.fields[fieldIdx.TRANSACTION_ID].input.value;
+      const txId = this._getFieldValue(fieldIdx.TRANSACTION_ID);
       if (!txId) {
         this._tab.setError('Enter Transaction Id to lookup output in.');
       } else {
@@ -71,6 +72,13 @@ export default class TransactionAddInputManual extends ViewBase {
     this._menuForm.menu.setFirstItemSelected();
   }
 
+  _getFieldValue(index: number) {
+    let result;
+    if (this._menuForm) {
+      result = this._menuForm.fields[index].input.value;
+    }
+    return result;
+  }
 
   async addInput() {
     try {

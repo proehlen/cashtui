@@ -34,11 +34,7 @@ export default class TransactionInputs extends ViewBase {
       label: 'Remove',
       help: 'Remove selected input',
       execute: this.removeSelectedInput.bind(this),
-      checkVisibile: () => state.transactions.active.inputs.length > 0,
-    }, {
-      key: 'R', label: 'Remove', help: 'Remove selected input',
-    }, {
-      key: 'R', label: 'Remove', help: 'Remove selected input',
+      checkVisible: () => state.transactions.active.inputs.length > 0,
     }, {
       key: 'A',
       label: 'Add',

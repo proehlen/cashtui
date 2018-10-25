@@ -1,7 +1,7 @@
 // @flow
 
-import FormView from 'tooey/lib/FormView';
-import ViewBase from 'tooey/lib/ViewBase';
+import FormView from 'tooey/lib/view/FormView';
+import ViewBase from 'tooey/lib/view/ViewBase';
 import Tab from 'tooey/lib/Tab';
 
 import MainMenu from './MainMenu';

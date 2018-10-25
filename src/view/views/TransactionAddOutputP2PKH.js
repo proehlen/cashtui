@@ -1,8 +1,8 @@
 // @flow
 
-import FormView from 'tooey/lib/FormView';
-import ViewBase from 'tooey/lib/ViewBase';
-import { type MenuItem } from 'tooey/lib/Menu';
+import FormView from 'tooey/lib/view/FormView';
+import ViewBase from 'tooey/lib/view/ViewBase';
+import { type MenuItem } from 'tooey/lib/component/Menu';
 import Output from 'cashlib/lib/Output';
 
 import app from '../app';

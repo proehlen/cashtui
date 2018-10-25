@@ -1,10 +1,10 @@
 /* Generic single column list view with standard menu */
 // @flow
 
-import ViewBase from 'tooey/lib/ViewBase';
-import List from 'tooey/lib/List';
-import type { ListColumn } from 'tooey/lib/List';
-import Menu, { type MenuItem } from 'tooey/lib/Menu';
+import ViewBase from 'tooey/lib/view/ViewBase';
+import List from 'tooey/lib/component/List';
+import type { ListColumn } from 'tooey/lib/component/List';
+import Menu, { type MenuItem } from 'tooey/lib/component/Menu';
 import Tab from 'tooey/lib/Tab';
 import output from 'tooey/lib/output';
 

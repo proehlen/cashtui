@@ -3,9 +3,9 @@ import Output from 'cashlib/lib/Output';
 import { leftPad } from 'stringfu';
 import Tab from 'tooey/lib/Tab';
 
-import ComponentBase from 'tooey/lib/ComponentBase';
-import List, { type ListColumn } from 'tooey/lib/List';
-import Menu from 'tooey/lib/Menu';
+import ComponentBase from 'tooey/lib/component/ComponentBase';
+import List, { type ListColumn } from 'tooey/lib/component/List';
+import Menu from 'tooey/lib/component/Menu';
 import state from '../../model/state';
 
 const VALUE_COLUMN_WIDTH = 15;

@@ -1,5 +1,5 @@
 // @flow
-import ViewBase from 'tooey/lib/ViewBase';
+import ViewBase from 'tooey/lib/view/ViewBase';
 import App from 'tooey/lib/App';
 import Tab from 'tooey/lib/Tab';
 

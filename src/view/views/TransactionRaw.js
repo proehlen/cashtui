@@ -1,8 +1,8 @@
 // @flow
 
 import Transaction from 'cashlib/lib/Transaction';
-import ViewBase from 'tooey/lib/ViewBase';
-import Menu, { type MenuItem } from 'tooey/lib/Menu';
+import ViewBase from 'tooey/lib/view/ViewBase';
+import Menu, { type MenuItem } from 'tooey/lib/component/Menu';
 import output from 'tooey/lib/output';
 
 import state from '../../model/state';

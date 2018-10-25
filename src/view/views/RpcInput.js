@@ -1,7 +1,7 @@
 // @flow
 
 import output from 'tooey/lib/output';
-import InputView from 'tooey/lib/InputView';
+import InputView from 'tooey/lib/view/InputView';
 import Tab from 'tooey/lib/Tab';
 
 import GenericList from './GenericList';

@@ -1,7 +1,7 @@
 // @flow
-import FormView from 'tooey/lib/FormView';
-import { type FormFieldDescription } from 'tooey/lib/Form';
-import ViewBase from 'tooey/lib/ViewBase';
+import FormView from 'tooey/lib/view/FormView';
+import { type FormFieldDescription } from 'tooey/lib/component/Form';
+import ViewBase from 'tooey/lib/view/ViewBase';
 import Input from 'cashlib/lib/Input';
 import { fromBytes } from 'stringfu';
 

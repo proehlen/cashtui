@@ -2,11 +2,11 @@
 import FormView from 'tooey/lib/view/FormView';
 import { type FormFieldDescription } from 'tooey/lib/component/Form';
 import ViewBase from 'tooey/lib/view/ViewBase';
+import Tab from 'tooey/lib/Tab';
 import Input from 'cashlib/lib/Input';
 import { fromBytes } from 'stringfu';
 
 import GenericText from './GenericText';
-import app from '../app';
 
 const fieldIdx = {
   TRANSACTION_ID: 0,
@@ -17,11 +17,13 @@ const fieldIdx = {
 };
 
 export default class ConnectionSettings extends ViewBase {
+  _tab: Tab
   _formView: FormView
   _input: Input
 
-  constructor(input: Input, transactionId?: string, inputIndex?: number) {
+  constructor(tab: Tab, input: Input, transactionId?: string, inputIndex?: number) {
     super('Transaction Input');
+    this._tab = tab;
     this._input = input;
 
     function blankIfUndefined(value: any) {
@@ -36,7 +38,7 @@ export default class ConnectionSettings extends ViewBase {
     fields[fieldIdx.OUTPUT_INDEX] = { label: 'Output number', default: input.outputIndex.toString(), type: 'integer' };
     fields[fieldIdx.SCRIPT] = { label: 'Signature script', default: fromBytes(input.signatureScript), type: 'string' };
 
-    this._formView = new FormView(app.activeTab, fields, [{
+    this._formView = new FormView(tab, fields, [{
       key: 'S',
       label: 'Script',
       help: 'Show entire signature script',
@@ -50,7 +52,7 @@ export default class ConnectionSettings extends ViewBase {
     const scriptText = fromBytes(this._input.signatureScript);
     // TODO nav to script parser
     const scriptView = new GenericText('Signature Script', scriptText);
-    app.pushView(scriptView);
+    this._tab.pushView(scriptView);
   }
 
   async handle(key: string): Promise<boolean> {

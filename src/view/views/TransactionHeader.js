@@ -32,7 +32,7 @@ export default class TransactionHeader extends ViewBase {
       key: 'R',
       label: 'Raw',
       help: 'Show raw serialized transaction',
-      execute: async () => tab.pushView(new TransactionRaw()),
+      execute: async () => tab.pushView(new TransactionRaw(tab)),
     }, {
       key: 'S',
       label: 'Send',

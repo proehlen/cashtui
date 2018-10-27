@@ -18,7 +18,7 @@ export default class TransactionAddOutput extends ViewBase {
       key: 'H',
       label: 'Add P2PKH',
       help: 'Add new Pay To Public Key Hash output',
-      execute: async () => tab.pushView(new TransactionAddOutputP2PKH()),
+      execute: async () => tab.pushView(new TransactionAddOutputP2PKH(tab)),
     }, {
       key: 'K', label: 'Add P2PK', help: 'Add new Pay To Public Key output',
     }, {

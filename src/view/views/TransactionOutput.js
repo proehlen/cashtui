@@ -2,12 +2,12 @@
 import FormView from 'tooey/lib/view/FormView';
 import { type FormFieldDescription } from 'tooey/lib/component/Form';
 import ViewBase from 'tooey/lib/view/ViewBase';
+import Tab from 'tooey/lib/Tab';
 import Output from 'cashlib/lib/Output';
 import { fromBytes } from 'stringfu';
 
 import GenericText from './GenericText';
 import state from '../../model/state';
-import app from '../app';
 
 const fieldIdx = {
   TRANSACTION_ID: 0,
@@ -19,11 +19,13 @@ const fieldIdx = {
 };
 
 export default class ConnectionSettings extends ViewBase {
+  _tab: Tab
   _formView: FormView
   _output: Output
 
-  constructor(output: Output, transactionId?: string, outputIndex?: number) {
+  constructor(tab: Tab, output: Output, transactionId?: string, outputIndex?: number) {
     super('Transaction Output');
+    this._tab = tab;
     this._output = output;
 
     function blankIfUndefined(value: any) {
@@ -40,7 +42,7 @@ export default class ConnectionSettings extends ViewBase {
     fields[fieldIdx.TYPE] = { label: 'Type', default: blankIfUndefined(output.scriptType), type: 'string' };
     fields[fieldIdx.SCRIPT] = { label: 'Public key script', default: fromBytes(output.pubKeyScript), type: 'string' };
 
-    this._formView = new FormView(app.activeTab, fields, [{
+    this._formView = new FormView(tab, fields, [{
       key: 'S',
       label: 'Script',
       help: 'Show entire public key script',
@@ -54,7 +56,7 @@ export default class ConnectionSettings extends ViewBase {
     const scriptText = fromBytes(this._output._pubKeyScript);
     // TODO nav to script parser
     const scriptView = new GenericText('Public Key Script', scriptText);
-    app.pushView(scriptView);
+    this._tab.pushView(scriptView);
   }
 
   async handle(key: string): Promise<boolean> {

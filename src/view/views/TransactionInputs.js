@@ -101,6 +101,7 @@ export default class TransactionInputs extends ViewBase {
     const input = state.transactions.active.inputs[this._list.selectedRowIndex];
     if (input) {
       this._tab.pushView(new TransactionInput(
+        this._tab,
         input,
         state.transactions.active.getId(),
         this._list.selectedRowIndex,

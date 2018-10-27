@@ -56,6 +56,7 @@ export default class TransactionOutputs extends ViewBase {
     const output = this._selectedOutput;
     if (output) {
       this._tab.pushView(new TransactionOutput(
+        this._tab,
         output,
         state.transactions.active.getId(),
         this._list.selectedOutputIndex,

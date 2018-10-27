@@ -82,7 +82,6 @@ export default class TransactionAddInputManual extends ViewBase {
 
   async addInput() {
     try {
-      // app.popView();
       const txId = this._formView.fields[fieldIdx.TRANSACTION_ID].input.value;
       const outputIdx = this._formView.fields[fieldIdx.OUTPUT_INDEX].input.value;
       if (!txId || !outputIdx) {

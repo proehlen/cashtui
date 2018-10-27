@@ -4,18 +4,21 @@ import Transaction from 'cashlib/lib/Transaction';
 import ViewBase from 'tooey/lib/view/ViewBase';
 import Menu, { type MenuItem } from 'tooey/lib/component/Menu';
 import output from 'tooey/lib/output';
+import Tab from 'tooey/lib/Tab';
 
 import state from '../../model/state';
-import app from '../app';
 
 export default class TransactionRaw extends ViewBase {
+  _tab: Tab
   _data: Array<string>
   _numPages: number
   _currentPage: number
   _menu: Menu
 
-  constructor() {
+  constructor(tab: Tab) {
     super('Raw Transaction');
+    this._tab = tab;
+
     // Break raw transaction into pages.  Note: we can't use List as when the output is copied
     // to the clipboard it will contain a linebreak char for each line.
     const data = [];
@@ -46,7 +49,7 @@ export default class TransactionRaw extends ViewBase {
         visible: () => this._currentPage > 1,
       }];
     }
-    this._menu = new Menu(app.activeTab, menuItems, true);
+    this._menu = new Menu(tab, menuItems, true);
     this._data = data;
   }
 
@@ -65,7 +68,7 @@ export default class TransactionRaw extends ViewBase {
 
   async nextPage() {
     if (this._currentPage === this._numPages) {
-      app.setInfo('No more pages');
+      this._tab.setInfo('No more pages');
     } else {
       this._currentPage += 1;
     }
@@ -73,7 +76,7 @@ export default class TransactionRaw extends ViewBase {
 
   async previousPage() {
     if (this._currentPage === 1) {
-      app.setInfo('Already at start');
+      this._tab.setInfo('Already at start');
     } else {
       this._currentPage -= 1;
     }

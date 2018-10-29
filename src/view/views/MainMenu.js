@@ -1,8 +1,8 @@
 // @flow
 
-import ViewBase from 'tooey/lib/view/ViewBase';
-import Menu from 'tooey/lib/component/Menu';
-import Tab from 'tooey/lib/Tab';
+import ViewBase from 'tooey/view/ViewBase';
+import Menu from 'tooey/component/Menu';
+import Tab from 'tooey/Tab';
 
 import TransactionsMenu from './TransactionsMenu';
 import RpcInput from './RpcInput';

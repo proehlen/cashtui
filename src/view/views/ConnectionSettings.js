@@ -1,8 +1,8 @@
 // @flow
 
-import FormView from 'tooey/lib/view/FormView';
-import ViewBase from 'tooey/lib/view/ViewBase';
-import Tab from 'tooey/lib/Tab';
+import FormView from 'tooey/view/FormView';
+import ViewBase from 'tooey/view/ViewBase';
+import Tab from 'tooey/Tab';
 
 import MainMenu from './MainMenu';
 import state from '../../model/state';

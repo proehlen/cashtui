@@ -1,10 +1,10 @@
 // @flow
 
 import Output from 'cashlib/lib/Output';
-import FormView from 'tooey/lib/view/FormView';
-import ViewBase from 'tooey/lib/view/ViewBase';
-import Tab from 'tooey/lib/Tab';
-import { type MenuItem } from 'tooey/lib/component/Menu';
+import FormView from 'tooey/view/FormView';
+import ViewBase from 'tooey/view/ViewBase';
+import Tab from 'tooey/Tab';
+import { type MenuItem } from 'tooey/component/Menu';
 
 import state from '../../model/state';
 

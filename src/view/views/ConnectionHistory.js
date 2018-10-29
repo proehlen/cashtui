@@ -1,9 +1,9 @@
 // @flow
 import Network from 'cashlib/lib/Network';
-import List, { type ListColumn } from 'tooey/lib/component/List';
-import Menu, { type MenuItem } from 'tooey/lib/component/Menu';
-import ViewBase from 'tooey/lib/view/ViewBase';
-import Tab from 'tooey/lib/Tab';
+import List, { type ListColumn } from 'tooey/component/List';
+import Menu, { type MenuItem } from 'tooey/component/Menu';
+import ViewBase from 'tooey/view/ViewBase';
+import Tab from 'tooey/Tab';
 
 import Connection, { type History as ModelHistory } from '../../model/Connection';
 import MainMenu from './MainMenu';

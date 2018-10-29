@@ -2,11 +2,11 @@
 
 import Transaction from 'cashlib/lib/Transaction';
 import Input from 'cashlib/lib/Input';
-import ViewBase from 'tooey/lib/view/ViewBase';
-import List, { type ListColumn } from 'tooey/lib/component/List';
-import Menu, { type MenuItem } from 'tooey/lib/component/Menu';
-import Tab from 'tooey/lib/Tab';
-import SelectView, { type SelectViewItem } from 'tooey/lib/view/SelectView';
+import ViewBase from 'tooey/view/ViewBase';
+import List, { type ListColumn } from 'tooey/component/List';
+import Menu, { type MenuItem } from 'tooey/component/Menu';
+import Tab from 'tooey/Tab';
+import SelectView, { type SelectViewItem } from 'tooey/view/SelectView';
 
 import TransactionInput from './TransactionInput';
 import TransactionAddInputManual from './TransactionAddInputManual';

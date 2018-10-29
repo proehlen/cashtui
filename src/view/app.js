@@ -1,7 +1,7 @@
 // @flow
-import ViewBase from 'tooey/lib/view/ViewBase';
-import App from 'tooey/lib/App';
-import Tab from 'tooey/lib/Tab';
+import ViewBase from 'tooey/view/ViewBase';
+import App from 'tooey/App';
+import Tab from 'tooey/Tab';
 
 import Connection from '../model/Connection';
 import NetworkSelection from './views/NetworkSelection';

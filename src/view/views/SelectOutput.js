@@ -1,9 +1,9 @@
 // @flow
 
-import ViewBase from 'tooey/lib/view/ViewBase';
-import Menu, { type MenuItem } from 'tooey/lib/component/Menu';
+import ViewBase from 'tooey/view/ViewBase';
+import Menu, { type MenuItem } from 'tooey/component/Menu';
 import Output from 'cashlib/lib/Output';
-import Tab from 'tooey/lib/Tab';
+import Tab from 'tooey/Tab';
 
 import OutputsList from '../components/OutputsList';
 

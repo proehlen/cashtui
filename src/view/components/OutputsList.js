@@ -1,11 +1,11 @@
 // @flow
 import Output from 'cashlib/lib/Output';
 import { leftPad } from 'stringfu';
-import Tab from 'tooey/lib/Tab';
+import Tab from 'tooey/Tab';
 
-import ComponentBase from 'tooey/lib/ComponentBase';
-import List, { type ListColumn } from 'tooey/lib/List';
-import Menu from 'tooey/lib/Menu';
+import ComponentBase from 'tooey/component/ComponentBase';
+import List, { type ListColumn } from 'tooey/component/List';
+import Menu from 'tooey/component/Menu';
 import state from '../../model/state';
 
 const VALUE_COLUMN_WIDTH = 15;
@@ -36,7 +36,7 @@ export default class OutputsList extends ComponentBase {
       value: (output) => {
         let addressEncoded = '';
         try {
-          const address = output.getAddress(state.connection.network);
+          const address = output.getAddress(state.getConnection(this._tab).network);
           if (address) {
             addressEncoded = address.toString();
           }

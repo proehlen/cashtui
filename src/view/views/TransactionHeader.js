@@ -1,10 +1,9 @@
 // @flow
 import cliui from 'cliui';
 import Transaction from 'cashlib/lib/Transaction';
-import ViewBase from 'tooey/lib/ViewBase';
-import Menu from 'tooey/lib/Menu';
-import MenuItem from 'tooey/lib/MenuItem';
-import Tab from 'tooey/lib/Tab';
+import ViewBase from 'tooey/view/ViewBase';
+import Menu, { type MenuItem } from 'tooey/component/Menu';
+import Tab from 'tooey/Tab';
 
 import TransactionInputs from './TransactionInputs';
 import TransactionOutputs from './TransactionOutputs';
@@ -19,18 +18,34 @@ export default class TransactionHeader extends ViewBase {
   constructor(tab: Tab) {
     super('Transaction');
     this._tab = tab;
-    const items: MenuItem[] = [
-      new MenuItem('I', 'Inputs', 'Transaction inputs', async () => tab.pushView(new TransactionInputs(tab))),
-      new MenuItem('O', 'Outputs', 'Transaction outputs', async () => tab.pushView(new TransactionOutputs(tab))),
-      new MenuItem('R', 'Raw', 'Show raw serialized transaction', async () => tab.pushView(new TransactionRaw())),
-      new MenuItem('S', 'Send', 'Broadcast transaction to network', this.send.bind(this)),
-    ];
+    const items: MenuItem[] = [{
+      key: 'I',
+      label: 'Inputs',
+      help: 'Transaction inputs',
+      execute: async () => tab.pushView(new TransactionInputs(tab)),
+    }, {
+      key: 'O',
+      label: 'Outputs',
+      help: 'Transaction outputs',
+      execute: async () => tab.pushView(new TransactionOutputs(tab)),
+    }, {
+      key: 'R',
+      label: 'Raw',
+      help: 'Show raw serialized transaction',
+      execute: async () => tab.pushView(new TransactionRaw(tab)),
+    }, {
+      key: 'S',
+      label: 'Send',
+      help: 'Broadcast transaction to network',
+      execute: this.send.bind(this),
+    }];
     this._menu = new Menu(tab, items);
   }
 
   async send() {
     try {
-      await state.rpc.request(`sendrawtransaction ${state.transactions.active.serialize()}`);
+      const connection = state.getConnection(this._tab);
+      await state.rpc.request(connection, `sendrawtransaction ${state.transactions.active.serialize()}`);
     } catch (err) {
       this._tab.setError(err.message);
     }

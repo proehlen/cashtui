@@ -1,14 +1,13 @@
 // @flow
-import MenuForm from 'tooey/lib/MenuForm';
-import MenuItem from 'tooey/lib/MenuItem';
-import { type FormFieldDescription } from 'tooey/lib/Form';
-import ViewBase from 'tooey/lib/ViewBase';
+import FormView from 'tooey/view/FormView';
+import { type FormFieldDescription } from 'tooey/component/Form';
+import ViewBase from 'tooey/view/ViewBase';
+import Tab from 'tooey/Tab';
 import Output from 'cashlib/lib/Output';
 import { fromBytes } from 'stringfu';
 
 import GenericText from './GenericText';
 import state from '../../model/state';
-import app from '../app';
 
 const fieldIdx = {
   TRANSACTION_ID: 0,
@@ -20,11 +19,13 @@ const fieldIdx = {
 };
 
 export default class ConnectionSettings extends ViewBase {
-  _menuForm: MenuForm
+  _tab: Tab
+  _formView: FormView
   _output: Output
 
-  constructor(output: Output, transactionId?: string, outputIndex?: number) {
+  constructor(tab: Tab, output: Output, transactionId?: string, outputIndex?: number) {
     super('Transaction Output');
+    this._tab = tab;
     this._output = output;
 
     function blankIfUndefined(value: any) {
@@ -36,14 +37,18 @@ export default class ConnectionSettings extends ViewBase {
     fields[fieldIdx.TRANSACTION_ID] = { label: 'Transaction Id', default: blankIfUndefined(transactionId), type: 'string' };
     fields[fieldIdx.OUTPUT_INDEX] = { label: 'Output number', default: blankIfUndefined(outputIndex), type: 'integer' };
     fields[fieldIdx.VALUE] = { label: 'Value', default: output.value.toString(), type: 'integer' };
-    const address = output.getAddress(state.connection.network);
+    const connection = state.getConnection(this._tab);
+    const address = output.getAddress(connection.network);
     fields[fieldIdx.ADDRESS] = { label: 'Address', default: blankIfUndefined(address), type: 'string' };
     fields[fieldIdx.TYPE] = { label: 'Type', default: blankIfUndefined(output.scriptType), type: 'string' };
     fields[fieldIdx.SCRIPT] = { label: 'Public key script', default: fromBytes(output.pubKeyScript), type: 'string' };
 
-    this._menuForm = new MenuForm(app.activeTab, fields, [
-      new MenuItem('S', 'Script', 'Show entire public key script', this.toScript.bind(this)),
-    ], {
+    this._formView = new FormView(tab, fields, [{
+      key: 'S',
+      label: 'Script',
+      help: 'Show entire public key script',
+      execute: this.toScript.bind(this),
+    }], {
       readOnly: true,
     });
   }
@@ -52,14 +57,14 @@ export default class ConnectionSettings extends ViewBase {
     const scriptText = fromBytes(this._output._pubKeyScript);
     // TODO nav to script parser
     const scriptView = new GenericText('Public Key Script', scriptText);
-    app.pushView(scriptView);
+    this._tab.pushView(scriptView);
   }
 
   async handle(key: string): Promise<boolean> {
-    return this._menuForm.handle(key);
+    return this._formView.handle(key);
   }
 
   render() {
-    this._menuForm.render();
+    this._formView.render();
   }
 }

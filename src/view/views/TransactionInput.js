@@ -1,13 +1,12 @@
 // @flow
-import MenuForm from 'tooey/lib/MenuForm';
-import MenuItem from 'tooey/lib/MenuItem';
-import { type FormFieldDescription } from 'tooey/lib/Form';
-import ViewBase from 'tooey/lib/ViewBase';
+import FormView from 'tooey/view/FormView';
+import { type FormFieldDescription } from 'tooey/component/Form';
+import ViewBase from 'tooey/view/ViewBase';
+import Tab from 'tooey/Tab';
 import Input from 'cashlib/lib/Input';
 import { fromBytes } from 'stringfu';
 
 import GenericText from './GenericText';
-import app from '../app';
 
 const fieldIdx = {
   TRANSACTION_ID: 0,
@@ -18,11 +17,13 @@ const fieldIdx = {
 };
 
 export default class ConnectionSettings extends ViewBase {
-  _menuForm: MenuForm
+  _tab: Tab
+  _formView: FormView
   _input: Input
 
-  constructor(input: Input, transactionId?: string, inputIndex?: number) {
+  constructor(tab: Tab, input: Input, transactionId?: string, inputIndex?: number) {
     super('Transaction Input');
+    this._tab = tab;
     this._input = input;
 
     function blankIfUndefined(value: any) {
@@ -37,9 +38,12 @@ export default class ConnectionSettings extends ViewBase {
     fields[fieldIdx.OUTPUT_INDEX] = { label: 'Output number', default: input.outputIndex.toString(), type: 'integer' };
     fields[fieldIdx.SCRIPT] = { label: 'Signature script', default: fromBytes(input.signatureScript), type: 'string' };
 
-    this._menuForm = new MenuForm(app.activeTab, fields, [
-      new MenuItem('S', 'Script', 'Show entire signature script', this.toScript.bind(this)),
-    ], {
+    this._formView = new FormView(tab, fields, [{
+      key: 'S',
+      label: 'Script',
+      help: 'Show entire signature script',
+      execute: this.toScript.bind(this),
+    }], {
       readOnly: true,
     });
   }
@@ -48,14 +52,14 @@ export default class ConnectionSettings extends ViewBase {
     const scriptText = fromBytes(this._input.signatureScript);
     // TODO nav to script parser
     const scriptView = new GenericText('Signature Script', scriptText);
-    app.pushView(scriptView);
+    this._tab.pushView(scriptView);
   }
 
   async handle(key: string): Promise<boolean> {
-    return this._menuForm.handle(key);
+    return this._formView.handle(key);
   }
 
   render() {
-    this._menuForm.render();
+    this._formView.render();
   }
 }

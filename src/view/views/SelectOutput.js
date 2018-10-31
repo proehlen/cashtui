@@ -1,10 +1,9 @@
 // @flow
 
-import ViewBase from 'tooey/lib/ViewBase';
-import Menu from 'tooey/lib/Menu';
-import MenuItem from 'tooey/lib/MenuItem';
+import ViewBase from 'tooey/view/ViewBase';
+import Menu, { type MenuItem } from 'tooey/component/Menu';
 import Output from 'cashlib/lib/Output';
-import Tab from 'tooey/lib/Tab';
+import Tab from 'tooey/Tab';
 
 import OutputsList from '../components/OutputsList';
 
@@ -23,8 +22,13 @@ export default class SelectOutput extends ViewBase {
     this._tab = tab;
 
     this._outputs = outputs;
-    const ok = new MenuItem('O', 'OK', 'Continue with selected output', this.onOk.bind(this));
-    this._menu = new Menu(tab, [ok], true);
+    const ok: MenuItem = {
+      key: 'O',
+      label: 'OK',
+      help: 'Continue with selected output',
+      execute: this.onOk.bind(this),
+    };
+    this._menu = new Menu(tab, [ok]);
     this._outputsList = new OutputsList(tab, outputs, this._menu, true);
     this._onSelected = onSelected;
   }

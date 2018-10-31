@@ -1,9 +1,8 @@
 // @flow
 
-import MenuForm from 'tooey/lib/MenuForm';
-import ViewBase from 'tooey/lib/ViewBase';
-import MenuItem from 'tooey/lib/MenuItem';
-import Tab from 'tooey/lib/Tab';
+import FormView from 'tooey/view/FormView';
+import ViewBase from 'tooey/view/ViewBase';
+import Tab from 'tooey/Tab';
 
 import MainMenu from './MainMenu';
 import state from '../../model/state';
@@ -18,39 +17,44 @@ const fieldIdx = {
 
 export default class ConnectionSettings extends ViewBase {
   _tab: Tab
-  _menuForm: MenuForm
+  _formView: FormView
 
   constructor(tab: Tab) {
     super('Connection Settings');
     this._tab = tab;
 
     // Form fields
+    const connection = state.getConnection(tab);
     const fields = [];
-    fields[fieldIdx.HOST] = { label: 'Host', default: state.connection.host, type: 'string' };
-    fields[fieldIdx.PORT] = { label: 'Port', default: state.connection.port.toString(), type: 'integer' };
-    fields[fieldIdx.COOKIE] = { label: 'Cookie file', default: state.connection.cookieFile, type: 'string' };
-    fields[fieldIdx.USER] = { label: 'User', default: state.connection.user, type: 'string' };
-    fields[fieldIdx.PASSWORD] = { label: 'Password', default: state.connection.password, type: 'password' };
+    fields[fieldIdx.HOST] = { label: 'Host', default: connection.host, type: 'string' };
+    fields[fieldIdx.PORT] = { label: 'Port', default: connection.port.toString(), type: 'integer' };
+    fields[fieldIdx.COOKIE] = { label: 'Cookie file', default: connection.cookieFile, type: 'string' };
+    fields[fieldIdx.USER] = { label: 'User', default: connection.user, type: 'string' };
+    fields[fieldIdx.PASSWORD] = { label: 'Password', default: connection.password, type: 'password' };
 
     // Menu items
-    const menuItems = [
-      new MenuItem('C', 'Connect', 'Connect to the node', this.connect.bind(this)),
-    ];
+    const menuItems = [{
+      key: 'C',
+      label: 'Connect',
+      help: 'Connect to the node',
+      execute: this.connect.bind(this),
+    }];
 
-    this._menuForm = new MenuForm(tab, fields, menuItems);
+    this._formView = new FormView(tab, fields, menuItems);
   }
 
   async connect() {
     try {
       // Update connection settings from form and connect
-      const { fields } = this._menuForm.form;
-      state.connection.host = fields[fieldIdx.HOST].input.value;
-      state.connection.port = parseInt(fields[fieldIdx.PORT].input.value, 10);
-      state.connection.cookieFile = fields[fieldIdx.COOKIE].input.value;
-      state.connection.user = fields[fieldIdx.USER].input.value;
-      state.connection.password = fields[fieldIdx.PASSWORD].input.value;
-      await state.connection.connect();
-      this._tab.stateMessage = state.connection.network.label;
+      const { fields } = this._formView.form;
+      const connection = state.getConnection(this._tab);
+      connection.host = fields[fieldIdx.HOST].input.value;
+      connection.port = parseInt(fields[fieldIdx.PORT].input.value, 10);
+      connection.cookieFile = fields[fieldIdx.COOKIE].input.value;
+      connection.user = fields[fieldIdx.USER].input.value;
+      connection.password = fields[fieldIdx.PASSWORD].input.value;
+      await connection.connect();
+      this._tab.stateMessage = connection.network.label;
       this._tab.pushView(new MainMenu(this._tab));
     } catch (err) {
       this._tab.setError(err.message);
@@ -58,10 +62,10 @@ export default class ConnectionSettings extends ViewBase {
   }
 
   async handle(key: string): Promise<boolean> {
-    return this._menuForm.handle(key);
+    return this._formView.handle(key);
   }
 
   render() {
-    this._menuForm.render();
+    this._formView.render();
   }
 }

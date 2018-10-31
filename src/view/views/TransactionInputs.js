@@ -2,15 +2,15 @@
 
 import Transaction from 'cashlib/lib/Transaction';
 import Input from 'cashlib/lib/Input';
-import ViewBase from 'tooey/lib/ViewBase';
-import List from 'tooey/lib/List';
-import Menu from 'tooey/lib/Menu';
-import Tab from 'tooey/lib/Tab';
-import MenuItem from 'tooey/lib/MenuItem';
-import type { ListColumn } from 'tooey/lib/List';
+import ViewBase from 'tooey/view/ViewBase';
+import List, { type ListColumn } from 'tooey/component/List';
+import Menu, { type MenuItem } from 'tooey/component/Menu';
+import Tab from 'tooey/Tab';
+import SelectView, { type SelectViewItem } from 'tooey/view/SelectView';
 
 import TransactionInput from './TransactionInput';
-import TransactionAddInput from './TransactionAddInput';
+import TransactionAddInputManual from './TransactionAddInputManual';
+import UnspentOutputs from './UnspentOutputs';
 import state from '../../model/state';
 
 export default class TransactionInputs extends ViewBase {
@@ -24,12 +24,24 @@ export default class TransactionInputs extends ViewBase {
     this._tab = tab;
 
     // Build menu
-    const menuItems = [
-      new MenuItem('S', 'Show', 'Show details for selected input',
-        this.toDetails.bind(this)),
-      new MenuItem('A', 'Add', 'Add new input',
-        async () => this._tab.pushView(new TransactionAddInput(tab))),
-    ];
+    const menuItems: MenuItem[] = [{
+      key: 'S',
+      label: 'Show',
+      help: 'Show details for selected input',
+      execute: this.toDetails.bind(this),
+      visible: () => state.transactions.active.inputs.length > 0,
+    }, {
+      key: 'R',
+      label: 'Remove',
+      help: 'Remove selected input',
+      execute: this.removeSelectedInput.bind(this),
+      visible: () => state.transactions.active.inputs.length > 0,
+    }, {
+      key: 'A',
+      label: 'Add',
+      help: 'Add new input',
+      execute: this.onAddInput.bind(this),
+    }];
     this._menu = new Menu(tab, menuItems);
 
     const transaction: Transaction = state.transactions.active;
@@ -53,10 +65,44 @@ export default class TransactionInputs extends ViewBase {
     });
   }
 
+  async onAddInput() {
+    const items: SelectViewItem[] = [{
+      label: 'Select unspent output from node wallet',
+      execute: this.toSelectUnspentOutputs.bind(this),
+    }, {
+      label: 'Enter utxo manually',
+      execute: async () => this._tab.replaceView(new TransactionAddInputManual(this._tab)),
+    }];
+    const selectView = new SelectView(this._tab, 'Add input from...', items);
+    this._tab.pushView(selectView);
+  }
+
+  async toSelectUnspentOutputs() {
+    const connection = state.getConnection(this._tab);
+    const rpcResult = await state.rpc.request(connection, 'listunspent');
+    debugger;
+    if (!Array.isArray(rpcResult) || !rpcResult.length) {
+      this._tab.setError('No unspent outputs returned by node wallet.');
+    } else {
+      const view = new UnspentOutputs(
+        this._tab,
+        'Select UTXO',
+        rpcResult,
+        async (utxo) => {
+          const input = new Input(utxo.txid, utxo.vout, new Uint8Array([]));
+          state.transactions.active.addInput(input);
+          this._tab.popView();
+        },
+      );
+      this._tab.replaceView(view);
+    }
+  }
+
   async toDetails() {
     const input = state.transactions.active.inputs[this._list.selectedRowIndex];
     if (input) {
       this._tab.pushView(new TransactionInput(
+        this._tab,
         input,
         state.transactions.active.getId(),
         this._list.selectedRowIndex,
@@ -65,6 +111,11 @@ export default class TransactionInputs extends ViewBase {
       this._tab.setWarning('No input selected');
     }
   }
+
+  async removeSelectedInput() {
+    state.transactions.active.removeInput(this._list.selectedRowIndex);
+  }
+
 
   render() {
     // Render outputs list

@@ -1,9 +1,9 @@
 // @flow
 
-import MenuForm from 'tooey/lib/MenuForm';
-import ViewBase from 'tooey/lib/ViewBase';
-import MenuItem from 'tooey/lib/MenuItem';
-import Tab from 'tooey/lib/Tab';
+import FormView from 'tooey/view/FormView';
+import ViewBase from 'tooey/view/ViewBase';
+import { type MenuItem } from 'tooey/component/Menu';
+import Tab from 'tooey/Tab';
 import Transaction from 'cashlib/lib/Transaction';
 import Input from 'cashlib/lib/Input';
 
@@ -15,8 +15,8 @@ const fieldIdx = {
   OUTPUT_INDEX: 1,
 };
 
-export default class TransactionAddInput extends ViewBase {
-  _menuForm: MenuForm
+export default class TransactionAddInputManual extends ViewBase {
+  _formView: FormView
   _tab: Tab
 
   constructor(tab: Tab) {
@@ -30,21 +30,30 @@ export default class TransactionAddInput extends ViewBase {
     fields[fieldIdx.OUTPUT_INDEX] = { label: 'Output index', default: '', type: 'integer' };
 
     // Menu items
-    const menuItems = [
-      new MenuItem('O', 'OK', 'Add input with entered details', this.addInput.bind(this)),
-      new MenuItem('L', 'Lookup Output', 'Lookup output in transaction', this.lookupOutput.bind(this)),
-    ];
+    const menuItems: MenuItem[] = [{
+      key: 'O',
+      label: 'OK',
+      help: 'Add input with entered details',
+      execute: this.addInput.bind(this),
+    }, {
+      key: 'L',
+      label: 'Lookup Output',
+      help: 'Lookup output in transaction',
+      execute: this.lookupOutput.bind(this),
+      visible: () => this._getFieldValue(fieldIdx.TRANSACTION_ID) !== '',
+    }];
 
-    this._menuForm = new MenuForm(tab, fields, menuItems);
+    this._formView = new FormView(tab, fields, menuItems);
   }
 
   async lookupOutput() {
     try {
-      const txId = this._menuForm.fields[fieldIdx.TRANSACTION_ID].input.value;
+      const txId = this._getFieldValue(fieldIdx.TRANSACTION_ID);
       if (!txId) {
         this._tab.setError('Enter Transaction Id to lookup output in.');
       } else {
-        const raw = await state.rpc.request(`getrawtransaction ${txId}`);
+        const connection = state.getConnection(this._tab);
+        const raw = await state.rpc.request(connection, `getrawtransaction ${txId}`);
         const transaction = Transaction.deserialize(raw.toString());
         const select = new SelectOutput(
           this._tab,
@@ -59,17 +68,23 @@ export default class TransactionAddInput extends ViewBase {
   }
 
   async onLookupSelection(outputIndex: number) {
-    this._menuForm.fields[fieldIdx.OUTPUT_INDEX].input.value = outputIndex.toString();
+    this._formView.fields[fieldIdx.OUTPUT_INDEX].input.value = outputIndex.toString();
     this._tab.popView();
-    this._menuForm.menu.setFirstItemSelected();
+    this._formView.menu.setFirstItemSelected();
   }
 
+  _getFieldValue(index: number) {
+    let result;
+    if (this._formView) {
+      result = this._formView.fields[index].input.value;
+    }
+    return result;
+  }
 
   async addInput() {
     try {
-      // app.popView();
-      const txId = this._menuForm.fields[fieldIdx.TRANSACTION_ID].input.value;
-      const outputIdx = this._menuForm.fields[fieldIdx.OUTPUT_INDEX].input.value;
+      const txId = this._formView.fields[fieldIdx.TRANSACTION_ID].input.value;
+      const outputIdx = this._formView.fields[fieldIdx.OUTPUT_INDEX].input.value;
       if (!txId || !outputIdx) {
         this._tab.setWarning('Enter Transaction Id and Output Index to continue.');
       } else {
@@ -83,10 +98,10 @@ export default class TransactionAddInput extends ViewBase {
   }
 
   async handle(key: string): Promise<boolean> {
-    return this._menuForm.handle(key);
+    return this._formView.handle(key);
   }
 
   render() {
-    this._menuForm.render();
+    this._formView.render();
   }
 }

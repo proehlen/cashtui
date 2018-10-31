@@ -8,7 +8,7 @@ import state from './state';
 
 const MAX_HISTORY = 25;
 
-export type History = {
+export type ConnectionHistory = {
   network: string,
   host: string,
   port: number,
@@ -112,7 +112,7 @@ export default class Connection {
   }
 
   async connect() {
-    await state.rpc.request('getinfo');
+    await state.rpc.request(this, 'getinfo');
     this._isConnected = true;
     Connection.addHistory(this);
   }
@@ -144,7 +144,7 @@ export default class Connection {
     return datadir;
   }
 
-  static getHistory(): Array<History> {
+  static getHistory(): Array<ConnectionHistory> {
     let history = [];
     const stored = state.localStorage.getItem('connectionHistory');
     if (stored) {
@@ -154,7 +154,7 @@ export default class Connection {
   }
 
   static addHistory(connection: Connection) {
-    const newRec: History = {
+    const newRec: ConnectionHistory = {
       network: connection.network.label,
       host: connection.host,
       port: connection.port,

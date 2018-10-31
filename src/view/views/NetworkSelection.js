@@ -1,11 +1,10 @@
 // @flow
 
 import Network from 'cashlib/lib/Network';
-import ViewBase from 'tooey/lib/ViewBase';
-import List, { type ListColumn } from 'tooey/lib/List';
-import Menu from 'tooey/lib/Menu';
-import MenuItem from 'tooey/lib/MenuItem';
-import Tab from 'tooey/lib/Tab';
+import ViewBase from 'tooey/view/ViewBase';
+import List, { type ListColumn } from 'tooey/component/List';
+import Menu, { type MenuItem } from 'tooey/component/Menu';
+import Tab from 'tooey/Tab';
 
 import Connection from '../../model/Connection';
 import ConnectionSettings from './ConnectionSettings';
@@ -24,12 +23,22 @@ export default class NetworkSelection extends ViewBase {
     this._tab = tab;
 
     // Build menu
-    this._continueItem = new MenuItem('C', 'Continue', 'Connect to Network', this.toConnectionSettings.bind(this));
+    this._continueItem = {
+      key: 'C',
+      label: 'Continue',
+      help: 'Connect to Network',
+      execute: this.toConnectionSettings.bind(this),
+    };
     const menuItems = [
       this._continueItem,
-      new MenuItem('R', 'Recent', 'Recent connections', this.toConnectionHistory.bind(this)),
+      {
+        key: 'R',
+        label: 'Recent',
+        help: 'Recent connections',
+        execute: this.toConnectionHistory.bind(this),
+      },
     ];
-    this._menu = new Menu(tab, menuItems, false);
+    this._menu = new Menu(tab, menuItems);
 
     // Build networks list
     this._networks = [
@@ -52,7 +61,7 @@ export default class NetworkSelection extends ViewBase {
   }
 
   async onListSelect() {
-    this._menu.setSelectedItem(this._continueItem.key);
+    this._menu.setSelectedItem(this._continueItem);
   }
 
   render() {
@@ -80,7 +89,7 @@ export default class NetworkSelection extends ViewBase {
       }
       const network = Network.fromString(networkLabel);
       const connection = new Connection(network);
-      state.connection = connection;
+      state.setConnection(this._tab, connection);
       this._tab.pushView(new ConnectionSettings(this._tab));
     } catch (err) {
       this._tab.setError(err.message);

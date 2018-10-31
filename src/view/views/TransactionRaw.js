@@ -1,22 +1,24 @@
 // @flow
 
 import Transaction from 'cashlib/lib/Transaction';
-import ViewBase from 'tooey/lib/ViewBase';
-import Menu from 'tooey/lib/Menu';
-import MenuItem from 'tooey/lib/MenuItem';
-import output from 'tooey/lib/output';
+import ViewBase from 'tooey/view/ViewBase';
+import Menu, { type MenuItem } from 'tooey/component/Menu';
+import output from 'tooey/output';
+import Tab from 'tooey/Tab';
 
 import state from '../../model/state';
-import app from '../app';
 
 export default class TransactionRaw extends ViewBase {
+  _tab: Tab
   _data: Array<string>
   _numPages: number
   _currentPage: number
   _menu: Menu
 
-  constructor() {
+  constructor(tab: Tab) {
     super('Raw Transaction');
+    this._tab = tab;
+
     // Break raw transaction into pages.  Note: we can't use List as when the output is copied
     // to the clipboard it will contain a linebreak char for each line.
     const data = [];
@@ -28,15 +30,27 @@ export default class TransactionRaw extends ViewBase {
       data.push(raw.substr(x * charsPerPage, charsPerPage));
     }
 
-    const items: MenuItem[] = [];
-    if (numPages) {
-      items.push(new MenuItem('N', 'Next page', 'Go to next page', this.nextPage.bind(this)));
-      items.push(new MenuItem('P', 'Previous page', 'Return to previous page', this.previousPage.bind(this)));
-    }
-    this._menu = new Menu(app.activeTab, items, true);
-    this._data = data;
     this._currentPage = 1;
     this._numPages = numPages;
+
+    let menuItems: MenuItem[] = [];
+    if (numPages > 1) {
+      menuItems = [{
+        key: 'N',
+        label: 'Next page',
+        help: 'Go to next page',
+        execute: this.nextPage.bind(this),
+        visible: () => this._currentPage < this._numPages,
+      }, {
+        key: 'P',
+        label: 'Previous page',
+        help: 'Return to previous page',
+        execute: this.previousPage.bind(this),
+        visible: () => this._currentPage > 1,
+      }];
+    }
+    this._menu = new Menu(tab, menuItems);
+    this._data = data;
   }
 
   render() {
@@ -54,7 +68,7 @@ export default class TransactionRaw extends ViewBase {
 
   async nextPage() {
     if (this._currentPage === this._numPages) {
-      app.setInfo('No more pages');
+      this._tab.setInfo('No more pages');
     } else {
       this._currentPage += 1;
     }
@@ -62,7 +76,7 @@ export default class TransactionRaw extends ViewBase {
 
   async previousPage() {
     if (this._currentPage === 1) {
-      app.setInfo('Already at start');
+      this._tab.setInfo('Already at start');
     } else {
       this._currentPage -= 1;
     }

@@ -1,13 +1,10 @@
 // @flow
 
 import { Transaction } from 'cashlib';
-import ViewBase from 'tooey/lib/ViewBase';
-import Menu from 'tooey/lib/Menu';
-import MenuItem from 'tooey/lib/MenuItem';
-import Tab from 'tooey/lib/Tab';
-
-import RawTransactionInput from './RawTransactionInput';
-import TransactionIdInput from './TransactionIdInput';
+import ViewBase from 'tooey/view/ViewBase';
+import Menu, { type MenuItem } from 'tooey/component/Menu';
+import Tab from 'tooey/Tab';
+import InputView from 'tooey/view/InputView';
 import state from '../../model/state';
 import TransactionHeader from './TransactionHeader';
 
@@ -19,17 +16,50 @@ export default class TransactionsMenu extends ViewBase {
     super('Transactions');
     this._tab = tab;
 
-    const items: MenuItem[] = [
-      new MenuItem('I', 'By Id', 'Retrieve transaction from full node', this.toTransactionIdInput.bind(this)),
-      new MenuItem('C', 'Create', 'Create new transaction', this.createTransaction.bind(this)),
-      new MenuItem('D', 'Decode raw', 'Decode raw transaction', this.toRawTransactionInput.bind(this)),
-      new MenuItem('R', 'Recent', 'Recent transactions'),
-    ];
+    const items: MenuItem[] = [{
+      key: 'I',
+      label: 'By Id',
+      help: 'Retrieve transaction from full node',
+      execute: this.toTransactionIdInput.bind(this),
+    }, {
+      key: 'C',
+      label: 'Create',
+      help: 'Create new transaction',
+      execute: this.createTransaction.bind(this),
+    }, {
+      key: 'D',
+      label: 'Decode raw',
+      help: 'Decode raw transaction',
+      execute: this.toRawTransactionInput.bind(this),
+    }, {
+      key: 'R',
+      label: 'Recent',
+      help: 'Recent transactions',
+    }];
     this._menu = new Menu(tab, items);
   }
 
   async toTransactionIdInput() {
-    this._tab.pushView(new TransactionIdInput(this._tab));
+    const inputView = new InputView(
+      this._tab,
+      'Transaction Id',
+      async (inputValue) => {
+        try {
+          const connection = state.getConnection(this._tab);
+          const raw = await state.rpc.request(connection, `getrawtransaction ${inputValue}`);
+          if (typeof raw === 'string') {
+            const transaction = Transaction.deserialize(raw);
+            state.transactions.active = transaction;
+            this._tab.replaceView(new TransactionHeader(this._tab));
+          } else {
+            throw new Error('Unexpected value returned from RPC call');
+          }
+        } catch (err) {
+          this._tab.setError(err.message);
+        }
+      },
+    );
+    this._tab.pushView(inputView);
   }
 
   async createTransaction() {
@@ -38,7 +68,15 @@ export default class TransactionsMenu extends ViewBase {
   }
 
   async toRawTransactionInput() {
-    this._tab.pushView(new RawTransactionInput(this._tab));
+    const inputView = new InputView(this._tab, 'Enter raw transaction', async (inputValue) => {
+      try {
+        state.transactions.active = Transaction.deserialize(inputValue);
+        this._tab.replaceView(new TransactionHeader(this._tab));
+      } catch (error) {
+        this._tab.setError(error.message);
+      }
+    });
+    this._tab.pushView(inputView);
   }
 
   async handle(key: string): Promise<boolean> {

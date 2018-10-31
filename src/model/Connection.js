@@ -112,7 +112,7 @@ export default class Connection {
   }
 
   async connect() {
-    await state.rpc.request('getinfo');
+    await state.rpc.request(this, 'getinfo');
     this._isConnected = true;
     Connection.addHistory(this);
   }

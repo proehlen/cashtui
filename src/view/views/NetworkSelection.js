@@ -89,7 +89,7 @@ export default class NetworkSelection extends ViewBase {
       }
       const network = Network.fromString(networkLabel);
       const connection = new Connection(network);
-      state.connection = connection;
+      state.setConnection(this._tab, connection);
       this._tab.pushView(new ConnectionSettings(this._tab));
     } catch (err) {
       this._tab.setError(err.message);

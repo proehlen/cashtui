@@ -88,7 +88,7 @@ export default class ConnectionHistory extends ViewBase {
     connection.cookieFile = history.cookieFile;
     connection.user = history.user;
     connection.password = history.password;
-    state.connection = connection;
+    state.setConnection(this._tab, connection);
     this._tab.pushView(new ConnectionSettings(this._tab));
   }
 
@@ -107,9 +107,9 @@ export default class ConnectionHistory extends ViewBase {
       connection.cookieFile = history.cookieFile;
       connection.user = history.user;
       connection.password = history.password;
-      state.connection = connection;
+      state.setConnection(this._tab, connection);
       await connection.connect();
-      this._tab.stateMessage = state.connection.network.label;
+      this._tab.stateMessage = connection.network.label;
       this._list.items = Connection.getHistory();
       this._tab.pushView(new MainMenu(this._tab));
     } catch (err) {

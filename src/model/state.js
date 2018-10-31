@@ -1,6 +1,7 @@
 // @flow
 import path from 'path';
 import { LocalStorage } from 'node-localstorage';
+import Tab from 'tooey/Tab';
 
 import Rpc from './Rpc';
 import Transactions from './Transactions';
@@ -10,7 +11,7 @@ import Connection from './Connection';
 class State {
   _rpc: Rpc
   _transactions: Transactions
-  _connection: Connection
+  _connection: Map<Tab, Connection>
   _localStorage: LocalStorage
 
   constructor() {
@@ -18,15 +19,24 @@ class State {
     this._localStorage = new LocalStorage(localStorageDir);
     this._rpc = new Rpc();
     this._transactions = new Transactions();
+    this._connection = new Map();
   }
 
   get rpc() { return this._rpc; }
   get transactions() { return this._transactions; }
-  get connection() { return this._connection; }
   get localStorage() { return this._localStorage; }
 
-  set connection(connection: Connection) {
-    this._connection = connection;
+  getConnection(tab: Tab): Connection {
+    const connection = this._connection.get(tab);
+    if (!connection) {
+      throw new Error('Tab is not connected.');
+    } else {
+      return connection;
+    }
+  }
+
+  setConnection(tab: Tab, connection: Connection) {
+    this._connection.set(tab, connection);
   }
 
   static get appDataRoot(): string {

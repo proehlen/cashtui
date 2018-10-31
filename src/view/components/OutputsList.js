@@ -36,7 +36,7 @@ export default class OutputsList extends ComponentBase {
       value: (output) => {
         let addressEncoded = '';
         try {
-          const address = output.getAddress(state.connection.network);
+          const address = output.getAddress(state.getConnection(this._tab).network);
           if (address) {
             addressEncoded = address.toString();
           }

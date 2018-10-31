@@ -4,7 +4,7 @@
 import http from 'http';
 import { isInteger } from 'stringfu';
 
-import state from './state';
+import Connection from './Connection';
 
 declare type RequestOptions = {
   hostname: string,
@@ -36,7 +36,11 @@ export default class Rpc {
     this._history.push(command);
   }
 
-  request(command: string, remember: boolean = false): Promise<string | any | number> {
+  request(
+    connection: Connection,
+    command: string,
+    remember: boolean = false,
+  ): Promise<string | any | number> {
     if (remember) {
       this._addHistory(command);
     }
@@ -76,16 +80,16 @@ export default class Rpc {
       const postData = JSON.stringify(rpcRequest);
 
       const reqOptions: RequestOptions = {
-        hostname: state.connection.host,
-        port: state.connection.port,
+        hostname: connection.host,
+        port: connection.port,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json-rpc',
           'Content-Length': Buffer.byteLength(postData),
         },
       };
-      if (state.connection.auth) {
-        reqOptions.auth = state.connection.auth;
+      if (connection.auth) {
+        reqOptions.auth = connection.auth;
       }
 
       const req = http.request(reqOptions, (res) => {

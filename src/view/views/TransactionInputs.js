@@ -78,7 +78,8 @@ export default class TransactionInputs extends ViewBase {
   }
 
   async toSelectUnspentOutputs() {
-    const rpcResult = await state.rpc.request('listunspent');
+    const connection = state.getConnection(this._tab);
+    const rpcResult = await state.rpc.request(connection, 'listunspent');
     debugger;
     if (!Array.isArray(rpcResult) || !rpcResult.length) {
       this._tab.setError('No unspent outputs returned by node wallet.');

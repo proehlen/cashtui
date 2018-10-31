@@ -44,7 +44,8 @@ export default class TransactionHeader extends ViewBase {
 
   async send() {
     try {
-      await state.rpc.request(`sendrawtransaction ${state.transactions.active.serialize()}`);
+      const connection = state.getConnection(this._tab);
+      await state.rpc.request(connection, `sendrawtransaction ${state.transactions.active.serialize()}`);
     } catch (err) {
       this._tab.setError(err.message);
     }

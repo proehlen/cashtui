@@ -45,7 +45,8 @@ export default class TransactionsMenu extends ViewBase {
       'Transaction Id',
       async (inputValue) => {
         try {
-          const raw = await state.rpc.request(`getrawtransaction ${inputValue}`);
+          const connection = state.getConnection(this._tab);
+          const raw = await state.rpc.request(connection, `getrawtransaction ${inputValue}`);
           if (typeof raw === 'string') {
             const transaction = Transaction.deserialize(raw);
             state.transactions.active = transaction;

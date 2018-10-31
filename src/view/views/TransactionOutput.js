@@ -37,7 +37,8 @@ export default class ConnectionSettings extends ViewBase {
     fields[fieldIdx.TRANSACTION_ID] = { label: 'Transaction Id', default: blankIfUndefined(transactionId), type: 'string' };
     fields[fieldIdx.OUTPUT_INDEX] = { label: 'Output number', default: blankIfUndefined(outputIndex), type: 'integer' };
     fields[fieldIdx.VALUE] = { label: 'Value', default: output.value.toString(), type: 'integer' };
-    const address = output.getAddress(state.connection.network);
+    const connection = state.getConnection(this._tab);
+    const address = output.getAddress(connection.network);
     fields[fieldIdx.ADDRESS] = { label: 'Address', default: blankIfUndefined(address), type: 'string' };
     fields[fieldIdx.TYPE] = { label: 'Type', default: blankIfUndefined(output.scriptType), type: 'string' };
     fields[fieldIdx.SCRIPT] = { label: 'Public key script', default: fromBytes(output.pubKeyScript), type: 'string' };

@@ -10,7 +10,8 @@ import state from '../../model/state';
 
 const onRpcCommandEnter = async (rpcCommand: string, tab: Tab) => {
   try {
-    const rpcResult = await state.rpc.request(rpcCommand, true);
+    const connection = state.getConnection(tab);
+    const rpcResult = await state.rpc.request(connection, rpcCommand, true);
     if (typeof rpcResult === 'string') {
       const outputLines = rpcResult.split('\n');
       if (outputLines.length > 1 || rpcResult.length < output.width) {

@@ -52,7 +52,8 @@ export default class TransactionAddInputManual extends ViewBase {
       if (!txId) {
         this._tab.setError('Enter Transaction Id to lookup output in.');
       } else {
-        const raw = await state.rpc.request(`getrawtransaction ${txId}`);
+        const connection = state.getConnection(this._tab);
+        const raw = await state.rpc.request(connection, `getrawtransaction ${txId}`);
         const transaction = Transaction.deserialize(raw.toString());
         const select = new SelectOutput(
           this._tab,

@@ -4,8 +4,10 @@ import List, { type ListColumn } from 'tooey/component/List';
 import Menu, { type MenuItem } from 'tooey/component/Menu';
 import ViewBase from 'tooey/view/ViewBase';
 import Tab from 'tooey/Tab';
+import output from 'tooey/output';
 
-import Connection, { type History as ModelHistory } from '../../model/Connection';
+import Connection, { type ConnectionHistory as ModelHistory } from '../../model/Connection';
+import ConnectionSettings from './ConnectionSettings';
 import MainMenu from './MainMenu';
 import NetworkSelection from './NetworkSelection';
 import state from '../../model/state';
@@ -31,12 +33,17 @@ export default class ConnectionHistory extends ViewBase {
     this._menu = new Menu(tab, [
       this._connectItem,
       {
+        key: 'E',
+        label: 'Edit',
+        help: 'Edit selected connection',
+        execute: this.onEditConnection.bind(this),
+      }, {
         key: 'N',
         label: 'New',
         help: 'Create new connection',
         execute: this.toNetworkSelection.bind(this),
       },
-    ], false);
+    ]);
 
     // Get history
     this._history = Connection.getHistory();
@@ -72,6 +79,19 @@ export default class ConnectionHistory extends ViewBase {
     this._menu.setSelectedItem(this._connectItem);
   }
 
+  async onEditConnection() {
+    const history = this._history[this._list.selectedRowIndex];
+    const network = Network.fromString(history.network);
+    const connection = new Connection(network);
+    connection.host = history.host;
+    connection.port = history.port;
+    connection.cookieFile = history.cookieFile;
+    connection.user = history.user;
+    connection.password = history.password;
+    state.connection = connection;
+    this._tab.pushView(new ConnectionSettings(this._tab));
+  }
+
   async toNetworkSelection() {
     this._tab.replaceView(new NetworkSelection(this._tab));
   }
@@ -90,7 +110,7 @@ export default class ConnectionHistory extends ViewBase {
       state.connection = connection;
       await connection.connect();
       this._tab.stateMessage = state.connection.network.label;
-      this._list.setData(Connection.getHistory());
+      this._list.items = Connection.getHistory();
       this._tab.pushView(new MainMenu(this._tab));
     } catch (err) {
       this._tab.setError(err.message);
@@ -100,6 +120,12 @@ export default class ConnectionHistory extends ViewBase {
   render() {
     // Render list first
     this._list.render();
+
+    // If no history, render notice
+    if (!this._list.items.length) {
+      output.cursorTo(0, output.contentStartRow);
+      console.log('No recent connections.');
+    }
 
     // Render menu last so cursor position is left in correct position
     this._menu.render(false);

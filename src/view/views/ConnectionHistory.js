@@ -1,5 +1,6 @@
 // @flow
 import Network from 'cashlib/lib/Network';
+import { abbreviateMiddle } from 'stringfu';
 import List, { type ListColumn } from 'tooey/component/List';
 import Menu, { type MenuItem } from 'tooey/component/Menu';
 import ViewBase from 'tooey/view/ViewBase';
@@ -58,13 +59,20 @@ export default class ConnectionHistory extends ViewBase {
       value: history => history.network,
     }, {
       heading: 'Host',
-      width: 30,
-      value: history => `${history.host}:${history.port.toString()}`,
+      width: 20,
+      value: (history) => {
+        const host = `${history.host}:${history.port.toString()}`;
+        return abbreviateMiddle(host, 20);
+      },
     }, {
       heading: 'Authentication',
       width: 40,
-      value: history => history.cookieFile
-        || `${history.user}:${'*'.repeat(history.password.length)}`,
+      value: (history) => {
+        debugger;
+        const authValue = history.cookieFile
+          || `${history.user}:${'*'.repeat(history.password.length)}`;
+        return abbreviateMiddle(authValue, 40);
+      },
     }];
 
     // Create list

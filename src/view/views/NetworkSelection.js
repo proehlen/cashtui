@@ -38,7 +38,7 @@ export default class NetworkSelection extends ViewBase {
         execute: this.toConnectionHistory.bind(this),
       },
     ];
-    this._menu = new Menu(tab, menuItems, false);
+    this._menu = new Menu(tab, menuItems);
 
     // Build networks list
     this._networks = [

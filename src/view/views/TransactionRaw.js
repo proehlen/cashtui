@@ -49,7 +49,7 @@ export default class TransactionRaw extends ViewBase {
         visible: () => this._currentPage > 1,
       }];
     }
-    this._menu = new Menu(tab, menuItems, true);
+    this._menu = new Menu(tab, menuItems);
     this._data = data;
   }
 

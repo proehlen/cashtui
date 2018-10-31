@@ -28,7 +28,7 @@ export default class SelectOutput extends ViewBase {
       help: 'Continue with selected output',
       execute: this.onOk.bind(this),
     };
-    this._menu = new Menu(tab, [ok], true);
+    this._menu = new Menu(tab, [ok]);
     this._outputsList = new OutputsList(tab, outputs, this._menu, true);
     this._onSelected = onSelected;
   }

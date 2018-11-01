@@ -31,20 +31,25 @@ export default class ConnectionHistory extends ViewBase {
       help: 'Connect to selected network',
       execute: this.connectToSelected.bind(this),
     };
-    this._menu = new Menu(tab, [
-      this._connectItem,
-      {
-        key: 'E',
-        label: 'Edit',
-        help: 'Edit selected connection',
-        execute: this.onEditConnection.bind(this),
-      }, {
-        key: 'N',
-        label: 'New',
-        help: 'Create new connection',
-        execute: this.toNetworkSelection.bind(this),
+    this._menu = new Menu(
+      tab,
+      [
+        this._connectItem,
+        {
+          key: 'E',
+          label: 'Edit',
+          help: 'Edit selected connection',
+          execute: this.onEditConnection.bind(this),
+        }, {
+          key: 'N',
+          label: 'New',
+          help: 'Create new connection',
+          execute: this.toNetworkSelection.bind(this),
+        },
+      ], {
+        hideBackItem: true,
       },
-    ]);
+    );
 
     // Get history
     this._history = Connection.getHistory();

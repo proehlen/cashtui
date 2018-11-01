@@ -2,13 +2,14 @@
 
 import Transaction from 'cashlib/lib/Transaction';
 import Output from 'cashlib/lib/Output';
+import SelectView, { type SelectViewItem } from 'tooey/view/SelectView';
 import ViewBase from 'tooey/view/ViewBase';
 import Menu, { type MenuItem } from 'tooey/component/Menu';
 import Tab from 'tooey/Tab';
 
 import OutputsList from '../components/OutputsList';
+import TransactionAddOutputP2PKH from './TransactionAddOutputP2PKH';
 import TransactionOutput from './TransactionOutput';
-import TransactionAddOutput from './TransactionAddOutput';
 import state from '../../model/state';
 
 export default class TransactionOutputs extends ViewBase {
@@ -31,7 +32,7 @@ export default class TransactionOutputs extends ViewBase {
       key: 'A',
       label: 'Add',
       help: 'Add new output',
-      execute: async () => tab.pushView(new TransactionAddOutput(tab)),
+      execute: this.onAddOutput.bind(this),
     }, {
       key: 'R',
       label: 'Remove',
@@ -43,6 +44,22 @@ export default class TransactionOutputs extends ViewBase {
 
     this._list = new OutputsList(tab, transaction.outputs, this._menu, true);
   }
+
+  async onAddOutput() {
+    const items: SelectViewItem[] = [{
+      label: 'Add P2PKH',
+      execute: async () => this._tab.pushView(new TransactionAddOutputP2PKH(this._tab)),
+    }, {
+      label: 'Add P2PK',
+    }, {
+      label: 'Add P2SH',
+    }, {
+      label: 'Add Non-Standard',
+    }];
+    const selectView = new SelectView(this._tab, 'Add Output', items);
+    this._tab.pushView(selectView);
+  }
+
 
   get _selectedOutput() {
     return state.transactions.active.outputs[this._list.selectedOutputIndex];

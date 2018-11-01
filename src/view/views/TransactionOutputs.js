@@ -9,6 +9,7 @@ import Tab from 'tooey/Tab';
 
 import OutputsList from '../components/OutputsList';
 import TransactionAddOutputP2PKH from './TransactionAddOutputP2PKH';
+import TransactionAddOutputNonStandard from './TransactionAddOutputNonStandard';
 import TransactionOutput from './TransactionOutput';
 import state from '../../model/state';
 
@@ -55,6 +56,7 @@ export default class TransactionOutputs extends ViewBase {
       label: 'Add P2SH',
     }, {
       label: 'Add Non-Standard',
+      execute: async () => this._tab.pushView(new TransactionAddOutputNonStandard(this._tab)),
     }];
     const selectView = new SelectView(this._tab, 'Add Output', items);
     this._tab.pushView(selectView);

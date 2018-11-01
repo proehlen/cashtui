@@ -4,7 +4,6 @@ import { type FormFieldDescription } from 'tooey/component/Form';
 import ViewBase from 'tooey/view/ViewBase';
 import Tab from 'tooey/Tab';
 import Output from 'cashlib/lib/Output';
-import { fromBytes } from 'stringfu';
 
 import GenericText from './GenericText';
 import state from '../../model/state';
@@ -41,7 +40,7 @@ export default class ConnectionSettings extends ViewBase {
     const address = output.getAddress(connection.network);
     fields[fieldIdx.ADDRESS] = { label: 'Address', default: blankIfUndefined(address), type: 'string' };
     fields[fieldIdx.TYPE] = { label: 'Type', default: blankIfUndefined(output.scriptType), type: 'string' };
-    fields[fieldIdx.SCRIPT] = { label: 'Public key script', default: fromBytes(output.pubKeyScript), type: 'string' };
+    fields[fieldIdx.SCRIPT] = { label: 'Public key script', default: output.pubKeyScript.toHex(), type: 'string' };
 
     this._formView = new FormView(tab, fields, [{
       key: 'S',
@@ -54,7 +53,7 @@ export default class ConnectionSettings extends ViewBase {
   }
 
   async toScript() {
-    const scriptText = fromBytes(this._output._pubKeyScript);
+    const scriptText = this._output._pubKeyScript.toHex();
     // TODO nav to script parser
     const scriptView = new GenericText('Public Key Script', scriptText);
     this._tab.pushView(scriptView);

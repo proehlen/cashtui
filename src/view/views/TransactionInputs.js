@@ -1,5 +1,6 @@
 // @flow
 
+import Script from 'cashlib/lib/Script';
 import Transaction from 'cashlib/lib/Transaction';
 import Input from 'cashlib/lib/Input';
 import ViewBase from 'tooey/view/ViewBase';
@@ -48,7 +49,7 @@ export default class TransactionInputs extends ViewBase {
     const columns: Array<ListColumn<Input>> = [{
       heading: 'Transaction Id',
       width: 64,
-      value: input => input.isCoinbase ? 'Coinbase' : input.transactionId,
+      value: input => input.isCoinbase ? 'Coinbase' : input.transactionId.toHex(),
     }, {
       heading: 'Output',
       width: 8,
@@ -56,7 +57,7 @@ export default class TransactionInputs extends ViewBase {
     }, {
       heading: 'Sig?',
       width: 4,
-      value: input => input.signatureScript.length ? 'Yes' : '',
+      value: input => input.signatureScript.toBytes().length ? 'Yes' : '',
     }];
 
     this._list = new List(tab, columns, transaction.inputs, {
@@ -80,7 +81,6 @@ export default class TransactionInputs extends ViewBase {
   async toSelectUnspentOutputs() {
     const connection = state.getConnection(this._tab);
     const rpcResult = await state.rpc.request(connection, 'listunspent');
-    debugger;
     if (!Array.isArray(rpcResult) || !rpcResult.length) {
       this._tab.setError('No unspent outputs returned by node wallet.');
     } else {
@@ -89,9 +89,13 @@ export default class TransactionInputs extends ViewBase {
         'Select UTXO',
         rpcResult,
         async (utxo) => {
-          const input = new Input(utxo.txid, utxo.vout, new Uint8Array([]));
-          state.transactions.active.addInput(input);
-          this._tab.popView();
+          try {
+            const input = new Input(utxo.txid, utxo.vout, new Script([]));
+            state.transactions.active.addInput(input);
+            this._tab.popView();
+          } catch (err) {
+            this._tab.setError(err.message);
+          }
         },
       );
       this._tab.replaceView(view);

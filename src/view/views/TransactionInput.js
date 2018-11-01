@@ -4,7 +4,6 @@ import { type FormFieldDescription } from 'tooey/component/Form';
 import ViewBase from 'tooey/view/ViewBase';
 import Tab from 'tooey/Tab';
 import Input from 'cashlib/lib/Input';
-import { fromBytes } from 'stringfu';
 
 import GenericText from './GenericText';
 
@@ -34,9 +33,9 @@ export default class ConnectionSettings extends ViewBase {
     const fields: Array<FormFieldDescription> = [];
     fields[fieldIdx.TRANSACTION_ID] = { label: 'Transaction Id', default: blankIfUndefined(transactionId), type: 'string' };
     fields[fieldIdx.INPUT_INDEX] = { label: 'Input number', default: blankIfUndefined(inputIndex), type: 'integer' };
-    fields[fieldIdx.OUTPUT_TRANSACTION] = { label: 'Output tx', default: input.transactionId, type: 'string' };
+    fields[fieldIdx.OUTPUT_TRANSACTION] = { label: 'Output tx', default: input.transactionId.toHex(), type: 'string' };
     fields[fieldIdx.OUTPUT_INDEX] = { label: 'Output number', default: input.outputIndex.toString(), type: 'integer' };
-    fields[fieldIdx.SCRIPT] = { label: 'Signature script', default: fromBytes(input.signatureScript), type: 'string' };
+    fields[fieldIdx.SCRIPT] = { label: 'Signature script', default: input.signatureScript.toHex(), type: 'string' };
 
     this._formView = new FormView(tab, fields, [{
       key: 'S',
@@ -49,7 +48,7 @@ export default class ConnectionSettings extends ViewBase {
   }
 
   async toScript() {
-    const scriptText = fromBytes(this._input.signatureScript);
+    const scriptText = this._input.signatureScript.toHex();
     // TODO nav to script parser
     const scriptView = new GenericText('Signature Script', scriptText);
     this._tab.pushView(scriptView);

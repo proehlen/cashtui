@@ -6,6 +6,7 @@ import { type MenuItem } from 'tooey/component/Menu';
 import Tab from 'tooey/Tab';
 import Transaction from 'cashlib/lib/Transaction';
 import Input from 'cashlib/lib/Input';
+import Script from 'cashlib/lib/Script';
 
 import state from '../../model/state';
 import SelectOutput from './SelectOutput';
@@ -88,7 +89,7 @@ export default class TransactionAddInputManual extends ViewBase {
       if (!txId || !outputIdx) {
         this._tab.setWarning('Enter Transaction Id and Output Index to continue.');
       } else {
-        const input = new Input(txId, parseInt(outputIdx, 10), new Uint8Array([]));
+        const input = new Input(txId, parseInt(outputIdx, 10), new Script([]));
         state.transactions.active.addInput(input);
         this._tab.popView();
       }

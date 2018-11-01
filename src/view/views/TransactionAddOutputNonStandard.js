@@ -25,8 +25,17 @@ export default class TransactionAddOutputNonStandard extends ViewBase {
     // Form fields
     const fields = [];
     // TODO - enter values in BCH (requires 'float' type to be added tooey)
-    fields[fieldIdx.VALUE] = { label: 'Value (Satoshis)', default: '', type: 'integer' };
-    fields[fieldIdx.SCRIPT] = { label: 'Script', default: '', type: 'string' };
+    fields[fieldIdx.VALUE] = {
+      label: 'Value (Satoshis)',
+      default: '',
+      type: 'integer',
+      required: true,
+    };
+    fields[fieldIdx.SCRIPT] = {
+      label: 'Script',
+      default: '',
+      type: 'string',
+    };
 
     // Menu items
     const menuItems: MenuItem[] = [{
@@ -43,9 +52,7 @@ export default class TransactionAddOutputNonStandard extends ViewBase {
     try {
       const script = this._formView.fields[fieldIdx.SCRIPT].input.value;
       const value = parseInt(this._formView.fields[fieldIdx.VALUE].input.value, 10);
-      if (!script || !value) {
-        this._tab.setWarning('Enter Value and Script to continue.');
-      } else {
+      if (this._formView.form.validate()) {
         const output = new Output(value, new Script(script));
         state.transactions.active.addOutput(output);
         // Go back to Outputs

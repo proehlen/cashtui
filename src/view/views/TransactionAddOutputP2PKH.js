@@ -23,9 +23,19 @@ export default class TransactionAddOutputP2PKH extends ViewBase {
 
     // Form fields
     const fields = [];
-    fields[fieldIdx.ADDRESS] = { label: 'Address', default: '', type: 'string' };
+    fields[fieldIdx.ADDRESS] = {
+      label: 'Address',
+      default: '',
+      type: 'string',
+      required: true,
+    };
     // TODO - enter values in BCH (requires 'float' type to be added tooey)
-    fields[fieldIdx.VALUE] = { label: 'Value (Satoshis)', default: '', type: 'integer' };
+    fields[fieldIdx.VALUE] = {
+      label: 'Value (Satoshis)',
+      default: '',
+      type: 'integer',
+      required: true,
+    };
 
     // Menu items
     const menuItems: MenuItem[] = [{
@@ -42,9 +52,7 @@ export default class TransactionAddOutputP2PKH extends ViewBase {
     try {
       const address = this._formView.fields[fieldIdx.ADDRESS].input.value;
       const value = parseInt(this._formView.fields[fieldIdx.VALUE].input.value, 10);
-      if (!address || !value) {
-        this._tab.setWarning('Enter Address and Value to continue.');
-      } else {
+      if (this._formView.form.validate()) {
         const output = Output.createP2PKH(address, value);
         state.transactions.active.addOutput(output);
         // Go back to Outputs

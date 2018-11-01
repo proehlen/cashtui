@@ -73,7 +73,6 @@ export default class ConnectionHistory extends ViewBase {
       heading: 'Authentication',
       width: 40,
       value: (history) => {
-        debugger;
         const authValue = history.cookieFile
           || `${history.user}:${'*'.repeat(history.password.length)}`;
         return abbreviateMiddle(authValue, 40);

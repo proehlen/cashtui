@@ -14,6 +14,7 @@ import SelectOutput from './SelectOutput';
 const fieldIdx = {
   TRANSACTION_ID: 0,
   OUTPUT_INDEX: 1,
+  SIG: 2,
 };
 
 export default class TransactionAddInputManual extends ViewBase {
@@ -27,8 +28,19 @@ export default class TransactionAddInputManual extends ViewBase {
 
     // Form fields
     const fields = [];
-    fields[fieldIdx.TRANSACTION_ID] = { label: 'Transaction Id', default: '', type: 'string' };
-    fields[fieldIdx.OUTPUT_INDEX] = { label: 'Output index', default: '', type: 'integer' };
+    fields[fieldIdx.TRANSACTION_ID] = {
+      label: 'Transaction id',
+      default: '',
+      type: 'string',
+      required: true,
+    };
+    fields[fieldIdx.OUTPUT_INDEX] = {
+      label: 'Output index',
+      default: '',
+      type: 'integer',
+      required: true,
+    };
+    fields[fieldIdx.SIG] = { label: 'Signature script', default: '', type: 'string' };
 
     // Menu items
     const menuItems: MenuItem[] = [{
@@ -84,12 +96,11 @@ export default class TransactionAddInputManual extends ViewBase {
 
   async addInput() {
     try {
-      const txId = this._formView.fields[fieldIdx.TRANSACTION_ID].input.value;
-      const outputIdx = this._formView.fields[fieldIdx.OUTPUT_INDEX].input.value;
-      if (!txId || !outputIdx) {
-        this._tab.setWarning('Enter Transaction Id and Output Index to continue.');
-      } else {
-        const input = new Input(txId, parseInt(outputIdx, 10), new Script([]));
+      if (this._formView.form.validate()) {
+        const txId = this._formView.fields[fieldIdx.TRANSACTION_ID].input.value;
+        const outputIdx = this._formView.fields[fieldIdx.OUTPUT_INDEX].input.value;
+        const sigScript = new Script(this._formView.fields[fieldIdx.SIG].input.value);
+        const input = new Input(txId, parseInt(outputIdx, 10), sigScript);
         state.transactions.active.addInput(input);
         this._tab.popView();
       }
